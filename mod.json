@@ -1,0 +1,84 @@
+{
+    "Name": "IMC.Spyglass",
+    "Description": "A server-side mod that handles punishing players from a curated reports list on the Northstar Discord server.",
+    "Version": "1.0.0",
+    "LoadPriority": 0,
+    "ConVars": [
+        {
+            // Whether or not to welcome players with the "spyglass_welcome_message" message.
+            "Name": "spyglass_chat_welcome",
+            "DefaultValue": "1"
+        },
+        {
+            "Name": "spyglass_welcome_message",
+            "DefaultValue": "This server is connected to the Spyglass global infractions database."
+        },
+        {
+            // Whether or not to warn a player through chat when they have been punished for one or more infractions.
+            "Name": "spyglass_punishment_notifications",
+            "DefaultValue": "1"
+        },
+        {
+            // The amount of weight a "ChatSpam" infraction has on a punishment calculation score.
+            // Chat Spam: when a player floods the chat with malicious intent, generally prolonged.
+            "Name": "spyglass_chat_spam_weight",
+            "DefaultValue": "0.2"
+        },
+        {
+            // The amount of weight a "LightToxicity" infraction has on a punishment calculation score.
+            // Light Toxicity: Insults/targeted harassment of one or more players, prolonged.
+            "Name": "spyglass_light_toxicity_weight",
+            "DefaultValue": "0.3"
+        },
+        {
+            // The amount of weight a "HeavyToxicity" infraction has on a punishment calculation score.
+            // Heavy Toxicity: Harassment based on a player's gender, sexuality, race, religion etc. Slurs included.
+            "Name": "spyglass_heavy_toxicity_weight",
+            "DefaultValue": "0.6"
+        },
+        {
+            // The amount of weight a "Cheating" infraction has on a punishment calculation score.
+            // Cheating: usage of external programs that provide unfair advantage to the player (aimbot, wallhack, speedhack etc.)
+            "Name": "spyglass_cheating_weight",
+            "DefaultValue": "2.0"
+        },
+        {
+            // The amount of infraction points a player needs to reach before being automatically banned.
+            "Name": "spyglass_ban_score_threshold",
+            "DefaultValue": "2.0"
+        },
+        {
+            // The amount of infraction points a player needs to reach before being automatically muted.
+            "Name": "spyglass_mute_score_threshold",
+            "DefaultValue": "0.5"
+        },
+        {
+            // The amount of infraction points a player needs to reach before being automatically warned (requires spyglass_punishment_notifications.
+            "Name": "spyglass_warn_score_threshold",
+            "DefaultValue": "0.1"
+        },
+        {
+            // Whether or not we should add the player to the banlist.txt if they reach the Ban threshold.
+            "Name": "spyglass_use_banlist_for_bans",
+            "DefaultValue": "1"
+        }
+    ],
+    "Scripts": [
+        {
+            "Path": "models.nut",
+            "RunOn": "SERVER && MP"
+        },
+        {
+            "Path": "spyglass.nut",
+            "RunOn": "SERVER && MP",
+            "ServerCallback":
+            {
+                "After": "Spyglass_Init"
+            }
+        },
+        {
+            "Path": "autogen_database.nut",
+            "RunOn": "SERVER && MP"
+        }
+    ]
+}
