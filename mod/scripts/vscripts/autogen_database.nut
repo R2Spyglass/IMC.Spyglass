@@ -4,7 +4,10 @@
  * Proceed at your own risk.
  */
 
-global table<int, array<PlayerInfraction>> Spyglass_Infractions =
+global table<string, array<PlayerInfraction>> Spyglass_Infractions =
 {
-  [23159648949844] = [{type = InfractionType.ChatSpam, Date = "01/01/1970 00:00:00" , Issuer = "NoCatt#8128", Reason = "Too cool"}]
+    ["1008806725370"] =
+    [
+        { PlayerUsername = "Neinguar", Type = InfractionType.ChatSpam, Date = "01/01/1970 00:00:00" , Issuer = "NoCatt#8128", Reason = "Too cool" }
+    ]
 }

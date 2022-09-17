@@ -10,8 +10,9 @@
             "DefaultValue": "1"
         },
         {
+            // The message to display to players when they join.
             "Name": "spyglass_welcome_message",
-            "DefaultValue": "This server is connected to the Spyglass global infractions database."
+            "DefaultValue": "This server is monitored by \\1xb[38;5;208mSpyglass\\x1b[0m. Global punishments are in effect."
         },
         {
             // Whether or not to warn a player through chat when they have been punished for one or more infractions.
@@ -19,21 +20,26 @@
             "DefaultValue": "1"
         },
         {
-            // The amount of weight a "ChatSpam" infraction has on a punishment calculation score.
-            // Chat Spam: when a player floods the chat with malicious intent, generally prolonged.
-            "Name": "spyglass_chat_spam_weight",
+            // Whether to notify the entire server of a player's punishment. Only if spyglass_punishment_notifications is enabled.
+            "Name": "spyglass_global_punishment_notifications",
+            "DefaultValue": "1" // todo: disable later
+        },
+        {
+            // The amount of weight a "Spamming" infraction has on a punishment calculation score.
+            // Spamming: when a player floods the text or voice chat with malicious intent, generally prolonged.
+            "Name": "spyglass_spamming_weight",
             "DefaultValue": "0.2"
         },
         {
-            // The amount of weight a "LightToxicity" infraction has on a punishment calculation score.
-            // Light Toxicity: Insults/targeted harassment of one or more players, prolonged.
-            "Name": "spyglass_light_toxicity_weight",
+            // The amount of weight a "Toxicity" infraction has on a punishment calculation score.
+            // Toxicity: Insults/targeted harassment of one or more players, prolonged.
+            "Name": "spyglass_toxicity_weight",
             "DefaultValue": "0.3"
         },
         {
-            // The amount of weight a "HeavyToxicity" infraction has on a punishment calculation score.
-            // Heavy Toxicity: Harassment based on a player's gender, sexuality, race, religion etc. Slurs included.
-            "Name": "spyglass_heavy_toxicity_weight",
+            // The amount of weight a "Discrimination" infraction has on a punishment calculation score.
+            // Discrimination: Harassment based on a player's gender, sexuality, race, religion etc. Slurs included.
+            "Name": "spyglass_discrimination_weight",
             "DefaultValue": "0.6"
         },
         {
@@ -60,12 +66,16 @@
         {
             // Whether or not we should add the player to the banlist.txt if they reach the Ban threshold.
             "Name": "spyglass_use_banlist_for_bans",
-            "DefaultValue": "1"
+            "DefaultValue": "0"
         }
     ],
     "Scripts": [
         {
             "Path": "models.nut",
+            "RunOn": "SERVER && MP"
+        },
+        {
+            "Path": "autogen_database.nut",
             "RunOn": "SERVER && MP"
         },
         {
@@ -75,10 +85,6 @@
             {
                 "After": "Spyglass_Init"
             }
-        },
-        {
-            "Path": "autogen_database.nut",
-            "RunOn": "SERVER && MP"
         }
     ]
 }
