@@ -2,17 +2,17 @@
     "Name": "IMC.Spyglass",
     "Description": "A server-side mod that handles punishing players from a curated reports list on the Northstar Discord server.",
     "Version": "1.0.0",
-    "LoadPriority": 0,
+    "LoadPriority": 2,
     "ConVars": [
         {
-            // Whether or not to welcome players with the "spyglass_welcome_message" message.
+            // Whether or not to welcome players when they join (tells them the server is running Spyglass for protection)
             "Name": "spyglass_chat_welcome",
             "DefaultValue": "1"
         },
         {
             // The message to display to players when they join.
             "Name": "spyglass_welcome_message",
-            "DefaultValue": "This server is monitored by \\1xb[38;5;208mSpyglass\\x1b[0m. Global punishments are in effect."
+            "DefaultValue": "This server is monitored by \\x1b[38;5;208mSpyglass\\x1b[0m. Global punishments are in effect."
         },
         {
             // Whether or not to warn a player through chat when they have been punished for one or more infractions.
@@ -67,6 +67,11 @@
             // Whether or not we should add the player to the banlist.txt if they reach the Ban threshold.
             "Name": "spyglass_use_banlist_for_bans",
             "DefaultValue": "0"
+        },
+        {
+            // Whether or not to notify a muted player when their message wasn't sent due to a mute.
+            "Name": "spyglass_notify_muted_player",
+            "DefaultValue": "1"
         }
     ],
     "Scripts": [
@@ -76,7 +81,11 @@
         },
         {
             "Path": "autogen_database.nut",
-            "RunOn": "SERVER && MP"
+            "RunOn": "SERVER && MP",
+            "ServerCallback":
+            {
+                "After": "Spyglass_Database_Init"
+            }
         },
         {
             "Path": "spyglass.nut",
