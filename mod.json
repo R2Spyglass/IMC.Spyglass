@@ -72,6 +72,22 @@
             // Whether or not to notify a muted player when their message wasn't sent due to a mute.
             "Name": "spyglass_notify_muted_player",
             "DefaultValue": "1"
+        },
+        {
+            "Name": "spyglass_command_prefix",
+            "DefaultValue": "!"
+        },
+        {
+            "Name": "spyglass_commands_admin_only",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "spyglass_admin_uids",
+            "DefaultValue": ""
+        },
+        {   // allows mod mainters to access commands
+            "Name": "spyglass_commands_maintainers_allowed", 
+            "DefaultValue": "1"
         }
     ],
     "Scripts": [
@@ -93,6 +109,14 @@
             "ServerCallback":
             {
                 "After": "Spyglass_Init"
+            }
+        },
+        {
+            "Path": "chat_utils.nut",
+            "RunOn":"SERVER && MP",
+            "ServerCallback":
+            {
+                "After": "spyglassChatUtilsInit"
             }
         }
     ]

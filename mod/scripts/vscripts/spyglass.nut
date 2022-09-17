@@ -1,6 +1,7 @@
 global function Spyglass_Init
 global array<string> Spyglass_MutedPlayers
 global array<string> Spyglass_BannedPlayers
+global function Spyglass_GetInfractionAsString
 
 // TODO: Custom callback for punishment
 
@@ -51,13 +52,13 @@ void function OnClientConnecting(entity player)
 
     if(totalWeight >= GetConVarFloat("spyglass_ban_score_threshold"))
     {
-        string reason = format("[Spyglass] You have been banned due to %i infraction(s). Latest infraction: %s", validInfractions, GetInfractionAsString(lastInfraction));
+        string reason = format("[Spyglass] You have been banned due to %i infraction(s). Latest infraction: %s", validInfractions, Spyglass_GetInfractionAsString(lastInfraction));
         printt(format("[Spyglass] Player '%s' [%s] was banned due to reaching an infraction score of %f.", player.GetPlayerName(), player.GetUID(), totalWeight))
 
         if (shouldNotifyPlayer && shouldNotifyGlobal && !bannedAlready)
         {
             Spyglass_BannedPlayers.append(player.GetUID());
-            string message = format("\x1b[38;5;208mSpyglass\x1b[0m: Player \x1b[111m%s\x1b[0m has been banned due to %i infraction(s).\nLatest infraction: %s", player.GetPlayerName(), validInfractions, GetInfractionAsString(lastInfraction));
+            string message = format("\x1b[38;5;208mSpyglass\x1b[0m: Player \x1b[111m%s\x1b[0m has been banned due to %i infraction(s).\nLatest infraction: %s", player.GetPlayerName(), validInfractions, Spyglass_GetInfractionAsString(lastInfraction));
             Chat_ServerBroadcast(message);
         }
 
@@ -111,13 +112,13 @@ void function OnClientConnected(entity player)
 
     if(totalWeight >= GetConVarFloat("spyglass_ban_score_threshold"))
     {
-        string reason = format("[Spyglass] You have been banned due to %i infraction(s). Latest infraction: %s", validInfractions, GetInfractionAsString(lastInfraction));
+        string reason = format("[Spyglass] You have been banned due to %i infraction(s). Latest infraction: %s", validInfractions, Spyglass_GetInfractionAsString(lastInfraction));
         printt(format("[Spyglass] Player '%s' [%s] was banned due to reaching an infraction score of %f.", player.GetPlayerName(), player.GetUID(), totalWeight))
 
         if (shouldNotifyPlayer && shouldNotifyGlobal && Spyglass_BannedPlayers.find(player.GetUID()) == -1)
         {
             Spyglass_BannedPlayers.append(player.GetUID());
-            string message = format("\x1b[38;5;208mSpyglass\x1b[0m: Player \x1b[111m%s\x1b[0m has been banned due to %i infraction(s).\nLatest infraction: %s", player.GetPlayerName(), validInfractions, GetInfractionAsString(lastInfraction));
+            string message = format("\x1b[38;5;208mSpyglass\x1b[0m: Player \x1b[111m%s\x1b[0m has been banned due to %i infraction(s).\nLatest infraction: %s", player.GetPlayerName(), validInfractions, Spyglass_GetInfractionAsString(lastInfraction));
             Chat_ServerBroadcast(message);
         }
 
@@ -138,12 +139,12 @@ void function OnClientConnected(entity player)
         {
             if (shouldNotifyGlobal)
             {
-                string message = format("\x1b[38;5;208mSpyglass\x1b[0m: Player \x1b[111m%s\x1b[0m has been muted due to %i infraction(s).\nLatest infraction: %s", player.GetPlayerName(), validInfractions, GetInfractionAsString(lastInfraction));
+                string message = format("\x1b[38;5;208mSpyglass\x1b[0m: Player \x1b[111m%s\x1b[0m has been muted due to %i infraction(s).\nLatest infraction: %s", player.GetPlayerName(), validInfractions, Spyglass_GetInfractionAsString(lastInfraction));
                 Chat_ServerBroadcast(message);
             }
             else
             {
-                string reason = format("\x1b[38;5;208mSpyglass\x1b[0m: You have been muted due to %i infraction(s).\nLatest infraction: %s", validInfractions, GetInfractionAsString(lastInfraction));
+                string reason = format("\x1b[38;5;208mSpyglass\x1b[0m: You have been muted due to %i infraction(s).\nLatest infraction: %s", validInfractions, Spyglass_GetInfractionAsString(lastInfraction));
                 Chat_ServerPrivateMessage(player, reason, true);
             }
         }
@@ -156,12 +157,12 @@ void function OnClientConnected(entity player)
         {
             if (shouldNotifyGlobal)
             {
-                string message = format("\x1b[38;5;208mSpyglass\x1b[0m: Player \x1b[111m%s\x1b[0m has been warned due to %i infraction(s).\nLatest infraction: %s", player.GetPlayerName(), validInfractions, GetInfractionAsString(lastInfraction));
+                string message = format("\x1b[38;5;208mSpyglass\x1b[0m: Player \x1b[111m%s\x1b[0m has been warned due to %i infraction(s).\nLatest infraction: %s", player.GetPlayerName(), validInfractions, Spyglass_GetInfractionAsString(lastInfraction));
                 Chat_ServerBroadcast(message);
             }
             else
             {
-                string reason = format("\x1b[38;5;208mSpyglass\x1b[0m: You have been warned due to %i infraction(s).\nLatest infraction: %s", validInfractions, GetInfractionAsString(lastInfraction));
+                string reason = format("\x1b[38;5;208mSpyglass\x1b[0m: You have been warned due to %i infraction(s).\nLatest infraction: %s", validInfractions, Spyglass_GetInfractionAsString(lastInfraction));
                 Chat_ServerPrivateMessage(player, reason, true);
             }
         }
@@ -212,7 +213,7 @@ float function GetInfractionWeight(PlayerInfraction infraction)
     return 0.0;
 }
 
-string function GetInfractionAsString(PlayerInfraction infraction)
+string function Spyglass_GetInfractionAsString(PlayerInfraction infraction)
 {
     string typeString = "Invalid";
     switch (infraction.Type)
