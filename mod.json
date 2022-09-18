@@ -10,7 +10,7 @@
         },
         {
             "Name": "spyglass_welcome_message",
-            "DefaultValue": "This server is monitored by \\x1b[38;5;208mSpyglass\\x1b[0m. Global sanctions are in effect."
+            "DefaultValue": "\\x1b[38;5;208mSpyglass:\\x1b[0m I am currently monitoring this server, and global sanctions are in effect."
         },
         {
             "Name": "spyglass_sanctions_notifications",
@@ -33,32 +33,26 @@
             "DefaultValue": "0.6"
         },
         {
-            // The amount of weight a "Cheating" infraction has on a sanctions calculation score.
             "Name": "spyglass_cheating_weight",
             "DefaultValue": "2.0"
         },
         {
-            // The amount of infraction points a player needs to reach before being automatically banned.
             "Name": "spyglass_ban_score_threshold",
             "DefaultValue": "2.0"
         },
         {
-            // The amount of infraction points a player needs to reach before being automatically muted.
             "Name": "spyglass_mute_score_threshold",
             "DefaultValue": "0.5"
         },
         {
-            // The amount of infraction points a player needs to reach before being automatically warned (requires spyglass_sanctions_notifications.
             "Name": "spyglass_warn_score_threshold",
             "DefaultValue": "0.1"
         },
         {
-            // Whether or not we should add the player to the banlist.txt if they reach the Ban threshold.
             "Name": "spyglass_use_banlist_for_bans",
             "DefaultValue": "0"
         },
         {
-            // Whether or not to notify a muted player when their message wasn't sent due to a mute.
             "Name": "spyglass_notify_muted_player",
             "DefaultValue": "1"
         }

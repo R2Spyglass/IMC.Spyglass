@@ -2,13 +2,13 @@
 # Spyglass
 
  
-A server-side mod that handles punishing players from a curated reports list on the Northstar Discord server.
+A server-side mod that handles sanctioning players from a curated reports list on the Northstar Discord server.
 
 Spyglass has been designed to be very customisable, up to a point where it can be made invisible to players on your server, keeping a strictly Vanilla experience if you prefer it, or publicly identify mischievous players that join your server.
 
 The database is regularly updated and shared across servers, meaning the sanctions are as well, provided the servers do not change their individual sanction thresholds.
 
-With Spyglass  and your help, we can make the community scene of Titanfall 2 a safe & wholesome one.
+With Spyglass and your help, we can make the community scene of Titanfall 2 a safe & wholesome one.
 
 ## Infractions
 
@@ -24,10 +24,10 @@ Reports are validated when they meet the following guidelines:
 Currently, Spyglass supports the current types of infractions:
 
 - Spoof: this infraction is merely to notify the player they were  spoofed.
-- Spamming: Spamming text or voice chat with malicious intent.
-- Toxicity: Insults/targeted harassment of one or more players. Generally attempting to ruin the game through harmless communication.
-- Discrimination: Harassment based on a player's gender, sexuality, race, religion etc.
-- Cheating: Usage of external programs that provide unfair advantage to the player (aimbot, wallhack, speedhack etc.)
+- Spamming: spamming text or voice chat with malicious intent.
+- Toxicity: insults/targeted harassment of one or more players. Generally attempting to ruin the game through harmful communication.
+- Discrimination: harassment based on a player's gender, sexuality, race, religion etc.
+- Cheating: usage of external programs that provide unfair advantage to the player (aimbot, wallhack, speedhack etc.) or detriment to the player experience (making the server or players lag & crash, etc.)
 
 This list is not final, and new infraction types can be added if the need arises. 
 Using the default settings, a singular `Cheating` infraction will land you an automatic ban, and a singular `Discrimination` infraction will give you a permanent mute.
@@ -48,7 +48,7 @@ DefaultValue = "1 (true)"
 [spyglass_welcome_message]
 Description = "The message to display to players when they join."
 Type = "String"
-DefaultValue = "This server is monitored by Spyglass. Global sanctions are in effect."
+DefaultValue = "Spyglass: I am currently monitoring this server, and global sanctions are in effect."
 
 [spyglass_sanctions_notifications]
 Description = "Whether or not to warn a player through chat when they have been punished for one or more infractions."

@@ -1,6 +1,9 @@
 global function Spyglass_Init;
 global function Spyglass_GetPlayerInfractions;
 global function Spyglass_ChatSendPlayerInfractions;
+global function Spyglass_SayAll;
+global function Spyglass_SayPrivate;
+
 global array<string> Spyglass_MutedPlayers;
 global array<string> Spyglass_BannedPlayers;
 global array<string> Spyglass_Maintainers = 
@@ -59,8 +62,8 @@ void function OnClientConnecting(entity player)
         if (shouldNotifyPlayer && shouldNotifyGlobal && !bannedAlready)
         {
             Spyglass_BannedPlayers.append(player.GetUID());
-            string message = format("\x1b[38;5;208mSpyglass\x1b[0m: Player \x1b[111m%s\x1b[0m has been banned due to %i infraction(s).", player.GetPlayerName(), validInfractions);
-            Chat_ServerBroadcast(message);
+            string message = format("Player \x1b[111m%s\x1b[0m has been banned due to %i infraction(s):", player.GetPlayerName(), validInfractions);
+            Spyglass_SayAll(message);
             Spyglass_ChatSendPlayerInfractions(player);
         }
 
@@ -84,7 +87,7 @@ void function OnClientConnected(entity player)
 
     if (GetConVarBool("spyglass_chat_welcome"))
     {
-        Chat_ServerPrivateMessage(player, Spyglass_GetColoredConVarString("spyglass_welcome_message"), false)
+        Chat_ServerPrivateMessage(player, Spyglass_GetColoredConVarString("spyglass_welcome_message"), false/*, false*/);
     }
 
     array<PlayerInfraction> foundInfractions = Spyglass_GetPlayerInfractions(player);
@@ -119,14 +122,14 @@ void function OnClientConnected(entity player)
         {
             if (shouldNotifyGlobal)
             {
-                string message = format("\x1b[38;5;208mSpyglass\x1b[0m: Player \x1b[111m%s\x1b[0m has been muted due to %i infraction(s).", player.GetPlayerName(), validInfractions);
-                Chat_ServerBroadcast(message);
+                string message = format("Player \x1b[111m%s\x1b[0m has been muted due to %i infraction(s):", player.GetPlayerName(), validInfractions);
+                Spyglass_SayAll(message);
                 Spyglass_ChatSendPlayerInfractions(player);
             }
             else
             {
-                string reason = format("\x1b[38;5;208mSpyglass\x1b[0m: You have been muted due to %i infraction(s).", validInfractions);
-                Chat_ServerPrivateMessage(player, reason, true);
+                string reason = format("You have been muted due to %i infraction(s):", validInfractions);
+                Spyglass_SayPrivate(player, reason, true, false);
                 Spyglass_ChatSendPlayerInfractions(player, [ player ]);
             }
         }
@@ -139,14 +142,14 @@ void function OnClientConnected(entity player)
         {
             if (shouldNotifyGlobal)
             {
-                string message = format("\x1b[38;5;208mSpyglass\x1b[0m: Player \x1b[111m%s\x1b[0m has been warned due to %i infraction(s).", player.GetPlayerName(), validInfractions);
-                Chat_ServerBroadcast(message);
+                string message = format("Player \x1b[111m%s\x1b[0m has been warned due to %i infraction(s):", player.GetPlayerName(), validInfractions);
+                Spyglass_SayAll(message);
                 Spyglass_ChatSendPlayerInfractions(player);
             }
             else
             {
-                string reason = format("\x1b[38;5;208mSpyglass\x1b[0m: You have been warned due to %i infraction(s).", validInfractions);
-                Chat_ServerPrivateMessage(player, reason, true);
+                string reason = format("You have been warned due to %i infraction(s):", validInfractions);
+                Spyglass_SayPrivate(player, reason, true, false);
                 Spyglass_ChatSendPlayerInfractions(player, [ player ]);
             }
         }
@@ -173,7 +176,7 @@ ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
 
         if (GetConVarBool("spyglass_notify_muted_player"))
         {
-            Chat_ServerPrivateMessage(message.player, "\x1b[38;5;208mSpyglass\x1b[0m: your message was blocked as you are permanently muted.", true);
+            Spyglass_SayPrivate(message.player, "I prevented you from talking as you are permanently muted.", true, false);
         }
     }
 
@@ -285,14 +288,16 @@ void function Spyglass_ChatSendPlayerInfractions(entity player, array<entity> ta
         // Check if we can merge the message together (limit is 254 characters)
         if (currentMessage.len() + infractionStr.len() + 1 <= 254)
         {
-            currentMessage += format("\n%s", infractionStr);
+            currentMessage += currentMessage.len() != 0 
+                ? format("\n%s", infractionStr)
+                : infractionStr;
         }
         else
         {
             // Send the current message globally/to the targets.
             if (isGlobal)
             {
-                Chat_ServerBroadcast(currentMessage);
+                Chat_ServerBroadcast(currentMessage/*, false*/);
             }
             else
             {
@@ -300,12 +305,12 @@ void function Spyglass_ChatSendPlayerInfractions(entity player, array<entity> ta
                 {
                     if (IsValid(target) && target.IsPlayer())
                     {
-                        Chat_ServerPrivateMessage(target, currentMessage, false);
+                        Chat_ServerPrivateMessage(target, currentMessage, false /*, false*/);
                     }
                 }
             }
 
-            currentMessage = format("\n%s", infractionStr);
+            currentMessage = infractionStr;
         }
     }
 
@@ -314,7 +319,7 @@ void function Spyglass_ChatSendPlayerInfractions(entity player, array<entity> ta
     {
         if (isGlobal)
         {
-            Chat_ServerBroadcast(currentMessage);
+            Chat_ServerBroadcast(currentMessage /*, false*/);
         }
         else
         {
@@ -322,10 +327,35 @@ void function Spyglass_ChatSendPlayerInfractions(entity player, array<entity> ta
             {
                 if (IsValid(target) && target.IsPlayer())
                 {
-                    Chat_ServerPrivateMessage(target, currentMessage, false);
+                    Chat_ServerPrivateMessage(target, currentMessage, false/*, false*/);
                 }
             }
         }
     }
+}
 
+// TODO: Re-enable withServerTag once PR is merged.
+
+/**
+ * Sends a message to everyone in the chat as Spyglass.
+ * @param message The message that Spyglass should send in chat.
+ * @param withServerTag Whether or not to display the [SERVER] tag prior to Spyglass' name.
+ */
+void function Spyglass_SayAll(string message, bool withServerTag = false)
+{
+    string finalMessage = format("\x1b[38;5;208mSpyglass:\x1b[0m %s", message);
+    Chat_ServerBroadcast(finalMessage /*, withServerTag*/);
+}
+
+/**
+ * Sends a message to the target player in the chat as Spyglass.
+ * @param player The player to send the message to.
+ * @param message The message that Spyglass should send in chat.
+ * @param isWhisper Whether or not to display the [WHISPER] tag prior to Spyglass' name.
+ * @param withServerTag Whether or not to display the [SERVER] tag prior to Spyglass' name.
+ */
+void function Spyglass_SayPrivate(entity player, string message, bool isWhisper, bool withServerTag = false)
+{
+    string finalMessage = format("\x1b[38;5;208mSpyglass:\x1b[0m %s", message);
+    Chat_ServerPrivateMessage(player, finalMessage, isWhisper /*, withServerTag*/);
 }
