@@ -44,11 +44,11 @@ void function SpyglassCommand_FindUID(entity player, array<string> args)
         }
 
         Spyglass_SayPrivate(player, format("Found %i partial matches for username '%s', did you mean:", result.foundNames.len(), query));
-        string matches = result.foundNames[0];
+        string matches = format("'%s'", result.foundNames[0]);
 
         for (int idx = 1; idx < result.foundNames.len(); ++idx)
         {
-            string formatted = format("\n%s", result.foundNames[idx]);
+            string formatted = format(", '%s'", result.foundNames[idx]);
 
             if (matches.len() + formatted.len() <= 254)
             {
