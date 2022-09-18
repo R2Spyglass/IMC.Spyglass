@@ -111,4 +111,25 @@ DefaultValue = "0 (false)"
 Description = "Whether or not to notify a muted player when their message wasn't sent due to a mute."
 Type = "Boolean"
 DefaultValue = "1 (true)"
+
+[spyglass_command_prefix]
+Description = "The prefix to use for Spyglass' chat commands."
+Type = "String"
+DefaultValue = "!"
+
+[spyglass_commands_admin_only]
+Description = "Whether or not Spyglass' commands can only be used by admins."
+Type = "Boolean"
+DefaultValue = "0 (false)"
+
+[spyglass_admin_uids]
+Description = "The UIDs of your server's admins that can use the commands, separated by a comma."
+Type = "String"
+DefaultValue = ""
+
+[spyglass_commands_maintainers_allowed]
+Description = "Whether or not Spyglass' maintainers have access to the commands."
+Note = "Commands are only for querying the database, and do not provide admin power. We will only use it for debugging purposes."
+Type = "Boolean"
+DefaultValue = "1 (true)"
 ```

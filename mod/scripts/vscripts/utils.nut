@@ -1,9 +1,4 @@
-global function Spyglass_Min;
-global function Spyglass_Minf;
-global function Spyglass_Max;
-global function Spyglass_Maxf;
-global function Spyglass_GetColoredConVarString;
-global function Spyglass_SplitEscapedString;
+globalize_all_functions
 
 // Returns the smallest value between a or b, or a if equal.
 int function Spyglass_Min(int a, int b)
@@ -81,4 +76,43 @@ array<string> function Spyglass_SplitEscapedString(string value, string separato
     }
 
     return result;
+}
+
+string function Spyglass_GetInfractionAsString(PlayerInfraction infraction)
+{
+    string typeString = "Invalid";
+    switch (infraction.Type)
+    {
+        case InfractionType.Spoof: typeString = "Spoofed"; break;
+        case InfractionType.Spamming: typeString = "Spamming"; break;
+        case InfractionType.Toxicity: typeString = "Toxicity"; break;
+        case InfractionType.Discrimination: typeString = "Discrimination"; break;
+        case InfractionType.Cheating: typeString = "Cheating"; break;
+    }
+
+    return format("\x1b[38;5;123m[%s] \x1b[38;2;254;64;64m(%s): \x1b[0m%s", infraction.Date, typeString, infraction.Reason);
+}
+
+float function Spyglass_GetInfractionWeight(PlayerInfraction infraction)
+{
+    switch (infraction.Type)
+    {
+        case InfractionType.Spamming:
+            return GetConVarFloat("spyglass_spamming_weight");
+        case InfractionType.Toxicity:
+            return GetConVarFloat("spyglass_toxicity_weight");
+        case InfractionType.Discrimination:
+            return GetConVarFloat("spyglass_discrimination_weight");
+        case InfractionType.Cheating:
+            return GetConVarFloat("spyglass_cheating_weight");
+    }
+
+    return 0.0;
+}
+
+/** Splits the value of the given string convar into an array, using commas as a separator. */
+array<string> function Spyglass_GetConVarStringArray(string cvarName)
+{
+    string clean = strip(GetConVarString(cvarName));
+    return split(clean, ",");
 }

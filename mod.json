@@ -68,18 +68,18 @@
             "Name": "spyglass_admin_uids",
             "DefaultValue": ""
         },
-        {   // allows mod mainters to access commands
+        {
             "Name": "spyglass_commands_maintainers_allowed", 
             "DefaultValue": "1"
         }
     ],
     "Scripts": [
         {
-            "Path": "utils.nut",
+            "Path": "models.nut",
             "RunOn": "SERVER && MP"
         },
         {
-            "Path": "models.nut",
+            "Path": "utils.nut",
             "RunOn": "SERVER && MP"
         },
         {
@@ -103,7 +103,7 @@
             "RunOn":"SERVER && MP",
             "ServerCallback":
             {
-                "After": "spyglassChatUtilsInit"
+                "After": "Spyglass_ChatUtils_Init"
             }
         }
     ]
