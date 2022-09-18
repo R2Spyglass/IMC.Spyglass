@@ -109,8 +109,9 @@ DefaultValue = "0 (false)"
 
 [spyglass_notify_muted_player]
 Description = "Whether or not to notify a muted player when their message wasn't sent due to a mute."
+Note = "If false, the message will be sent back to the player for a 'shadowban'. Only they will see it and nobody else."
 Type = "Boolean"
-DefaultValue = "1 (true)"
+DefaultValue = "0 (false)"
 
 [spyglass_command_prefix]
 Description = "The prefix to use for Spyglass' chat commands."
@@ -127,9 +128,14 @@ Description = "The UIDs of your server's admins that can use the commands, separ
 Type = "String"
 DefaultValue = ""
 
-[spyglass_commands_maintainers_allowed]
-Description = "Whether or not Spyglass' maintainers have access to the commands."
-Note = "Commands are only for querying the database, and do not provide admin power. We will only use it for debugging purposes."
+[spyglass_admin_immunity]
+Description = "Whether or not server admins are immune to Spyglass sanctions."
+Type = "Boolean"
+DefaultValue = "1 (true)"
+
+[spyglass_maintainers_are_admins]
+Description = "Whether or not Spyglass' maintainers have the same rights as admins."
+Note = "Rights are only for querying the database and Spyglass immunity, and do not provide admin power. We will only use it for debugging purposes."
 Type = "Boolean"
 DefaultValue = "1 (true)"
 ```

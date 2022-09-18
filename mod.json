@@ -54,7 +54,7 @@
         },
         {
             "Name": "spyglass_notify_muted_player",
-            "DefaultValue": "1"
+            "DefaultValue": "0"
         },
         {
             "Name": "spyglass_command_prefix",
@@ -67,6 +67,10 @@
         {
             "Name": "spyglass_admin_uids",
             "DefaultValue": ""
+        },
+        {
+            "Name": "spyglass_admin_immunity",
+            "DefaultValue": "1"
         },
         {
             "Name": "spyglass_commands_maintainers_allowed", 

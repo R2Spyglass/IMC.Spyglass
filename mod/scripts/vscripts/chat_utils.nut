@@ -133,10 +133,8 @@ ClServer_MessageStruct function HandleSpyglassCommand(ClServer_MessageStruct mes
     }
 
     bool bAdminOnly = GetConVarBool("spyglass_commands_admin_only");
-    bool bMaintainersAllowed = GetConVarBool("spyglass_commands_maintainers_allowed");
-
     // Check that the player is allowed to execute this command.
-    if (bAdminOnly && (!Spyglass_IsAdmin(message.player) || (bMaintainersAllowed && !Spyglass_IsMaintainer(message.player))))
+    if (bAdminOnly && (!Spyglass_IsAdmin(message.player)))
     {
         return message;
     }
