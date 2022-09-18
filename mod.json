@@ -73,7 +73,7 @@
             "DefaultValue": "1"
         },
         {
-            "Name": "spyglass_commands_maintainers_allowed", 
+            "Name": "spyglass_maintainers_are_admins", 
             "DefaultValue": "1"
         }
     ],

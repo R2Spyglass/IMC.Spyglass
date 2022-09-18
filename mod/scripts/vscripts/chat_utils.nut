@@ -23,7 +23,7 @@ void function SpyglassCommand_FindUID(entity player, array<string> args)
 
     if (result.isExactMatch)
     {
-        Spyglass_SayPrivate(player, format("Found an exact match for username '%s': [%s]", query, result.foundUID));
+        Spyglass_SayPrivate(player, format("Found an exact match for username '%s': [%s]", result.foundNames[0], result.foundUID));
         return;
     }
 

@@ -32,7 +32,7 @@ void function Spyglass_Init()
 
 void function OnClientConnecting(entity player)
 {
-    if (!IsValid(player))
+    if (!IsValid(player) || Spyglass_HasImmunity(player))
     {
         return;
     }
@@ -95,6 +95,11 @@ void function OnClientConnected(entity player)
     if (GetConVarBool("spyglass_chat_welcome"))
     {
         Chat_ServerPrivateMessage(player, Spyglass_GetColoredConVarString("spyglass_welcome_message"), false/*, false*/);
+    }
+
+    if (Spyglass_HasImmunity(player))
+    {
+        return;
     }
 
     array<PlayerInfraction> foundInfractions = Spyglass_GetPlayerInfractions(player.GetUID());
@@ -177,13 +182,13 @@ void function OnClientDisconnected(entity player)
 
 ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
 {
-    // Ignore if the message is already blocked.
-    if (message.shouldBlock)
+    // Ignore if the message is already blocked, if the player is invalid or the player is immune.
+    if (message.shouldBlock || !IsValid(message.player) || Spyglass_HasImmunity(message.player))
     {
         return message;
     }
 
-    if (IsValid(message.player) && Spyglass_IsMuted(message.player))
+    if (Spyglass_IsMuted(message.player))
     {
         message.shouldBlock = true;
 
@@ -385,6 +390,7 @@ Spyglass_UIDQueryResult function Spyglass_FindUIDByName(string name)
     if (clean in Spyglass_PlayerNameUIDMap)
     {
         result.isExactMatch = true;
+        result.foundNames.append(clean);
         result.foundUID = Spyglass_PlayerNameUIDMap[clean];
         return result;
     }
