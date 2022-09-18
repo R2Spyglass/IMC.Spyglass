@@ -13,8 +13,6 @@ global struct PlayerInfraction
     int Type
     // The date the infraction was added to the database, in human readable format.
     string Date
-    // The Discord username of the user who issued the infraction in the database.
-    string Issuer
     // The origin username of the user whose infraction this is.
     string PlayerUsername
     // The reason why this infraction was given to the user.
