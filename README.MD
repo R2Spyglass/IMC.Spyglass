@@ -102,12 +102,6 @@ Requires = "spyglass_sanctions_notifications 1"
 Type = "Float"
 DefaultValue = "0.1"
 
-[spyglass_warn_score_threshold]
-Description = "The amount of infraction points a player needs to reach before being automatically muted."
-Requires = "spyglass_sanctions_notifications 1"
-Type = "Float"
-DefaultValue = "0.1"
-
 [spyglass_use_banlist_for_bans]
 Description = "Whether or not we should add the player to the banlist.txt if they reach the Ban threshold. If not, they will just be kicked while joining."
 Type = "Boolean"
