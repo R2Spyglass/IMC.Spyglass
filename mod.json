@@ -2,74 +2,57 @@
     "Name": "IMC.Spyglass",
     "Description": "A server-side mod that handles punishing players from a curated reports list on the Northstar Discord server.",
     "Version": "1.0.0",
-    "LoadPriority": 2,
+    "LoadPriority": 1,
     "ConVars": [
         {
-            // Whether or not to welcome players when they join (tells them the server is running Spyglass for protection)
             "Name": "spyglass_chat_welcome",
             "DefaultValue": "1"
         },
         {
-            // The message to display to players when they join.
             "Name": "spyglass_welcome_message",
-            "DefaultValue": "This server is monitored by \\x1b[38;5;208mSpyglass\\x1b[0m. Global punishments are in effect."
+            "DefaultValue": "\\x1b[38;5;208mSpyglass:\\x1b[0m I am currently monitoring this server, and global sanctions are in effect."
         },
         {
-            // Whether or not to warn a player through chat when they have been punished for one or more infractions.
-            "Name": "spyglass_punishment_notifications",
+            "Name": "spyglass_sanctions_notifications",
             "DefaultValue": "1"
         },
         {
-            // Whether to notify the entire server of a player's punishment. Only if spyglass_punishment_notifications is enabled.
-            "Name": "spyglass_global_punishment_notifications",
-            "DefaultValue": "1" // todo: disable later
+            "Name": "spyglass_global_sanctions_notifications",
+            "DefaultValue": "1"
         },
         {
-            // The amount of weight a "Spamming" infraction has on a punishment calculation score.
-            // Spamming: when a player floods the text or voice chat with malicious intent, generally prolonged.
             "Name": "spyglass_spamming_weight",
             "DefaultValue": "0.2"
         },
         {
-            // The amount of weight a "Toxicity" infraction has on a punishment calculation score.
-            // Toxicity: Insults/targeted harassment of one or more players, prolonged.
             "Name": "spyglass_toxicity_weight",
             "DefaultValue": "0.3"
         },
         {
-            // The amount of weight a "Discrimination" infraction has on a punishment calculation score.
-            // Discrimination: Harassment based on a player's gender, sexuality, race, religion etc. Slurs included.
             "Name": "spyglass_discrimination_weight",
             "DefaultValue": "0.6"
         },
         {
-            // The amount of weight a "Cheating" infraction has on a punishment calculation score.
-            // Cheating: usage of external programs that provide unfair advantage to the player (aimbot, wallhack, speedhack etc.)
             "Name": "spyglass_cheating_weight",
             "DefaultValue": "2.0"
         },
         {
-            // The amount of infraction points a player needs to reach before being automatically banned.
             "Name": "spyglass_ban_score_threshold",
             "DefaultValue": "2.0"
         },
         {
-            // The amount of infraction points a player needs to reach before being automatically muted.
             "Name": "spyglass_mute_score_threshold",
             "DefaultValue": "0.5"
         },
         {
-            // The amount of infraction points a player needs to reach before being automatically warned (requires spyglass_punishment_notifications.
             "Name": "spyglass_warn_score_threshold",
             "DefaultValue": "0.1"
         },
         {
-            // Whether or not we should add the player to the banlist.txt if they reach the Ban threshold.
             "Name": "spyglass_use_banlist_for_bans",
             "DefaultValue": "0"
         },
         {
-            // Whether or not to notify a muted player when their message wasn't sent due to a mute.
             "Name": "spyglass_notify_muted_player",
             "DefaultValue": "1"
         },
@@ -91,6 +74,10 @@
         }
     ],
     "Scripts": [
+        {
+            "Path": "utils.nut",
+            "RunOn": "SERVER && MP"
+        },
         {
             "Path": "models.nut",
             "RunOn": "SERVER && MP"
