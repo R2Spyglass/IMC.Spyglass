@@ -190,6 +190,11 @@ ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
         {
             Spyglass_SayPrivate(message.player, "I prevented you from talking as you are permanently muted.", true, false);
         }
+        else
+        {
+            // Send the message back to them so they don't even know it was muted.
+            Chat_PrivateMessage(message.player, message.player, message.message, false);
+        }
     }
 
     return message;
