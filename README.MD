@@ -3,6 +3,10 @@
 
 # Spyglass
 
+<a href="https://discord.com/invite/whKMsPN3nu" target="_blank">
+  <img src="https://discordapp.com/api/guilds/897214251414994994/widget.png?style=shield" alt="Spyglass Discord Server"/>
+</a>
+
 A server-side mod that handles sanctioning players from a curated reports list on the Northstar Discord server.
 
 Spyglass has been designed to be very customisable, up to a point where it can be made invisible to players on your server, keeping a strictly Vanilla experience if you prefer it, or publicly identify mischievous players that join your server.
