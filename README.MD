@@ -41,75 +41,75 @@ You shouldn't in any way, shape or form modify the mod itself if possible, to ma
 
 ```ini
 [spyglass_chat_welcome]
-Description = Whether or not to welcome players when they join (tells them the server is running Spyglass for protection).
-Type = Boolean
-DefaultValue = 1 (true)
+Description = "Whether or not to welcome players when they join (tells them the server is running Spyglass for protection)."
+Type = "Boolean"
+DefaultValue = "1 (true)"
 
 [spyglass_welcome_message]
-Description = The message to display to players when they join.
-Type = String
-DefaultValue = This server is monitored by Spyglass. Global sanctions are in effect.
+Description = "The message to display to players when they join."
+Type = "String"
+DefaultValue = "This server is monitored by Spyglass. Global sanctions are in effect."
 
 [spyglass_sanctions_notifications]
-Description = Whether or not to warn a player through chat when they have been punished for one or more infractions.
-Type = Boolean
-DefaultValue = 1 (true)
+Description = "Whether or not to warn a player through chat when they have been punished for one or more infractions."
+Type = "Boolean"
+DefaultValue = "1 (true)"
 
 [spyglass_global_sanctions_notifications]
-Description = Whether to notify the entire server of a player's sanctions.
-Type = Boolean
-Requires = spyglass_sanctions_notifications 1
-DefaultValue = 1 (true)
+Description = "Whether to notify the entire server of a player's sanctions."
+Type = "Boolean"
+Requires = "spyglass_sanctions_notifications 1"
+DefaultValue = "1 (true)"
 
 [spyglass_spamming_weight]
-Description = The amount of weight a "Spamming" infraction has on a sanction calculation score.
-Type = Float
-DefaultValue = 0.2
+Description = "The amount of weight a 'Spamming' infraction has on a sanction calculation score."
+Type = "Float"
+DefaultValue = "0.2"
 
 [spyglass_toxicity_weight]
-Description = The amount of weight a "Toxicity" infraction has on a sanction calculation score.
-Type = Float
-DefaultValue = 0.3
+Description = "The amount of weight a 'Toxicity' infraction has on a sanction calculation score."
+Type = "Float"
+DefaultValue = "0.3"
 
 [spyglass_discrimination_weight]
-Description = The amount of weight a "Discrimination" infraction has on a sanction calculation score.
-Type = Float
-DefaultValue = 0.6
+Description = "The amount of weight a 'Discrimination' infraction has on a sanction calculation score."
+Type = "Float"
+DefaultValue = "0.6"
 
 [spyglass_cheating_weight]
-Description = The amount of weight a "Cheating" infraction has on a sanction calculation score.
-Type = Float
-DefaultValue = 2.0
+Description = "The amount of weight a 'Cheating' infraction has on a sanction calculation score."
+Type = "Float"
+DefaultValue = "2.0"
 
 [spyglass_ban_score_threshold]
-Description = The amount of infraction points a player needs to reach before being automatically banned.
-Type = Float
-DefaultValue = 2.0
+Description = "The amount of infraction points a player needs to reach before being automatically banned."
+Type = "Float"
+DefaultValue = "2.0"
 
 [spyglass_mute_score_threshold]
-Description = The amount of infraction points a player needs to reach before being automatically muted.
-Type = Float
-DefaultValue = 0.5
+Description = "The amount of infraction points a player needs to reach before being automatically muted."
+Type = "Float"
+DefaultValue = "0.5"
 
 [spyglass_warn_score_threshold]
-Description = The amount of infraction points a player needs to reach before being automatically muted.
-Requires = spyglass_sanctions_notifications 1
-Type = Float
-DefaultValue = 0.1
+Description = "The amount of infraction points a player needs to reach before being automatically muted."
+Requires = "spyglass_sanctions_notifications 1"
+Type = "Float"
+DefaultValue = "0.1"
 
 [spyglass_warn_score_threshold]
-Description = The amount of infraction points a player needs to reach before being automatically muted.
-Requires = spyglass_sanctions_notifications 1
-Type = Float
-DefaultValue = 0.1
+Description = "The amount of infraction points a player needs to reach before being automatically muted."
+Requires = "spyglass_sanctions_notifications 1"
+Type = "Float"
+DefaultValue = "0.1"
 
 [spyglass_use_banlist_for_bans]
-Description = Whether or not we should add the player to the banlist.txt if they reach the Ban threshold. If not, they will just be kicked while joining.
-Type = Boolean
-DefaultValue =  0 (false)
+Description = "Whether or not we should add the player to the banlist.txt if they reach the Ban threshold. If not, they will just be kicked while joining."
+Type = "Boolean"
+DefaultValue = "0 (false)"
 
-[spyglass_notify_muted_player]
-Description = Whether or not to notify a muted player when their message wasn't sent due to a mute.
-Type = Boolean
-DefaultValue =  1 (true)
+[spyglass_notify_muted_player]"
+Description = "Whether or not to notify a muted player when their message wasn't sent due to a mute."
+Type = "Boolean"
+DefaultValue = "1 (true)"
 ```
