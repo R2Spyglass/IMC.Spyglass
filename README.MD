@@ -108,7 +108,7 @@ Description = "Whether or not we should add the player to the banlist.txt if the
 Type = "Boolean"
 DefaultValue = "0 (false)"
 
-[spyglass_notify_muted_player]"
+[spyglass_notify_muted_player]
 Description = "Whether or not to notify a muted player when their message wasn't sent due to a mute."
 Type = "Boolean"
 DefaultValue = "1 (true)"
