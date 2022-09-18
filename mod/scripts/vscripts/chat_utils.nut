@@ -1,13 +1,31 @@
 global function Spyglass_ChatUtils_Init;
-table<string, void functionref(entity, array<string>)> SpyglassCommands = {}
+array<Spyglass_Command> RegisteredCommands = []
 
 void function Spyglass_ChatUtils_Init()
 {
     AddCallback_OnReceivedSayTextMessage(HandleSpyglassCommand);
+    //command name max length is 17 characters to make it look cool I hope
+    RegisterCommand("infractions", "Shows you the reports for a speciffic player",SpyglassCommand_Infractions )
+    RegisterCommand("finduid","Returns the UID of a player based on a name",SpyglassCommand_FindUID)
+    RegisterCommand("findname", "Returns the name of a player based on a UID",SpyglassCommand_FindName)
+    RegisterCommand("help", "Tells you available chat commands for spyglass",SpyglassCommand_Help )
+    RegisterCommand("spyglass", "Tells you what spyglass is",SpyglassCommand_SpyglassInfo )
 
-    SpyglassCommands["infractions"] <- SpyglassCommand_Infractions
-    SpyglassCommands["finduid"] <- SpyglassCommand_FindUID
-    SpyglassCommands["findname"] <- SpyglassCommand_FindName
+}
+
+void function SpyglassCommand_SpyglassInfo(entity player, array<string> args)
+{
+    string message = "Spyglass is a Northstar mod for banning and muteing players across servers"
+    Chat_ServerPrivateMessage(player, message,false)
+}
+
+void function SpyglassCommand_Help(entity player, array<string> args)
+{
+    string message = "Available commands are:\n"
+    foreach(Spyglass_Command cmd in RegisteredCommands)
+    {
+        Chat_ServerPrivateMessage(player,"\x1b[38;5;45m"+ cmd.Name + "\x1b[0m:  " + cmd.Description , false)
+    }
 }
 
 void function SpyglassCommand_FindUID(entity player, array<string> args)
@@ -158,9 +176,10 @@ ClServer_MessageStruct function HandleSpyglassCommand(ClServer_MessageStruct mes
     string commandName = args[0].tolower();
     
     // Ensure the command name is a valid command.
-    if(!(commandName in SpyglassCommands))
+    Spyglass_Command currentCommand = CheckForCommand(commandName)
+    if(currentCommand.isFound == false)
     {
-        return message;
+        return message
     }
     
     // Remove the command from the arguments.
@@ -170,10 +189,23 @@ ClServer_MessageStruct function HandleSpyglassCommand(ClServer_MessageStruct mes
     Chat_PrivateMessage(message.player, message.player, message.message, false);
 
     // Execute the command and block the message.
-    SpyglassCommands[commandName](message.player, args);
+    currentCommand.CommandFunction(message.player, args)
 
     message.shouldBlock = true;
     return message;
+}
+Spyglass_Command function CheckForCommand(string commandName)
+{
+    foreach(Spyglass_Command cmd in RegisteredCommands)
+    {
+        if(cmd.Name == commandName|| cmd.Aliases.find(commandName)!= -1 )
+        {   
+            cmd.isFound = true
+            return cmd
+        }
+    }
+    Spyglass_Command IsFalseReturn = {isFound = false,...}
+    return IsFalseReturn
 }
 
 void function SpyglassCommand_Infractions(entity player, array<string> args)
@@ -211,4 +243,15 @@ void function SpyglassCommand_Infractions(entity player, array<string> args)
 
     Spyglass_SayPrivate(player, format("Found %i infraction(s) for '%s' [%s]:", infractions.len(), infractions[0].PlayerUsername, uid));
     Spyglass_ChatSendPlayerInfractions(uid, [ player ], 0, false);
+}
+
+void function RegisterCommand(string Name,string Description,void functionref(entity, array<string>) CommandFunction, array<string> Aliases = [] )
+{
+    Spyglass_Command cmd ={...}
+        cmd.Name = Name
+        cmd.Description = Description
+        cmd.CommandFunction = CommandFunction
+        cmd.Aliases = Aliases
+    
+    RegisteredCommands.append(cmd)
 }

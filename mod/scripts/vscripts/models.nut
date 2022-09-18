@@ -31,3 +31,12 @@ global struct Spyglass_UIDQueryResult
     // If we don't have an exact match, an array of names that are a partial match.
     array<string> foundNames
 }
+
+global struct Spyglass_Command
+{
+    string Name
+    string Description
+    void functionref(entity, array<string>) CommandFunction
+    array<string> Aliases = []
+    bool isFound = false
+}
