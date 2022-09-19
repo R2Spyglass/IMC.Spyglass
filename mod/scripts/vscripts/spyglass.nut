@@ -97,11 +97,11 @@ void function OnClientConnecting(entity player)
 
         if (GetConVarBool("spyglass_use_banlist_for_bans"))
         {
-            ServerCommand(format("ban %s", player.GetPlayerName()));
+            ServerCommand(format("ban %s", player.GetUID()));
         }
         else
         {
-            ServerCommand(format("kick %s", player.GetPlayerName()));
+            ServerCommand(format("kick %s", player.GetUID()));
         }
     }
 }
