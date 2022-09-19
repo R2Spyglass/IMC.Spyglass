@@ -1,6 +1,3 @@
-
-## This mod is still in development, do not add it to your server yet as it does not contain a valid database, and might be unstable.
-
 # Spyglass
 
 <a href="https://discord.com/invite/whKMsPN3nu" target="_blank">
@@ -38,6 +35,22 @@ This list is not final, and new infraction types can be added if the need arises
 Using the default settings, a singular `Cheating` infraction will land you an automatic ban, and a singular `Discrimination` infraction will give you a permanent mute.
 
 Infractions are cumulative, and may lead to greater sanctions (multiple spamming offences will eventually lead to a permanent mute).
+
+## Commands
+
+By default, commands are admin only, and are prefixed by "!".
+
+*Example: !infractions ErliteDev*
+
+```ini
+[find]
+Example = "!find ErliteDev, !find 1005829030626"
+Description = "Attempts to find a user with the given name, or UID. Partial matches work."
+
+[infractions]
+Example = "!infractions ErliteDev, !infractions 1005829030626"
+Description = "Searches for a player's infractions and displays them in chat."
+```
 
 ## Configuration Variables 
 
