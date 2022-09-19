@@ -75,15 +75,15 @@
     ],
     "Scripts": [
         {
-            "Path": "models.nut",
+            "Path": "spyglass/models.nut",
             "RunOn": "SERVER && MP"
         },
         {
-            "Path": "utils.nut",
+            "Path": "spyglass/utils.nut",
             "RunOn": "SERVER && MP"
         },
         {
-            "Path": "autogen_database.nut",
+            "Path": "spyglass/autogen_database.nut",
             "RunOn": "SERVER && MP",
             "ServerCallback":
             {
@@ -91,7 +91,7 @@
             }
         },
         {
-            "Path": "spyglass.nut",
+            "Path": "spyglass/spyglass.nut",
             "RunOn": "SERVER && MP",
             "ServerCallback":
             {
@@ -99,7 +99,7 @@
             }
         },
         {
-            "Path": "chat_utils.nut",
+            "Path": "spyglass/chat_utils.nut",
             "RunOn":"SERVER && MP",
             "ServerCallback":
             {
