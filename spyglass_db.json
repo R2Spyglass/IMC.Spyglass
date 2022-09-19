@@ -45,6 +45,21 @@
         "ServerName": "DJMalachite Docker Server",
         "Reason": "Aimbot & wallhacks.",
         "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/1021202916067004509"
+      },
+      {
+        "InfractionID": 122,
+        "PlayerUsername": "lonelykilla23",
+        "PlayerUniqueId": "1005782992766",
+        "Type": 4,
+        "DateTimestamp": 1643781828,
+        "DateAsString": "02-FEB-22",
+        "IssuerUserId": 440187154744868904,
+        "IssuerUsername": "NoCatt",
+        "ReporterUserId": 199417447424458762,
+        "ReporterUsername": "BulletMemes",
+        "ServerName": "Unknown",
+        "Reason": "Aimbot.",
+        "Evidence": "https://youtu.be/EMNEw5Nar_c"
       }
     ],
     "1003520719357": [
@@ -203,6 +218,66 @@
         "ServerName": "V3X Pilots vs Pilots",
         "Reason": "Racial slurs in chat.",
         "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/993874197552046140"
+      },
+      {
+        "InfractionID": 82,
+        "PlayerUsername": "JesusMango",
+        "PlayerUniqueId": "2655753508",
+        "Type": 3,
+        "DateTimestamp": 1652014311,
+        "DateAsString": "08-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 483635741327622164,
+        "ReporterUsername": "Lenny (little british femboy)",
+        "ServerName": "1.7.0 Attrition (faky) 2",
+        "Reason": "Racial slurs in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/972843274584858695"
+      },
+      {
+        "InfractionID": 84,
+        "PlayerUsername": "JesusMango",
+        "PlayerUniqueId": "2655753508",
+        "Type": 3,
+        "DateTimestamp": 1651771561,
+        "DateAsString": "05-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 275309639636221962,
+        "ReporterUsername": "GiovanniGman",
+        "ServerName": "Arashi4G Glitch",
+        "Reason": "Racial slur in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/971825108291313694"
+      },
+      {
+        "InfractionID": 87,
+        "PlayerUsername": "JesusMango",
+        "PlayerUniqueId": "2655753508",
+        "Type": 3,
+        "DateTimestamp": 1651578303,
+        "DateAsString": "03-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 688821442644934828,
+        "ReporterUsername": "ToesnatcherMizu",
+        "ServerName": "24/7 Aegis Titanbrawl",
+        "Reason": "Racial slur in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/971014524704526396"
+      },
+      {
+        "InfractionID": 88,
+        "PlayerUsername": "JesusMango",
+        "PlayerUniqueId": "2655753508",
+        "Type": 3,
+        "DateTimestamp": 1651572754,
+        "DateAsString": "03-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 627742777253560321,
+        "ReporterUsername": "Thresk",
+        "ServerName": "Local bunnings sticks and stones",
+        "Reason": "Racial slur in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/970991251266609193"
       }
     ],
     "1012893329720": [
@@ -490,6 +565,21 @@
         "ServerName": "[US-EAST] BeanBag Vanilla Attrition #4",
         "Reason": "Use of homophobic slurs.",
         "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/1001316943015452692"
+      },
+      {
+        "InfractionID": 114,
+        "PlayerUsername": "m0rbidc0rvid",
+        "PlayerUniqueId": "1011134487508",
+        "Type": 3,
+        "DateTimestamp": 1646261338,
+        "DateAsString": "02-MAR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 392065540723572757,
+        "ReporterUsername": "LucaTheLoser",
+        "ServerName": "Vanilla Fastball",
+        "Reason": "Homophobic slurs in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/948713557166555136"
       }
     ],
     "1000186323332": [
@@ -524,6 +614,21 @@
         "ServerName": "[V3X] Pilots vs Pilots [24/7] Glitch",
         "Reason": "(Spoofed) Wallhacks and aimbot.",
         "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/999427246869708810"
+      },
+      {
+        "InfractionID": 104,
+        "PlayerUsername": "cheesegratermanx",
+        "PlayerUniqueId": "1011897054369",
+        "Type": 3,
+        "DateTimestamp": 1648832780,
+        "DateAsString": "01-APR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 676832666213154818,
+        "ReporterUsername": "Iron",
+        "ServerName": "Unknown",
+        "Reason": "Racial slur in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/959498969208225792"
       }
     ],
     "1009821473677": [
@@ -852,6 +957,21 @@
         "ServerName": "MENTAL Intense Attrition",
         "Reason": "Aimbot & no recoil.",
         "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/988935420945522718"
+      },
+      {
+        "InfractionID": 92,
+        "PlayerUsername": "Thavage_Soul",
+        "PlayerUniqueId": "1009690917669",
+        "Type": 4,
+        "DateTimestamp": 1651369493,
+        "DateAsString": "01-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 233260871973994497,
+        "ReporterUsername": "Apex",
+        "ServerName": "[EU] Vanilla Attrition #5",
+        "Reason": "Aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/970138714250559508"
       }
     ],
     "1000349712299": [
@@ -1251,7 +1371,910 @@
         "Reason": "Aimbot and speedhacks.",
         "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/1012544331476897882"
       }
+    ],
+    "1011777372037": [
+      {
+        "InfractionID": 78,
+        "PlayerUsername": "xiRunZxBoxLive_",
+        "PlayerUniqueId": "1011777372037",
+        "Type": 1,
+        "DateTimestamp": 1652127709,
+        "DateAsString": "09-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 485927254677913605,
+        "ReporterUsername": "Avalar",
+        "ServerName": "Avalar's Sticks and Stones",
+        "Reason": "Spamming chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/973318901175836742"
+      },
+      {
+        "InfractionID": 79,
+        "PlayerUsername": "whotfiswanderer",
+        "PlayerUniqueId": "1011777372037",
+        "Type": 1,
+        "DateTimestamp": 1652126918,
+        "DateAsString": "09-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 160380703672893440,
+        "ReporterUsername": "أنس",
+        "ServerName": "[EU] Legonzaur 6 unholy trinity [U]",
+        "Reason": "Spamming chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/973315583607189564"
+      },
+      {
+        "InfractionID": 80,
+        "PlayerUsername": "xiRunZxBoxLive_",
+        "PlayerUniqueId": "1011777372037",
+        "Type": 4,
+        "DateTimestamp": 1652125596,
+        "DateAsString": "09-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 782724277467086889,
+        "ReporterUsername": "ɴᴀᴍᴇʟᴇꜱꜱ",
+        "ServerName": "[VEX] Glitch PvP",
+        "Reason": "Aimbot and wallhacks.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/973310039655874690"
+      },
+      {
+        "InfractionID": 81,
+        "PlayerUsername": "xiRunZxBoxLive_",
+        "PlayerUniqueId": "1011777372037",
+        "Type": 3,
+        "DateTimestamp": 1652122363,
+        "DateAsString": "09-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 200647491631316993,
+        "ReporterUsername": "Gecko",
+        "ServerName": "[EU/GER] [Randomiser] laundmo's fastball randomiser",
+        "Reason": "Racial slur in chat (and spamming).",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/973296479819149372"
+      }
+    ],
+    "2342589311": [
+      {
+        "InfractionID": 83,
+        "PlayerUsername": "evilsparky420",
+        "PlayerUniqueId": "2342589311",
+        "Type": 3,
+        "DateTimestamp": 1651926804,
+        "DateAsString": "07-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 518430392810995715,
+        "ReporterUsername": "うみ＿",
+        "ServerName": "[EU/CH]WANON256'S AEGIS TITAN BRAWL",
+        "Reason": "Racial slur in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/972476245759655966"
+      },
+      {
+        "InfractionID": 94,
+        "PlayerUsername": "evilsparky420",
+        "PlayerUniqueId": "2342589311",
+        "Type": 3,
+        "DateTimestamp": 1650732615,
+        "DateAsString": "23-APR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 200647491631316993,
+        "ReporterUsername": "Gecko",
+        "ServerName": "24/7 Aegis Titanbrawl",
+        "Reason": "Racial and homophobic slurs in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/967467454039220285"
+      }
+    ],
+    "1012599329074": [
+      {
+        "InfractionID": 85,
+        "PlayerUsername": "peigengchen",
+        "PlayerUniqueId": "1012599329074",
+        "Type": 4,
+        "DateTimestamp": 1651765305,
+        "DateAsString": "05-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 374972613736398848,
+        "ReporterUsername": "Lilli",
+        "ServerName": "Unknown",
+        "Reason": "Aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/971798870751346688"
+      }
+    ],
+    "1003374325454": [
+      {
+        "InfractionID": 86,
+        "PlayerUsername": "kill_kids_I_must",
+        "PlayerUniqueId": "1003374325454",
+        "Type": 4,
+        "DateTimestamp": 1651716610,
+        "DateAsString": "05-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 342763600131260416,
+        "ReporterUsername": "Ping",
+        "ServerName": "Karma Kraber9k",
+        "Reason": "Aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/971594626328854568"
+      }
+    ],
+    "1011576569232": [
+      {
+        "InfractionID": 89,
+        "PlayerUsername": "DADAG4R",
+        "PlayerUniqueId": "1011576569232",
+        "Type": 4,
+        "DateTimestamp": 1651523358,
+        "DateAsString": "02-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 642596491835211787,
+        "ReporterUsername": "SinB",
+        "ServerName": "V3X glitch 24/7",
+        "Reason": "Aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/970784069522702436"
+      }
+    ],
+    "2262483997": [
+      {
+        "InfractionID": 90,
+        "PlayerUsername": "SilentSnice",
+        "PlayerUniqueId": "2262483997",
+        "Type": 4,
+        "DateTimestamp": 1651478629,
+        "DateAsString": "02-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 268494575780233216,
+        "ReporterUsername": "Legonzaur",
+        "ServerName": "Legonzaur's Attrition",
+        "Reason": "Emit, invincibility, speedhacks.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/970596463522508851"
+      }
+    ],
+    "1007712991451": [
+      {
+        "InfractionID": 91,
+        "PlayerUsername": "VenoPadro",
+        "PlayerUniqueId": "1007712991451",
+        "Type": 3,
+        "DateTimestamp": 1651433354,
+        "DateAsString": "01-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 564463541248065547,
+        "ReporterUsername": "Soup",
+        "ServerName": "[Asia][JPN] The Rejects - Attrition",
+        "Reason": "Racial slurs in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/970406565846851674"
+      },
+      {
+        "InfractionID": 101,
+        "PlayerUsername": "VenoPadro",
+        "PlayerUniqueId": "1007712991451",
+        "Type": 3,
+        "DateTimestamp": 1649375165,
+        "DateAsString": "07-APR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 475005857269284874,
+        "ReporterUsername": "Foahr",
+        "ServerName": "faky's Pilot v Pilot",
+        "Reason": "Every listable discrimination offence.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/961773893260017664"
+      },
+      {
+        "InfractionID": 102,
+        "PlayerUsername": "VenoPadro",
+        "PlayerUniqueId": "1007712991451",
+        "Type": 3,
+        "DateTimestamp": 1649170933,
+        "DateAsString": "05-APR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 462097404565389324,
+        "ReporterUsername": "Michel Molasses",
+        "ServerName": "[AUS] Your local Bunnings Pilots vs Pilots",
+        "Reason": "Racial slur and telling a player to commit suicide.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/960917283797073940"
+      }
+    ],
+    "1008868194618": [
+      {
+        "InfractionID": 93,
+        "PlayerUsername": "MrHuggy",
+        "PlayerUniqueId": "1008868194618",
+        "Type": 4,
+        "DateTimestamp": 1650826163,
+        "DateAsString": "24-APR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 600346080483475500,
+        "ReporterUsername": "Nuclear_Bart",
+        "ServerName": "Unknown",
+        "Reason": "Aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/967859820361285802"
+      }
+    ],
+    "1006345795805": [
+      {
+        "InfractionID": 95,
+        "PlayerUsername": "cheesester2010",
+        "PlayerUniqueId": "1006345795805",
+        "Type": 2,
+        "DateTimestamp": 1650672186,
+        "DateAsString": "23-APR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 925724371199336448,
+        "ReporterUsername": "H00man",
+        "ServerName": "Unknown",
+        "Reason": "Spamming nazi glorification.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/967213994903498812"
+      }
+    ],
+    "1010187802107": [
+      {
+        "InfractionID": 96,
+        "PlayerUsername": "FakyCockCheese",
+        "PlayerUniqueId": "1010187802107",
+        "Type": 1,
+        "DateTimestamp": 1650294736,
+        "DateAsString": "18-APR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 278073569177632769,
+        "ReporterUsername": "faky",
+        "ServerName": "faky's skirmish",
+        "Reason": "Chat spam.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/965630855273906196"
+      }
+    ],
+    "1011202965727": [
+      {
+        "InfractionID": 97,
+        "PlayerUsername": "BeetusTheJanitor",
+        "PlayerUniqueId": "1011202965727",
+        "Type": 1,
+        "DateTimestamp": 1649787952,
+        "DateAsString": "12-APR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 200647491631316993,
+        "ReporterUsername": "Gecko",
+        "ServerName": "[Can East] Wongo's Dedicated FFA PVP Server",
+        "Reason": "Spamming (using patched connect exploit).",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/963505250868813934"
+      }
+    ],
+    "1013525112146": [
+      {
+        "InfractionID": 98,
+        "PlayerUsername": "CakesCockCheese",
+        "PlayerUniqueId": "1013525112146",
+        "Type": 2,
+        "DateTimestamp": 1649624547,
+        "DateAsString": "10-APR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 278073569177632769,
+        "ReporterUsername": "faky",
+        "ServerName": "faky's PvP",
+        "Reason": "Spamming insults in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/962819879998730251"
+      },
+      {
+        "InfractionID": 99,
+        "PlayerUsername": "CakessCumSock",
+        "PlayerUniqueId": "1013525112146",
+        "Type": 1,
+        "DateTimestamp": 1649624547,
+        "DateAsString": "10-APR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 278073569177632769,
+        "ReporterUsername": "faky",
+        "ServerName": "faky's PvP",
+        "Reason": "Spamming chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/962819879998730251"
+      }
+    ],
+    "2848731946": [
+      {
+        "InfractionID": 100,
+        "PlayerUsername": "Raleighl",
+        "PlayerUniqueId": "2848731946",
+        "Type": 3,
+        "DateTimestamp": 1649619484,
+        "DateAsString": "10-APR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 635884328886337587,
+        "ReporterUsername": "Clarko7274",
+        "ServerName": "Unknown",
+        "Reason": "Racial slur in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/962798643457454090"
+      }
+    ],
+    "1007473846648": [
+      {
+        "InfractionID": 103,
+        "PlayerUsername": "deXSQL",
+        "PlayerUniqueId": "1007473846648",
+        "Type": 4,
+        "DateTimestamp": 1649093967,
+        "DateAsString": "04-APR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 278073569177632769,
+        "ReporterUsername": "faky",
+        "ServerName": "faky's PvP",
+        "Reason": "Aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/960594465238704148"
+      }
+    ],
+    "1001190508849": [
+      {
+        "InfractionID": 105,
+        "PlayerUsername": "WorldOfShanks",
+        "PlayerUniqueId": "1001190508849",
+        "Type": 3,
+        "DateTimestamp": 1648624000,
+        "DateAsString": "30-MAR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 97783163329208320,
+        "ReporterUsername": "Boolin",
+        "ServerName": "Untamed Axis [Zeldar] Skirmish Aegis",
+        "Reason": "Racial slurs in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/958623282679152700"
+      }
+    ],
+    "1007311496164": [
+      {
+        "InfractionID": 106,
+        "PlayerUsername": "BunnyhopEnjoyer",
+        "PlayerUniqueId": "1007311496164",
+        "Type": 3,
+        "DateTimestamp": 1647533129,
+        "DateAsString": "17-MAR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 172781195329798144,
+        "ReporterUsername": "Revadike",
+        "ServerName": "[EU] Glitch [24/7] Pilot vs Pilot hosted by Arashi4G",
+        "Reason": "Racial slur in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/954047837623173150"
+      },
+      {
+        "InfractionID": 107,
+        "PlayerUsername": "BunnyhopEnjoyer",
+        "PlayerUniqueId": "1007311496164",
+        "Type": 3,
+        "DateTimestamp": 1647529531,
+        "DateAsString": "17-MAR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 178807400495579136,
+        "ReporterUsername": "Ray_K",
+        "ServerName": "faky's skirmish",
+        "Reason": "Racial slurs in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/954032747100377149"
+      }
+    ],
+    "1007254462376": [
+      {
+        "InfractionID": 108,
+        "PlayerUsername": "RespawnEntertainment",
+        "PlayerUniqueId": "1007254462376",
+        "Type": 4,
+        "DateTimestamp": 1647169039,
+        "DateAsString": "13-MAR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 612932944612425728,
+        "ReporterUsername": "rudstar",
+        "ServerName": "Your local Bunnings Skirmish",
+        "Reason": "Instant respawn exploit.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/952520730682200084"
+      }
+    ],
+    "1000122980241": [
+      {
+        "InfractionID": 109,
+        "PlayerUsername": "Naicrez",
+        "PlayerUniqueId": "1000122980241",
+        "Type": 3,
+        "DateTimestamp": 1646936536,
+        "DateAsString": "10-MAR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 275309639636221962,
+        "ReporterUsername": "GiovanniGman",
+        "ServerName": "[EU] Pilot vs Pilot w map rotation hosted by Arashi4G",
+        "Reason": "Racial slurs in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/951545543128137728"
+      }
+    ],
+    "1012628317658": [
+      {
+        "InfractionID": 110,
+        "PlayerUsername": "WellWhelve",
+        "PlayerUniqueId": "1012628317658",
+        "Type": 4,
+        "DateTimestamp": 1646892546,
+        "DateAsString": "10-MAR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 135614890395041792,
+        "ReporterUsername": "E3VL",
+        "ServerName": "E3VL's Playground",
+        "Reason": "Wallhacks, soft aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/951361035527401513"
+      }
+    ],
+    "1003233974297": [
+      {
+        "InfractionID": 111,
+        "PlayerUsername": "unconnected",
+        "PlayerUniqueId": "1003233974297",
+        "Type": 4,
+        "DateTimestamp": 1646708315,
+        "DateAsString": "08-MAR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 531547427774136343,
+        "ReporterUsername": "coolmanny1107",
+        "ServerName": "Unknown",
+        "Reason": "Noclip, aimbot, speedhacks.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/950588314447130684"
+      },
+      {
+        "InfractionID": 112,
+        "PlayerUsername": "fart_eater",
+        "PlayerUniqueId": "1003233974297",
+        "Type": 4,
+        "DateTimestamp": 1646608092,
+        "DateAsString": "06-MAR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 320606002837979157,
+        "ReporterUsername": "Viper",
+        "ServerName": "laundmo's sticks & stones",
+        "Reason": "Aimbot, wallhacks.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/950167950797713448"
+      },
+      {
+        "InfractionID": 113,
+        "PlayerUsername": "PureRupted",
+        "PlayerUniqueId": "1003233974297",
+        "Type": 0,
+        "DateTimestamp": 1646557591,
+        "DateAsString": "06-MAR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 272489540193615873,
+        "ReporterUsername": "Mumbles",
+        "ServerName": "Your Local Bunnings PVP",
+        "Reason": "(Spoofed) Aimbot and invincibility.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/949956132741464094"
+      },
+      {
+        "InfractionID": 131,
+        "PlayerUsername": "MeowSolo",
+        "PlayerUniqueId": "1003233974297",
+        "Type": 4,
+        "DateTimestamp": 1644538180,
+        "DateAsString": "11-FEB-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 135614890395041792,
+        "ReporterUsername": "E3VL",
+        "ServerName": "Unknown",
+        "Reason": "Aimbot and misc exploits.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/941486110335442994"
+      }
+    ],
+    "1000046162248": [
+      {
+        "InfractionID": 115,
+        "PlayerUsername": "CoolFerCats",
+        "PlayerUniqueId": "1000046162248",
+        "Type": 4,
+        "DateTimestamp": 1645948776,
+        "DateAsString": "27-FEB-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 310490330615119874,
+        "ReporterUsername": "ShoXx",
+        "ServerName": "Unknown",
+        "Reason": "Aimbot and wallhacks.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/947402577564270612"
+      }
+    ],
+    "1005934084362": [
+      {
+        "InfractionID": 116,
+        "PlayerUsername": "jiji73",
+        "PlayerUniqueId": "1005934084362",
+        "Type": 4,
+        "DateTimestamp": 1645725566,
+        "DateAsString": "24-FEB-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 411925301732311040,
+        "ReporterUsername": "Krispycka",
+        "ServerName": "laundmo's flipside [glitch]",
+        "Reason": "Aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/946466366549016656"
+      }
+    ],
+    "1008860702285": [
+      {
+        "InfractionID": 117,
+        "PlayerUsername": "swift_owl808yt",
+        "PlayerUniqueId": "1008860702285",
+        "Type": 4,
+        "DateTimestamp": 1645587566,
+        "DateAsString": "23-FEB-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 151682687311151104,
+        "ReporterUsername": "Fox",
+        "ServerName": "[US-East] awesome infection server | no out of bounds",
+        "Reason": "Aimbot and wallhacks.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/945887552437633134"
+      },
+      {
+        "InfractionID": 119,
+        "PlayerUsername": "swift_owl808yt",
+        "PlayerUniqueId": "1008860702285",
+        "Type": 4,
+        "DateTimestamp": 1645250980,
+        "DateAsString": "19-FEB-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 284863450319028225,
+        "ReporterUsername": "Kalosmira",
+        "ServerName": "[AUS]Your Local Bunnings Pilots vs Pilots",
+        "Reason": "Aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/944475807676502066"
+      },
+      {
+        "InfractionID": 120,
+        "PlayerUsername": "swift_owl808yt",
+        "PlayerUniqueId": "1008860702285",
+        "Type": 4,
+        "DateTimestamp": 1645223783,
+        "DateAsString": "18-FEB-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 600346080483475500,
+        "ReporterUsername": "Nuclear_Bart",
+        "ServerName": "Glitch 24/7",
+        "Reason": "Aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/944361739066167316"
+      }
+    ],
+    "1006954720415": [
+      {
+        "InfractionID": 118,
+        "PlayerUsername": "Ace_PandaEyes23",
+        "PlayerUniqueId": "1006954720415",
+        "Type": 4,
+        "DateTimestamp": 1645297475,
+        "DateAsString": "19-FEB-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 679022772336328754,
+        "ReporterUsername": "Tycho",
+        "ServerName": "[EU] Pilot v Pilot w map rotation",
+        "Reason": "Aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/944670823439011941"
+      }
+    ],
+    "1001463354043": [
+      {
+        "InfractionID": 121,
+        "PlayerUsername": "DezSquad",
+        "PlayerUniqueId": "1001463354043",
+        "Type": 4,
+        "DateTimestamp": 1645201597,
+        "DateAsString": "18-FEB-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 638077595178500147,
+        "ReporterUsername": "Drop_It_Like_Its_Hotspot",
+        "ServerName": "[24/7 Glitch][Pilot Free For All]",
+        "Reason": "Aimbot and wallhacks.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/944268681305796618"
+      }
+    ],
+    "1011555553975": [
+      {
+        "InfractionID": 123,
+        "PlayerUsername": "dalkryesaaa",
+        "PlayerUniqueId": "1011555553975",
+        "Type": 4,
+        "DateTimestamp": 1645100195,
+        "DateAsString": "17-FEB-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 806599082273013852,
+        "ReporterUsername": "Crowsies",
+        "ServerName": "Unknown",
+        "Reason": "Aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/943843372567769129"
+      }
+    ],
+    "1003695138110": [
+      {
+        "InfractionID": 124,
+        "PlayerUsername": "benjibenji21",
+        "PlayerUniqueId": "1003695138110",
+        "Type": 4,
+        "DateTimestamp": 1645055341,
+        "DateAsString": "16-FEB-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 300707883392172032,
+        "ReporterUsername": "burd",
+        "ServerName": "laundmo's flipside",
+        "Reason": "Aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/943655238299160587"
+      }
+    ],
+    "1006346760265": [
+      {
+        "InfractionID": 125,
+        "PlayerUsername": "xenobility",
+        "PlayerUniqueId": "1006346760265",
+        "Type": 4,
+        "DateTimestamp": 1644120861,
+        "DateAsString": "06-FEB-22",
+        "IssuerUserId": 440187154744868904,
+        "IssuerUsername": "NoCatt",
+        "ReporterUserId": 485927254677913605,
+        "ReporterUsername": "Avalar",
+        "ServerName": "Unknown",
+        "Reason": "Aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/"
+      }
+    ],
+    "1010725680144": [
+      {
+        "InfractionID": 126,
+        "PlayerUsername": "Razzy1234",
+        "PlayerUniqueId": "1010725680144",
+        "Type": 4,
+        "DateTimestamp": 1645012379,
+        "DateAsString": "16-FEB-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 469118941185310741,
+        "ReporterUsername": "DontTouchMyChair",
+        "ServerName": "Unknown",
+        "Reason": "Aimbot and wallhacks.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/943475044942757908"
+      },
+      {
+        "InfractionID": 128,
+        "PlayerUsername": "Razzy1234",
+        "PlayerUniqueId": "1010725680144",
+        "Type": 4,
+        "DateTimestamp": 1644981500,
+        "DateAsString": "16-FEB-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 600346080483475500,
+        "ReporterUsername": "Nuclear_Bart",
+        "ServerName": "Unknown",
+        "Reason": "Aimbot and wallhacks.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/943345528077451316"
+      }
+    ],
+    "2272897911": [
+      {
+        "InfractionID": 127,
+        "PlayerUsername": "t0asts",
+        "PlayerUniqueId": "2272897911",
+        "Type": 4,
+        "DateTimestamp": 1644387997,
+        "DateAsString": "09-FEB-22",
+        "IssuerUserId": 440187154744868904,
+        "IssuerUsername": "NoCatt",
+        "ReporterUserId": 135614890395041792,
+        "ReporterUsername": "E3VL",
+        "ServerName": "Unknown",
+        "Reason": "Aimbot and wallhacks.",
+        "Evidence": "https://youtu.be/9rw8pvEwPCk"
+      }
+    ],
+    "1006923229024": [
+      {
+        "InfractionID": 129,
+        "PlayerUsername": "PlatiniumDong",
+        "PlayerUniqueId": "1006923229024",
+        "Type": 4,
+        "DateTimestamp": 1644441027,
+        "DateAsString": "09-FEB-22",
+        "IssuerUserId": 440187154744868904,
+        "IssuerUsername": "NoCatt",
+        "ReporterUserId": 774352851454656564,
+        "ReporterUsername": "TimeIsUnending",
+        "ServerName": "Unknown",
+        "Reason": "Aimbot and wallhacks.",
+        "Evidence": "https://medal.tv/games/requested/clips/atYsdbOaxSA_c/d13370lEn8gR?invite=cr-MSxLNlMsMjgzMzM5NDAs"
+      }
+    ],
+    "1012583183520": [
+      {
+        "InfractionID": 130,
+        "PlayerUsername": "ezyon_darknessss",
+        "PlayerUniqueId": "1012583183520",
+        "Type": 4,
+        "DateTimestamp": 1644619554,
+        "DateAsString": "11-FEB-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 723456118491316225,
+        "ReporterUsername": "Marfoo",
+        "ServerName": "Unknown",
+        "Reason": "Aimbot.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/941827418157629470"
+      }
+    ],
+    "2250487322": [
+      {
+        "InfractionID": 132,
+        "PlayerUsername": "refractxvi",
+        "PlayerUniqueId": "2250487322",
+        "Type": 3,
+        "DateTimestamp": 1651355891,
+        "DateAsString": "30-APR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 957791247077109770,
+        "ReporterUsername": "cat",
+        "ServerName": "[V3X] 24/7",
+        "Reason": "Racial slurs in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/970081663503716362"
+      }
+    ],
+    "2839761312": [
+      {
+        "InfractionID": 133,
+        "PlayerUsername": "FrAkIngPIlOtfAll",
+        "PlayerUniqueId": "2839761312",
+        "Type": 2,
+        "DateTimestamp": 1651384545,
+        "DateAsString": "01-MAY-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 839619257091227649,
+        "ReporterUsername": "Leonardo DaVinci",
+        "ServerName": "[asia][jpn] The Rejects - Attrition",
+        "Reason": "Telling players to commit suicide.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/970201843806400534"
+      },
+      {
+        "InfractionID": 134,
+        "PlayerUsername": "FrAkIngPIlOtfAll",
+        "PlayerUniqueId": "2839761312",
+        "Type": 3,
+        "DateTimestamp": 1649557632,
+        "DateAsString": "10-APR-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 818125549993328710,
+        "ReporterUsername": "roku",
+        "ServerName": "[EU] interestings house flys",
+        "Reason": "Racial slur in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/962539217156706344"
+      }
+    ],
+    "1008441324399": [
+      {
+        "InfractionID": 135,
+        "PlayerUsername": "The-0v3rki113r",
+        "PlayerUniqueId": "1008441324399",
+        "Type": 3,
+        "DateTimestamp": 1654375799,
+        "DateAsString": "04-JUN-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 149567006776098816,
+        "ReporterUsername": "TotallyNoWitch",
+        "ServerName": "[EU] Alex Stupid Gun Game",
+        "Reason": "Racism and antisemitism.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/982748076366250054"
+      }
+    ],
+    "1002319733641": [
+      {
+        "InfractionID": 136,
+        "PlayerUsername": "fenderbg97",
+        "PlayerUniqueId": "1002319733641",
+        "Type": 3,
+        "DateTimestamp": 1660845293,
+        "DateAsString": "18-AUG-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 911412685244104764,
+        "ReporterUsername": "not_invis",
+        "ServerName": "fvnkhead's rebalanced pvp",
+        "Reason": "Racial slur in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/1009883098466492556"
+      }
+    ],
+    "1007028668642": [
+      {
+        "InfractionID": 137,
+        "PlayerUsername": "_R34lityCh3ck_",
+        "PlayerUniqueId": "1007028668642",
+        "Type": 0,
+        "DateTimestamp": 1656769449,
+        "DateAsString": "02-JUL-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 812819451832696892,
+        "ReporterUsername": "NecoArcEnjoyer",
+        "ServerName": "[V3X] Glitch",
+        "Reason": "(Spoofed) Aimbot and wallhacks.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/992787770575704134"
+      }
+    ],
+    "1013453793571": [
+      {
+        "InfractionID": 138,
+        "PlayerUsername": "zabossthebigboss",
+        "PlayerUniqueId": "1013453793571",
+        "Type": 3,
+        "DateTimestamp": 1658102394,
+        "DateAsString": "17-JUL-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 270383052335742977,
+        "ReporterUsername": "greenisacolour",
+        "ServerName": "[US-St.Louis] Angel City Imports",
+        "Reason": "Racial and homophobic slurs.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/998378546118524978"
+      },
+      {
+        "InfractionID": 140,
+        "PlayerUsername": "zabossthebigboss",
+        "PlayerUniqueId": "1013453793571",
+        "Type": 3,
+        "DateTimestamp": 1657375477,
+        "DateAsString": "09-JUL-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 148601922721546241,
+        "ReporterUsername": "Avery",
+        "ServerName": "[US] Furry Cumflation Zone",
+        "Reason": "Racism, transphobia.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/995329636986789969"
+      }
+    ],
+    "2294597892": [
+      {
+        "InfractionID": 139,
+        "PlayerUsername": "DuckDuckDonkey",
+        "PlayerUniqueId": "2294597892",
+        "Type": 3,
+        "DateTimestamp": 1657992305,
+        "DateAsString": "16-JUL-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 173982357865365504,
+        "ReporterUsername": "UselessRobot",
+        "ServerName": "BeanBag Vanilla Attrition #1",
+        "Reason": "Racial and homophobic slurs in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/997916798005551184"
+      }
     ]
   },
-  "LastInfractionID": 77
+  "LastInfractionID": 140
 }

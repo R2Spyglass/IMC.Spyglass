@@ -40,7 +40,15 @@ void function Spyglass_Database_Init()
 	currentInfraction.Reason = "Aimbot & wallhacks.";
 	
     infractions.append(clone currentInfraction);
+    currentInfraction.ID = 122;
+	currentInfraction.PlayerUsername = "lonelykilla23";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "02-FEB-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
     Spyglass_Infractions["1005782992766"] <- clone infractions;
+
     // 1003520719357
     infractions = [];
     currentInfraction.ID = 3;
@@ -51,6 +59,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1003520719357"] <- clone infractions;
+
     // 1008622084773
     infractions = [];
     currentInfraction.ID = 4;
@@ -61,6 +70,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1008622084773"] <- clone infractions;
+
     // 1011452735139
     infractions = [];
     currentInfraction.ID = 5;
@@ -71,6 +81,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1011452735139"] <- clone infractions;
+
     // 2655753508
     infractions = [];
     currentInfraction.ID = 6;
@@ -122,7 +133,36 @@ void function Spyglass_Database_Init()
 	currentInfraction.Reason = "Racial slurs in chat.";
 	
     infractions.append(clone currentInfraction);
+    currentInfraction.ID = 82;
+	currentInfraction.PlayerUsername = "JesusMango";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "08-MAY-22";
+	currentInfraction.Reason = "Racial slurs in chat.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 84;
+	currentInfraction.PlayerUsername = "JesusMango";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "05-MAY-22";
+	currentInfraction.Reason = "Racial slur in chat.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 87;
+	currentInfraction.PlayerUsername = "JesusMango";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "03-MAY-22";
+	currentInfraction.Reason = "Racial slur in chat.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 88;
+	currentInfraction.PlayerUsername = "JesusMango";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "03-MAY-22";
+	currentInfraction.Reason = "Racial slur in chat.";
+	
+    infractions.append(clone currentInfraction);
     Spyglass_Infractions["2655753508"] <- clone infractions;
+
     // 1012893329720
     infractions = [];
     currentInfraction.ID = 7;
@@ -133,6 +173,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1012893329720"] <- clone infractions;
+
     // 1006249545593
     infractions = [];
     currentInfraction.ID = 8;
@@ -143,6 +184,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1006249545593"] <- clone infractions;
+
     // 1013244775476
     infractions = [];
     currentInfraction.ID = 9;
@@ -153,6 +195,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1013244775476"] <- clone infractions;
+
     // 1011345449670
     infractions = [];
     currentInfraction.ID = 10;
@@ -170,6 +213,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1011345449670"] <- clone infractions;
+
     // 1011457670714
     infractions = [];
     currentInfraction.ID = 11;
@@ -180,6 +224,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1011457670714"] <- clone infractions;
+
     // 1007544128057
     infractions = [];
     currentInfraction.ID = 13;
@@ -190,6 +235,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1007544128057"] <- clone infractions;
+
     // 1007319692607
     infractions = [];
     currentInfraction.ID = 14;
@@ -200,6 +246,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1007319692607"] <- clone infractions;
+
     // 1000180140014
     infractions = [];
     currentInfraction.ID = 15;
@@ -210,6 +257,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1000180140014"] <- clone infractions;
+
     // 1010161190670
     infractions = [];
     currentInfraction.ID = 16;
@@ -220,6 +268,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1010161190670"] <- clone infractions;
+
     // 1008988079827
     infractions = [];
     currentInfraction.ID = 18;
@@ -230,6 +279,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1008988079827"] <- clone infractions;
+
     // 1008122720592
     infractions = [];
     currentInfraction.ID = 19;
@@ -240,6 +290,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1008122720592"] <- clone infractions;
+
     // 1012632396446
     infractions = [];
     currentInfraction.ID = 22;
@@ -250,6 +301,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1012632396446"] <- clone infractions;
+
     // 1000092519211
     infractions = [];
     currentInfraction.ID = 23;
@@ -260,6 +312,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1000092519211"] <- clone infractions;
+
     // 1008973146907
     infractions = [];
     currentInfraction.ID = 24;
@@ -270,6 +323,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1008973146907"] <- clone infractions;
+
     // 1011795366781
     infractions = [];
     currentInfraction.ID = 25;
@@ -280,6 +334,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1011795366781"] <- clone infractions;
+
     // 1011134487508
     infractions = [];
     currentInfraction.ID = 26;
@@ -289,7 +344,15 @@ void function Spyglass_Database_Init()
 	currentInfraction.Reason = "Use of homophobic slurs.";
 	
     infractions.append(clone currentInfraction);
+    currentInfraction.ID = 114;
+	currentInfraction.PlayerUsername = "m0rbidc0rvid";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "02-MAR-22";
+	currentInfraction.Reason = "Homophobic slurs in chat.";
+	
+    infractions.append(clone currentInfraction);
     Spyglass_Infractions["1011134487508"] <- clone infractions;
+
     // 1000186323332
     infractions = [];
     currentInfraction.ID = 28;
@@ -300,6 +363,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1000186323332"] <- clone infractions;
+
     // 1011897054369
     infractions = [];
     currentInfraction.ID = 30;
@@ -309,7 +373,15 @@ void function Spyglass_Database_Init()
 	currentInfraction.Reason = "(Spoofed) Wallhacks and aimbot.";
 	
     infractions.append(clone currentInfraction);
+    currentInfraction.ID = 104;
+	currentInfraction.PlayerUsername = "cheesegratermanx";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "01-APR-22";
+	currentInfraction.Reason = "Racial slur in chat.";
+	
+    infractions.append(clone currentInfraction);
     Spyglass_Infractions["1011897054369"] <- clone infractions;
+
     // 1009821473677
     infractions = [];
     currentInfraction.ID = 31;
@@ -320,6 +392,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1009821473677"] <- clone infractions;
+
     // 1011116972357
     infractions = [];
     currentInfraction.ID = 32;
@@ -330,6 +403,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1011116972357"] <- clone infractions;
+
     // 2251932307
     infractions = [];
     currentInfraction.ID = 33;
@@ -340,6 +414,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["2251932307"] <- clone infractions;
+
     // 1006063431799
     infractions = [];
     currentInfraction.ID = 34;
@@ -350,6 +425,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1006063431799"] <- clone infractions;
+
     // 2250141414
     infractions = [];
     currentInfraction.ID = 35;
@@ -381,6 +457,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["2250141414"] <- clone infractions;
+
     // 1009805930043
     infractions = [];
     currentInfraction.ID = 37;
@@ -398,6 +475,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1009805930043"] <- clone infractions;
+
     // 1008231879388
     infractions = [];
     currentInfraction.ID = 40;
@@ -408,6 +486,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1008231879388"] <- clone infractions;
+
     // 1009767928840
     infractions = [];
     currentInfraction.ID = 42;
@@ -418,6 +497,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1009767928840"] <- clone infractions;
+
     // 1004184060749
     infractions = [];
     currentInfraction.ID = 43;
@@ -428,6 +508,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1004184060749"] <- clone infractions;
+
     // 1008593965434
     infractions = [];
     currentInfraction.ID = 45;
@@ -438,6 +519,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1008593965434"] <- clone infractions;
+
     // 1013391767921
     infractions = [];
     currentInfraction.ID = 46;
@@ -462,6 +544,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1013391767921"] <- clone infractions;
+
     // 1008873731189
     infractions = [];
     currentInfraction.ID = 49;
@@ -472,6 +555,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1008873731189"] <- clone infractions;
+
     // 2321091843
     infractions = [];
     currentInfraction.ID = 50;
@@ -482,6 +566,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["2321091843"] <- clone infractions;
+
     // 1009690917669
     infractions = [];
     currentInfraction.ID = 51;
@@ -491,7 +576,15 @@ void function Spyglass_Database_Init()
 	currentInfraction.Reason = "Aimbot & no recoil.";
 	
     infractions.append(clone currentInfraction);
+    currentInfraction.ID = 92;
+	currentInfraction.PlayerUsername = "Thavage_Soul";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "01-MAY-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
     Spyglass_Infractions["1009690917669"] <- clone infractions;
+
     // 1000349712299
     infractions = [];
     currentInfraction.ID = 52;
@@ -502,6 +595,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1000349712299"] <- clone infractions;
+
     // 1007299698120
     infractions = [];
     currentInfraction.ID = 53;
@@ -519,6 +613,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1007299698120"] <- clone infractions;
+
     // 1010773614705
     infractions = [];
     currentInfraction.ID = 54;
@@ -529,6 +624,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1010773614705"] <- clone infractions;
+
     // 1009589129089
     infractions = [];
     currentInfraction.ID = 55;
@@ -539,6 +635,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1009589129089"] <- clone infractions;
+
     // 1009417714028
     infractions = [];
     currentInfraction.ID = 59;
@@ -563,6 +660,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1009417714028"] <- clone infractions;
+
     // 1006636445131
     infractions = [];
     currentInfraction.ID = 62;
@@ -573,6 +671,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1006636445131"] <- clone infractions;
+
     // 1007313236586
     infractions = [];
     currentInfraction.ID = 63;
@@ -590,6 +689,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1007313236586"] <- clone infractions;
+
     // 1011158646016
     infractions = [];
     currentInfraction.ID = 65;
@@ -600,6 +700,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1011158646016"] <- clone infractions;
+
     // 2311733905
     infractions = [];
     currentInfraction.ID = 66;
@@ -617,6 +718,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["2311733905"] <- clone infractions;
+
     // 1011604298047
     infractions = [];
     currentInfraction.ID = 68;
@@ -627,6 +729,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1011604298047"] <- clone infractions;
+
     // 1009796277318
     infractions = [];
     currentInfraction.ID = 69;
@@ -637,6 +740,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1009796277318"] <- clone infractions;
+
     // 1009685493971
     infractions = [];
     currentInfraction.ID = 70;
@@ -647,6 +751,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1009685493971"] <- clone infractions;
+
     // 1008227051828
     infractions = [];
     currentInfraction.ID = 71;
@@ -657,6 +762,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1008227051828"] <- clone infractions;
+
     // 1007901881439
     infractions = [];
     currentInfraction.ID = 72;
@@ -667,6 +773,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1007901881439"] <- clone infractions;
+
     // 1006358680073
     infractions = [];
     currentInfraction.ID = 73;
@@ -677,6 +784,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1006358680073"] <- clone infractions;
+
     // 1010517024687
     infractions = [];
     currentInfraction.ID = 74;
@@ -687,6 +795,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1010517024687"] <- clone infractions;
+
     // 1012276100023
     infractions = [];
     currentInfraction.ID = 75;
@@ -697,6 +806,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1012276100023"] <- clone infractions;
+
     // 1008904554095
     infractions = [];
     currentInfraction.ID = 76;
@@ -707,6 +817,7 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1008904554095"] <- clone infractions;
+
     // 1013163567703
     infractions = [];
     currentInfraction.ID = 77;
@@ -717,6 +828,548 @@ void function Spyglass_Database_Init()
 	
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["1013163567703"] <- clone infractions;
+
+    // 1011777372037
+    infractions = [];
+    currentInfraction.ID = 78;
+	currentInfraction.PlayerUsername = "xiRunZxBoxLive_";
+	currentInfraction.Type = InfractionType.Spamming;
+	currentInfraction.Date = "09-MAY-22";
+	currentInfraction.Reason = "Spamming chat.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 79;
+	currentInfraction.PlayerUsername = "whotfiswanderer";
+	currentInfraction.Type = InfractionType.Spamming;
+	currentInfraction.Date = "09-MAY-22";
+	currentInfraction.Reason = "Spamming chat.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 80;
+	currentInfraction.PlayerUsername = "xiRunZxBoxLive_";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "09-MAY-22";
+	currentInfraction.Reason = "Aimbot and wallhacks.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 81;
+	currentInfraction.PlayerUsername = "xiRunZxBoxLive_";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "09-MAY-22";
+	currentInfraction.Reason = "Racial slur in chat (and spamming).";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1011777372037"] <- clone infractions;
+
+    // 2342589311
+    infractions = [];
+    currentInfraction.ID = 83;
+	currentInfraction.PlayerUsername = "evilsparky420";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "07-MAY-22";
+	currentInfraction.Reason = "Racial slur in chat.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 94;
+	currentInfraction.PlayerUsername = "evilsparky420";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "23-APR-22";
+	currentInfraction.Reason = "Racial and homophobic slurs in chat.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["2342589311"] <- clone infractions;
+
+    // 1012599329074
+    infractions = [];
+    currentInfraction.ID = 85;
+	currentInfraction.PlayerUsername = "peigengchen";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "05-MAY-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1012599329074"] <- clone infractions;
+
+    // 1003374325454
+    infractions = [];
+    currentInfraction.ID = 86;
+	currentInfraction.PlayerUsername = "kill_kids_I_must";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "05-MAY-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1003374325454"] <- clone infractions;
+
+    // 1011576569232
+    infractions = [];
+    currentInfraction.ID = 89;
+	currentInfraction.PlayerUsername = "DADAG4R";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "02-MAY-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1011576569232"] <- clone infractions;
+
+    // 2262483997
+    infractions = [];
+    currentInfraction.ID = 90;
+	currentInfraction.PlayerUsername = "SilentSnice";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "02-MAY-22";
+	currentInfraction.Reason = "Emit, invincibility, speedhacks.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["2262483997"] <- clone infractions;
+
+    // 1007712991451
+    infractions = [];
+    currentInfraction.ID = 91;
+	currentInfraction.PlayerUsername = "VenoPadro";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "01-MAY-22";
+	currentInfraction.Reason = "Racial slurs in chat.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 101;
+	currentInfraction.PlayerUsername = "VenoPadro";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "07-APR-22";
+	currentInfraction.Reason = "Every listable discrimination offence.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 102;
+	currentInfraction.PlayerUsername = "VenoPadro";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "05-APR-22";
+	currentInfraction.Reason = "Racial slur and telling a player to commit suicide.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1007712991451"] <- clone infractions;
+
+    // 1008868194618
+    infractions = [];
+    currentInfraction.ID = 93;
+	currentInfraction.PlayerUsername = "MrHuggy";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "24-APR-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1008868194618"] <- clone infractions;
+
+    // 1006345795805
+    infractions = [];
+    currentInfraction.ID = 95;
+	currentInfraction.PlayerUsername = "cheesester2010";
+	currentInfraction.Type = InfractionType.Toxicity;
+	currentInfraction.Date = "23-APR-22";
+	currentInfraction.Reason = "Spamming nazi glorification.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1006345795805"] <- clone infractions;
+
+    // 1010187802107
+    infractions = [];
+    currentInfraction.ID = 96;
+	currentInfraction.PlayerUsername = "FakyCockCheese";
+	currentInfraction.Type = InfractionType.Spamming;
+	currentInfraction.Date = "18-APR-22";
+	currentInfraction.Reason = "Chat spam.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1010187802107"] <- clone infractions;
+
+    // 1011202965727
+    infractions = [];
+    currentInfraction.ID = 97;
+	currentInfraction.PlayerUsername = "BeetusTheJanitor";
+	currentInfraction.Type = InfractionType.Spamming;
+	currentInfraction.Date = "12-APR-22";
+	currentInfraction.Reason = "Spamming (using patched connect exploit).";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1011202965727"] <- clone infractions;
+
+    // 1013525112146
+    infractions = [];
+    currentInfraction.ID = 98;
+	currentInfraction.PlayerUsername = "CakesCockCheese";
+	currentInfraction.Type = InfractionType.Toxicity;
+	currentInfraction.Date = "10-APR-22";
+	currentInfraction.Reason = "Spamming insults in chat.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 99;
+	currentInfraction.PlayerUsername = "CakessCumSock";
+	currentInfraction.Type = InfractionType.Spamming;
+	currentInfraction.Date = "10-APR-22";
+	currentInfraction.Reason = "Spamming chat.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1013525112146"] <- clone infractions;
+
+    // 2848731946
+    infractions = [];
+    currentInfraction.ID = 100;
+	currentInfraction.PlayerUsername = "Raleighl";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "10-APR-22";
+	currentInfraction.Reason = "Racial slur in chat.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["2848731946"] <- clone infractions;
+
+    // 1007473846648
+    infractions = [];
+    currentInfraction.ID = 103;
+	currentInfraction.PlayerUsername = "deXSQL";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "04-APR-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1007473846648"] <- clone infractions;
+
+    // 1001190508849
+    infractions = [];
+    currentInfraction.ID = 105;
+	currentInfraction.PlayerUsername = "WorldOfShanks";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "30-MAR-22";
+	currentInfraction.Reason = "Racial slurs in chat.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1001190508849"] <- clone infractions;
+
+    // 1007311496164
+    infractions = [];
+    currentInfraction.ID = 106;
+	currentInfraction.PlayerUsername = "BunnyhopEnjoyer";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "17-MAR-22";
+	currentInfraction.Reason = "Racial slur in chat.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 107;
+	currentInfraction.PlayerUsername = "BunnyhopEnjoyer";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "17-MAR-22";
+	currentInfraction.Reason = "Racial slurs in chat.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1007311496164"] <- clone infractions;
+
+    // 1007254462376
+    infractions = [];
+    currentInfraction.ID = 108;
+	currentInfraction.PlayerUsername = "RespawnEntertainment";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "13-MAR-22";
+	currentInfraction.Reason = "Instant respawn exploit.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1007254462376"] <- clone infractions;
+
+    // 1000122980241
+    infractions = [];
+    currentInfraction.ID = 109;
+	currentInfraction.PlayerUsername = "Naicrez";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "10-MAR-22";
+	currentInfraction.Reason = "Racial slurs in chat.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1000122980241"] <- clone infractions;
+
+    // 1012628317658
+    infractions = [];
+    currentInfraction.ID = 110;
+	currentInfraction.PlayerUsername = "WellWhelve";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "10-MAR-22";
+	currentInfraction.Reason = "Wallhacks, soft aimbot.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1012628317658"] <- clone infractions;
+
+    // 1003233974297
+    infractions = [];
+    currentInfraction.ID = 111;
+	currentInfraction.PlayerUsername = "unconnected";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "08-MAR-22";
+	currentInfraction.Reason = "Noclip, aimbot, speedhacks.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 112;
+	currentInfraction.PlayerUsername = "fart_eater";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "06-MAR-22";
+	currentInfraction.Reason = "Aimbot, wallhacks.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 113;
+	currentInfraction.PlayerUsername = "PureRupted";
+	currentInfraction.Type = InfractionType.Spoof;
+	currentInfraction.Date = "06-MAR-22";
+	currentInfraction.Reason = "(Spoofed) Aimbot and invincibility.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 131;
+	currentInfraction.PlayerUsername = "MeowSolo";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "11-FEB-22";
+	currentInfraction.Reason = "Aimbot and misc exploits.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1003233974297"] <- clone infractions;
+
+    // 1000046162248
+    infractions = [];
+    currentInfraction.ID = 115;
+	currentInfraction.PlayerUsername = "CoolFerCats";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "27-FEB-22";
+	currentInfraction.Reason = "Aimbot and wallhacks.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1000046162248"] <- clone infractions;
+
+    // 1005934084362
+    infractions = [];
+    currentInfraction.ID = 116;
+	currentInfraction.PlayerUsername = "jiji73";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "24-FEB-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1005934084362"] <- clone infractions;
+
+    // 1008860702285
+    infractions = [];
+    currentInfraction.ID = 117;
+	currentInfraction.PlayerUsername = "swift_owl808yt";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "23-FEB-22";
+	currentInfraction.Reason = "Aimbot and wallhacks.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 119;
+	currentInfraction.PlayerUsername = "swift_owl808yt";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "19-FEB-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 120;
+	currentInfraction.PlayerUsername = "swift_owl808yt";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "18-FEB-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1008860702285"] <- clone infractions;
+
+    // 1006954720415
+    infractions = [];
+    currentInfraction.ID = 118;
+	currentInfraction.PlayerUsername = "Ace_PandaEyes23";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "19-FEB-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1006954720415"] <- clone infractions;
+
+    // 1001463354043
+    infractions = [];
+    currentInfraction.ID = 121;
+	currentInfraction.PlayerUsername = "DezSquad";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "18-FEB-22";
+	currentInfraction.Reason = "Aimbot and wallhacks.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1001463354043"] <- clone infractions;
+
+    // 1011555553975
+    infractions = [];
+    currentInfraction.ID = 123;
+	currentInfraction.PlayerUsername = "dalkryesaaa";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "17-FEB-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1011555553975"] <- clone infractions;
+
+    // 1003695138110
+    infractions = [];
+    currentInfraction.ID = 124;
+	currentInfraction.PlayerUsername = "benjibenji21";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "16-FEB-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1003695138110"] <- clone infractions;
+
+    // 1006346760265
+    infractions = [];
+    currentInfraction.ID = 125;
+	currentInfraction.PlayerUsername = "xenobility";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "06-FEB-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1006346760265"] <- clone infractions;
+
+    // 1010725680144
+    infractions = [];
+    currentInfraction.ID = 126;
+	currentInfraction.PlayerUsername = "Razzy1234";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "16-FEB-22";
+	currentInfraction.Reason = "Aimbot and wallhacks.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 128;
+	currentInfraction.PlayerUsername = "Razzy1234";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "16-FEB-22";
+	currentInfraction.Reason = "Aimbot and wallhacks.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1010725680144"] <- clone infractions;
+
+    // 2272897911
+    infractions = [];
+    currentInfraction.ID = 127;
+	currentInfraction.PlayerUsername = "t0asts";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "09-FEB-22";
+	currentInfraction.Reason = "Aimbot and wallhacks.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["2272897911"] <- clone infractions;
+
+    // 1006923229024
+    infractions = [];
+    currentInfraction.ID = 129;
+	currentInfraction.PlayerUsername = "PlatiniumDong";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "09-FEB-22";
+	currentInfraction.Reason = "Aimbot and wallhacks.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1006923229024"] <- clone infractions;
+
+    // 1012583183520
+    infractions = [];
+    currentInfraction.ID = 130;
+	currentInfraction.PlayerUsername = "ezyon_darknessss";
+	currentInfraction.Type = InfractionType.Cheating;
+	currentInfraction.Date = "11-FEB-22";
+	currentInfraction.Reason = "Aimbot.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1012583183520"] <- clone infractions;
+
+    // 2250487322
+    infractions = [];
+    currentInfraction.ID = 132;
+	currentInfraction.PlayerUsername = "refractxvi";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "30-APR-22";
+	currentInfraction.Reason = "Racial slurs in chat.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["2250487322"] <- clone infractions;
+
+    // 2839761312
+    infractions = [];
+    currentInfraction.ID = 133;
+	currentInfraction.PlayerUsername = "FrAkIngPIlOtfAll";
+	currentInfraction.Type = InfractionType.Toxicity;
+	currentInfraction.Date = "01-MAY-22";
+	currentInfraction.Reason = "Telling players to commit suicide.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 134;
+	currentInfraction.PlayerUsername = "FrAkIngPIlOtfAll";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "10-APR-22";
+	currentInfraction.Reason = "Racial slur in chat.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["2839761312"] <- clone infractions;
+
+    // 1008441324399
+    infractions = [];
+    currentInfraction.ID = 135;
+	currentInfraction.PlayerUsername = "The-0v3rki113r";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "04-JUN-22";
+	currentInfraction.Reason = "Racism and antisemitism.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1008441324399"] <- clone infractions;
+
+    // 1002319733641
+    infractions = [];
+    currentInfraction.ID = 136;
+	currentInfraction.PlayerUsername = "fenderbg97";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "18-AUG-22";
+	currentInfraction.Reason = "Racial slur in chat.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1002319733641"] <- clone infractions;
+
+    // 1007028668642
+    infractions = [];
+    currentInfraction.ID = 137;
+	currentInfraction.PlayerUsername = "_R34lityCh3ck_";
+	currentInfraction.Type = InfractionType.Spoof;
+	currentInfraction.Date = "02-JUL-22";
+	currentInfraction.Reason = "(Spoofed) Aimbot and wallhacks.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1007028668642"] <- clone infractions;
+
+    // 1013453793571
+    infractions = [];
+    currentInfraction.ID = 138;
+	currentInfraction.PlayerUsername = "zabossthebigboss";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "17-JUL-22";
+	currentInfraction.Reason = "Racial and homophobic slurs.";
+	
+    infractions.append(clone currentInfraction);
+    currentInfraction.ID = 140;
+	currentInfraction.PlayerUsername = "zabossthebigboss";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "09-JUL-22";
+	currentInfraction.Reason = "Racism, transphobia.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1013453793571"] <- clone infractions;
+
+    // 2294597892
+    infractions = [];
+    currentInfraction.ID = 139;
+	currentInfraction.PlayerUsername = "DuckDuckDonkey";
+	currentInfraction.Type = InfractionType.Discrimination;
+	currentInfraction.Date = "16-JUL-22";
+	currentInfraction.Reason = "Racial and homophobic slurs in chat.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["2294597892"] <- clone infractions;
+
 
     printt("==========================================");
     printt("[Spyglass] Mapping player names to UIDs.  ");
@@ -745,6 +1398,7 @@ void function Spyglass_Database_Init()
     Spyglass_PlayerNameUIDMap["m0rbidc0rvid"] <- "1011134487508";
     Spyglass_PlayerNameUIDMap["g0fesh"] <- "1000186323332";
     Spyglass_PlayerNameUIDMap["awesomeguy41"] <- "1011897054369";
+    Spyglass_PlayerNameUIDMap["cheesegratermanx"] <- "1011897054369";
     Spyglass_PlayerNameUIDMap["fuzzqminotaur97"] <- "1009821473677";
     Spyglass_PlayerNameUIDMap["tamagicznaflet"] <- "1011116972357";
     Spyglass_PlayerNameUIDMap["ogtsilva"] <- "2251932307";
@@ -779,6 +1433,50 @@ void function Spyglass_Database_Init()
     Spyglass_PlayerNameUIDMap["moxi76"] <- "1012276100023";
     Spyglass_PlayerNameUIDMap["watzkrakenn"] <- "1008904554095";
     Spyglass_PlayerNameUIDMap["ohmangoh"] <- "1013163567703";
+    Spyglass_PlayerNameUIDMap["xirunzxboxlive_"] <- "1011777372037";
+    Spyglass_PlayerNameUIDMap["whotfiswanderer"] <- "1011777372037";
+    Spyglass_PlayerNameUIDMap["evilsparky420"] <- "2342589311";
+    Spyglass_PlayerNameUIDMap["peigengchen"] <- "1012599329074";
+    Spyglass_PlayerNameUIDMap["kill_kids_i_must"] <- "1003374325454";
+    Spyglass_PlayerNameUIDMap["dadag4r"] <- "1011576569232";
+    Spyglass_PlayerNameUIDMap["silentsnice"] <- "2262483997";
+    Spyglass_PlayerNameUIDMap["venopadro"] <- "1007712991451";
+    Spyglass_PlayerNameUIDMap["mrhuggy"] <- "1008868194618";
+    Spyglass_PlayerNameUIDMap["cheesester2010"] <- "1006345795805";
+    Spyglass_PlayerNameUIDMap["fakycockcheese"] <- "1010187802107";
+    Spyglass_PlayerNameUIDMap["beetusthejanitor"] <- "1011202965727";
+    Spyglass_PlayerNameUIDMap["cakescockcheese"] <- "1013525112146";
+    Spyglass_PlayerNameUIDMap["cakesscumsock"] <- "1013525112146";
+    Spyglass_PlayerNameUIDMap["raleighl"] <- "2848731946";
+    Spyglass_PlayerNameUIDMap["dexsql"] <- "1007473846648";
+    Spyglass_PlayerNameUIDMap["worldofshanks"] <- "1001190508849";
+    Spyglass_PlayerNameUIDMap["bunnyhopenjoyer"] <- "1007311496164";
+    Spyglass_PlayerNameUIDMap["respawnentertainment"] <- "1007254462376";
+    Spyglass_PlayerNameUIDMap["naicrez"] <- "1000122980241";
+    Spyglass_PlayerNameUIDMap["wellwhelve"] <- "1012628317658";
+    Spyglass_PlayerNameUIDMap["unconnected"] <- "1003233974297";
+    Spyglass_PlayerNameUIDMap["fart_eater"] <- "1003233974297";
+    Spyglass_PlayerNameUIDMap["purerupted"] <- "1003233974297";
+    Spyglass_PlayerNameUIDMap["meowsolo"] <- "1003233974297";
+    Spyglass_PlayerNameUIDMap["coolfercats"] <- "1000046162248";
+    Spyglass_PlayerNameUIDMap["jiji73"] <- "1005934084362";
+    Spyglass_PlayerNameUIDMap["swift_owl808yt"] <- "1008860702285";
+    Spyglass_PlayerNameUIDMap["ace_pandaeyes23"] <- "1006954720415";
+    Spyglass_PlayerNameUIDMap["dezsquad"] <- "1001463354043";
+    Spyglass_PlayerNameUIDMap["dalkryesaaa"] <- "1011555553975";
+    Spyglass_PlayerNameUIDMap["benjibenji21"] <- "1003695138110";
+    Spyglass_PlayerNameUIDMap["xenobility"] <- "1006346760265";
+    Spyglass_PlayerNameUIDMap["razzy1234"] <- "1010725680144";
+    Spyglass_PlayerNameUIDMap["t0asts"] <- "2272897911";
+    Spyglass_PlayerNameUIDMap["platiniumdong"] <- "1006923229024";
+    Spyglass_PlayerNameUIDMap["ezyon_darknessss"] <- "1012583183520";
+    Spyglass_PlayerNameUIDMap["refractxvi"] <- "2250487322";
+    Spyglass_PlayerNameUIDMap["frakingpilotfall"] <- "2839761312";
+    Spyglass_PlayerNameUIDMap["the-0v3rki113r"] <- "1008441324399";
+    Spyglass_PlayerNameUIDMap["fenderbg97"] <- "1002319733641";
+    Spyglass_PlayerNameUIDMap["_r34litych3ck_"] <- "1007028668642";
+    Spyglass_PlayerNameUIDMap["zabossthebigboss"] <- "1013453793571";
+    Spyglass_PlayerNameUIDMap["duckduckdonkey"] <- "2294597892";
 
     printt("==========================================");
     printt("[Spyglass] Loaded player database.        ");
