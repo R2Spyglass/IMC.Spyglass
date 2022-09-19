@@ -1,0 +1,7 @@
+{
+    "name": "Spyglass",
+    "version_number": "1.0.0",
+    "website_url": "https://github.com/Erlite/IMC.Spyglass/",
+    "description": "A curated, global player reports database with configurable automated sanctions",
+    "dependencies": []
+}

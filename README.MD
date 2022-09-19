@@ -17,6 +17,9 @@ With Spyglass and your help, we can make the community scene of Titanfall 2 a sa
 ### Easy Mode 
 
 Simply go to our [releases](https://github.com/Erlite/IMC.Spyglass/releases), grab the latest one and extract it in your server's mods folder.
+
+You may also get the mod on [Thunderstore](https://northstar.thunderstore.io/package/IMC/Spyglass/).
+
 You should delete any previous version you had installed before.
 
 ### Experienced Server Owner
