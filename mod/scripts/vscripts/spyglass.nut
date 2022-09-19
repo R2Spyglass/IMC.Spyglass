@@ -101,7 +101,7 @@ void function OnClientConnecting(entity player)
         }
         else
         {
-            ServerCommand(format("kick %s", player.GetUID()));
+            ServerCommand(format("kick %s", player.GetPlayerName()));
         }
     }
 }
