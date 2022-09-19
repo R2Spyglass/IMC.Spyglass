@@ -1,5 +1,5 @@
 // Contains Spyglass' valid infraction types.
-global enum InfractionType
+global enum Spyglass_InfractionType
 {
     Spoof = 0, // The player was spoofed and this only serves as a warning for them.
     Spamming = 1, // The player has spammed text or voice chat with malicious intent.
@@ -9,7 +9,7 @@ global enum InfractionType
 }
 
 // Contains the data about a single player infraction.
-global struct PlayerInfraction
+global struct Spyglass_PlayerInfraction
 {
     // Unique ID of this infraction.
     int ID 
@@ -32,4 +32,20 @@ global struct Spyglass_UIDQueryResult
     string FoundUID
     // If we don't have an exact match, an array of names that are a partial match.
     array<string> FoundNames
+}
+
+global enum Spyglass_MuteNotificationType
+{
+    Block = 0, // The message is blocked, with no notice from Spyglass.
+    Notify = 1, // The message is blocked, Spyglass notifies the user.
+    Shadowban = 2, // The message is blocked, but sent back to the player. Only they can see it.
+}
+
+global enum Spyglass_SanctionNotificationMode
+{
+    None = 0, // No sanction notification whatsoever for anyone.
+    PlayerOnly = 1, // Only the sanctioned player will see the notification.
+    PlayerAndAdmins = 2, // Only the sanctioned player and online admins will see the notification.
+    AdminsOnly = 3, // Only server admins will see the sanction notification.
+    Everyone = 4, // Everyone will see the notification.
 }

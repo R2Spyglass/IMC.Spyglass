@@ -177,7 +177,7 @@ void function SpyglassCommand_Infractions(entity player, array<string> args)
     string clean = strip(args[0]);
     
     // Check if this is a valid UID. 
-    array<PlayerInfraction> infractions = Spyglass_GetPlayerInfractions(clean);
+    array<Spyglass_PlayerInfraction> infractions = Spyglass_GetSpyglass_PlayerInfractions(clean);
     string uid = clean;
 
     if (infractions.len() == 0)
@@ -189,7 +189,7 @@ void function SpyglassCommand_Infractions(entity player, array<string> args)
             return;
         }
 
-        infractions = Spyglass_GetPlayerInfractions(result.FoundUID);
+        infractions = Spyglass_GetSpyglass_PlayerInfractions(result.FoundUID);
         uid = result.FoundUID;
     }
     

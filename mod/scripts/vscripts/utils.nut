@@ -78,32 +78,32 @@ array<string> function Spyglass_SplitEscapedString(string value, string separato
     return result;
 }
 
-string function Spyglass_GetInfractionAsString(PlayerInfraction infraction)
+string function Spyglass_GetInfractionAsString(Spyglass_PlayerInfraction infraction)
 {
     string typeString = "Invalid";
     switch (infraction.Type)
     {
-        case InfractionType.Spoof: typeString = "Spoofed"; break;
-        case InfractionType.Spamming: typeString = "Spamming"; break;
-        case InfractionType.Toxicity: typeString = "Toxicity"; break;
-        case InfractionType.Discrimination: typeString = "Discrimination"; break;
-        case InfractionType.Cheating: typeString = "Cheating"; break;
+        case Spyglass_InfractionType.Spoof: typeString = "Spoofed"; break;
+        case Spyglass_InfractionType.Spamming: typeString = "Spamming"; break;
+        case Spyglass_InfractionType.Toxicity: typeString = "Toxicity"; break;
+        case Spyglass_InfractionType.Discrimination: typeString = "Discrimination"; break;
+        case Spyglass_InfractionType.Cheating: typeString = "Cheating"; break;
     }
 
     return format("\x1b[38;5;123m[#%i @ %s] \x1b[38;2;254;64;64m(%s): \x1b[0m%s", infraction.ID, infraction.Date, typeString, infraction.Reason);
 }
 
-float function Spyglass_GetInfractionWeight(PlayerInfraction infraction)
+float function Spyglass_GetInfractionWeight(Spyglass_PlayerInfraction infraction)
 {
     switch (infraction.Type)
     {
-        case InfractionType.Spamming:
+        case Spyglass_InfractionType.Spamming:
             return GetConVarFloat("spyglass_spamming_weight");
-        case InfractionType.Toxicity:
+        case Spyglass_InfractionType.Toxicity:
             return GetConVarFloat("spyglass_toxicity_weight");
-        case InfractionType.Discrimination:
+        case Spyglass_InfractionType.Discrimination:
             return GetConVarFloat("spyglass_discrimination_weight");
-        case InfractionType.Cheating:
+        case Spyglass_InfractionType.Cheating:
             return GetConVarFloat("spyglass_cheating_weight");
     }
 

@@ -61,7 +61,7 @@ Note = "Rights are only for querying the database and Spyglass immunity, and do 
 Type = "Boolean"
 DefaultValue = "1 (true)"
 
-[spyglass_chat_welcome]
+[spyglass_welcome_message_enabled]
 Description = "Whether or not to welcome players when they join (tells them the server is running Spyglass for protection)."
 Type = "Boolean"
 DefaultValue = "1 (true)"
@@ -71,16 +71,11 @@ Description = "The message to display to players when they join."
 Type = "String"
 DefaultValue = "Spyglass: I am currently monitoring this server, and global sanctions are in effect."
 
-[spyglass_sanctions_notifications]
-Description = "Whether or not to warn a player through chat when they have been punished for one or more infractions."
-Type = "Boolean"
-DefaultValue = "1 (true)"
-
-[spyglass_global_sanctions_notifications]
-Description = "Whether to notify the entire server of a player's sanctions."
-Type = "Boolean"
-Requires = "spyglass_sanctions_notifications 1"
-DefaultValue = "1 (true)"
+[spyglass_sanction_notification_mode]
+Description = "Used to choose who receives a notification when a player with a sanction joins the server."
+Values = "0: None, 1: Player Only, 2: Player and Admins, 3: Admins Only, 4: Everyone"
+Type = "Integer"
+DefaultValue = "4"
 
 [spyglass_spamming_weight]
 Description = "The amount of weight a 'Spamming' infraction has on a sanction calculation score."
@@ -123,11 +118,11 @@ Description = "Whether or not we should add the player to the banlist.txt if the
 Type = "Boolean"
 DefaultValue = "0 (false)"
 
-[spyglass_notify_muted_player]
-Description = "Whether or not to notify a muted player when their message wasn't sent due to a mute."
-Note = "If false, the message will be sent back to the player for a 'shadowban'. Only they will see it and nobody else."
-Type = "Boolean"
-DefaultValue = "0 (false)"
+[spyglass_mute_sanction_type]
+Description = "How to handle a muted player that tries to send a message in chat."
+Values = "0: Prevent message from appearing, 1: Prevent and notify player, 2: Only allow the player to see their own message."
+Type = "Integer"
+DefaultValue = "1"
 
 [spyglass_command_prefix]
 Description = "The prefix to use for Spyglass' chat commands."
@@ -137,5 +132,5 @@ DefaultValue = "!"
 [spyglass_commands_admin_only]
 Description = "Whether or not Spyglass' commands can only be used by admins."
 Type = "Boolean"
-DefaultValue = "0 (false)"
+DefaultValue = "1 (true)"
 ```

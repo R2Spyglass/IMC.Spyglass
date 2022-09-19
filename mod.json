@@ -17,7 +17,7 @@
             "DefaultValue": "1"
         },
         {
-            "Name": "spyglass_chat_welcome",
+            "Name": "spyglass_welcome_message_enabled",
             "DefaultValue": "1"
         },
         {
@@ -25,12 +25,8 @@
             "DefaultValue": "\\x1b[38;5;208mSpyglass:\\x1b[0m I am currently monitoring this server, and global sanctions are in effect."
         },
         {
-            "Name": "spyglass_sanctions_notifications",
-            "DefaultValue": "1"
-        },
-        {
-            "Name": "spyglass_global_sanctions_notifications",
-            "DefaultValue": "1"
+            "Name": "spyglass_sanction_notification_mode",
+            "DefaultValue": "4"
         },
         {
             "Name": "spyglass_spamming_weight",
@@ -65,8 +61,8 @@
             "DefaultValue": "0"
         },
         {
-            "Name": "spyglass_notify_muted_player",
-            "DefaultValue": "0"
+            "Name": "spyglass_mute_sanction_type",
+            "DefaultValue": "1"
         },
         {
             "Name": "spyglass_command_prefix",
@@ -74,7 +70,7 @@
         },
         {
             "Name": "spyglass_commands_admin_only",
-            "DefaultValue": "0"
+            "DefaultValue": "1"
         }
     ],
     "Scripts": [
