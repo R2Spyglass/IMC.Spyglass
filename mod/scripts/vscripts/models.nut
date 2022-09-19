@@ -11,6 +11,8 @@ global enum InfractionType
 // Contains the data about a single player infraction.
 global struct PlayerInfraction
 {
+    // Unique ID of this infraction.
+    int ID 
     // The type of infraction the player has committed.
     int Type
     // The date the infraction was added to the database, in human readable format.

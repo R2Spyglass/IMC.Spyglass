@@ -90,7 +90,7 @@ string function Spyglass_GetInfractionAsString(PlayerInfraction infraction)
         case InfractionType.Cheating: typeString = "Cheating"; break;
     }
 
-    return format("\x1b[38;5;123m[%s] \x1b[38;2;254;64;64m(%s): \x1b[0m%s", infraction.Date, typeString, infraction.Reason);
+    return format("\x1b[38;5;123m[#%i @ %s] \x1b[38;2;254;64;64m(%s): \x1b[0m%s", infraction.ID, infraction.Date, typeString, infraction.Reason);
 }
 
 float function Spyglass_GetInfractionWeight(PlayerInfraction infraction)
