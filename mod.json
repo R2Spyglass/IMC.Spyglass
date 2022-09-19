@@ -1,7 +1,7 @@
 {
     "Name": "IMC.Spyglass",
     "Description": "A server-side mod that handles punishing players from a curated reports list on the Northstar Discord server.",
-    "Version": "1.0.0",
+    "Version": "1.0.1",
     "LoadPriority": 1,
     "ConVars": [
         {
