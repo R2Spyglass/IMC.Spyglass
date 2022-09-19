@@ -12,6 +12,21 @@ The database is regularly updated and shared across servers, meaning the sanctio
 
 With Spyglass and your help, we can make the community scene of Titanfall 2 a safe & wholesome one.
 
+## Installation
+
+### Easy Mode 
+
+Simply go to our [releases](https://github.com/Erlite/IMC.Spyglass/releases), grab the latest one and extract it in your server's mods folder.
+You should delete any previous version you had installed before.
+
+### Experienced Server Owner
+
+The best way to use Spyglass is by cloning this git repository, and pulling it from time to time to keep an up to date database.
+The database is read on map change, so that would allow you to keep it in sync.
+
+You may use the `stable` branch if you wish to only get database updates or stable versions.
+Do not modify Spyglass in any way, shape or form to keep this working smoothly. All configuration is done with convars.
+
 ## Infractions
 
 An infraction is a singular report that has been validated by the maintainers, contributors and Northstar community Discord. 
