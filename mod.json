@@ -5,6 +5,18 @@
     "LoadPriority": 1,
     "ConVars": [
         {
+            "Name": "spyglass_admin_uids",
+            "DefaultValue": ""
+        },
+        {
+            "Name": "spyglass_admin_immunity",
+            "DefaultValue": "1"
+        },
+        {
+            "Name": "spyglass_maintainers_are_admins", 
+            "DefaultValue": "1"
+        },
+        {
             "Name": "spyglass_chat_welcome",
             "DefaultValue": "1"
         },
@@ -63,18 +75,6 @@
         {
             "Name": "spyglass_commands_admin_only",
             "DefaultValue": "0"
-        },
-        {
-            "Name": "spyglass_admin_uids",
-            "DefaultValue": ""
-        },
-        {
-            "Name": "spyglass_admin_immunity",
-            "DefaultValue": "1"
-        },
-        {
-            "Name": "spyglass_maintainers_are_admins", 
-            "DefaultValue": "1"
         }
     ],
     "Scripts": [

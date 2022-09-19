@@ -5,118 +5,8 @@ void function Spyglass_ChatUtils_Init()
 {
     AddCallback_OnReceivedSayTextMessage(HandleSpyglassCommand);
 
-    SpyglassCommands["infractions"] <- SpyglassCommand_Infractions
-    SpyglassCommands["finduid"] <- SpyglassCommand_FindUID
-    SpyglassCommands["findname"] <- SpyglassCommand_FindName
-}
-
-void function SpyglassCommand_FindUID(entity player, array<string> args)
-{
-    if(args.len() == 0)
-    {
-        Spyglass_SayPrivate(player, "Please specify a username to search for.");
-        return;
-    }
-    
-    string query = strip(args[0]);
-    Spyglass_UIDQueryResult result = Spyglass_FindUIDByName(query);
-
-    if (result.isExactMatch)
-    {
-        Spyglass_SayPrivate(player, format("Found an exact match for username '%s': [%s]", result.foundNames[0], result.foundUID));
-        return;
-    }
-
-    if (result.foundNames.len() == 1)
-    {
-        Spyglass_UIDQueryResult partialResult = Spyglass_FindUIDByName(result.foundNames[0]);
-        Spyglass_SayPrivate(player, format("Found a partial match '%s' from query '%s': [%s]", result.foundNames[0], query, partialResult.foundUID));
-        return;
-    }
-    
-    // We found some partial matches, output them if there's not too many results.
-    if (result.foundNames.len() > 0)
-    {
-        if (result.foundNames.len() > 10)
-        {
-            Spyglass_SayPrivate(player, format("Too many partial matches for username '%s', please try to narrow down your query.", query));
-            return;
-        }
-
-        Spyglass_SayPrivate(player, format("Found %i partial matches for username '%s', did you mean:", result.foundNames.len(), query));
-        string matches = format("'%s'", result.foundNames[0]);
-
-        for (int idx = 1; idx < result.foundNames.len(); ++idx)
-        {
-            string formatted = format(", '%s'", result.foundNames[idx]);
-
-            if (matches.len() + formatted.len() <= 254)
-            {
-                matches += formatted;
-            }
-            else
-            {
-                Spyglass_SayPrivate(player, matches);
-                matches = result.foundNames[idx];
-            }
-        }
-
-        if (matches.len() > 0)
-        {
-            Spyglass_SayPrivate(player, matches);
-        }
-    }
-    else
-    {
-        Spyglass_SayPrivate(player, format("Could not find a full or partial match for username '%s'.", query));
-    }
-}
-
-void function SpyglassCommand_FindName(entity player, array<string> args)
-{
-    if(args.len() == 0)
-    {
-        Spyglass_SayPrivate(player, "Please specify a UID to search for.");
-        return;
-    }
-
-    string clean = strip(args[0]);
-    array<string> matches = Spyglass_FindPlayerNameByUID(clean);
-
-    if (matches.len() == 0)
-    {
-        Spyglass_SayPrivate(player, format("Could not find any match for UID [%s] in the database.", clean));
-        return;
-    }
-
-    if (matches.len() == 1)
-    {
-        Spyglass_SayPrivate(player, format("UID [%s] belongs to player '%s'.", clean, matches[0]));
-        return;
-    }
-
-    Spyglass_SayPrivate(player, format("UID [%s] belongs to the player with the following usernames:", clean));
-
-    string message = matches[0];
-    for (int idx = 1; idx < matches.len(); ++idx)
-    {
-        string formatted = format("\n%s", matches[idx]);
-
-        if (message.len() + formatted.len() <= 254)
-        {
-            message += formatted;
-        }
-        else
-        {
-            Spyglass_SayPrivate(player, message);
-            message = matches[idx];
-        }
-    }
-
-    if (message.len() > 0)
-    {
-        Spyglass_SayPrivate(player, message);
-    }
+    SpyglassCommands["infractions"] <- SpyglassCommand_Infractions;
+    SpyglassCommands["find"] <- SpyglassCommand_FindPlayer;
 }
 
 ClServer_MessageStruct function HandleSpyglassCommand(ClServer_MessageStruct message)
@@ -176,6 +66,106 @@ ClServer_MessageStruct function HandleSpyglassCommand(ClServer_MessageStruct mes
     return message;
 }
 
+void function SpyglassCommand_FindPlayer(entity player, array<string> args)
+{
+    if(args.len() == 0)
+    {
+        Spyglass_SayPrivate(player, "Please specify a username or UID to search for.");
+        return;
+    }
+    
+    string query = strip(args[0]);
+
+    // Check if we can find a UID that matches that query first.
+    array<string> matches = Spyglass_FindPlayerNameByUID(query);
+    if (matches.len() > 0)
+    {
+        if (matches.len() == 1)
+        {
+            Spyglass_SayPrivate(player, format("UID [%s] belongs to player '%s'.", query, matches[0]));
+            return;
+        }
+
+        Spyglass_SayPrivate(player, format("UID [%s] belongs to the player with the following usernames:", query));
+
+        string message = matches[0];
+        for (int idx = 1; idx < matches.len(); ++idx)
+        {
+            string formatted = format("\n%s", matches[idx]);
+
+            if (message.len() + formatted.len() <= 254)
+            {
+                message += formatted;
+            }
+            else
+            {
+                Spyglass_SayPrivate(player, message);
+                message = matches[idx];
+            }
+        }
+
+        if (message.len() > 0)
+        {
+            Spyglass_SayPrivate(player, message);
+        }
+
+        return;
+    }
+
+    // If not, try to check if the query matches any username(s).
+    Spyglass_UIDQueryResult result = Spyglass_FindUIDByName(query);
+
+    if (result.IsExactMatch)
+    {
+        Spyglass_SayPrivate(player, format("Found an exact match for username '%s': [%s]", result.FoundNames[0], result.FoundUID));
+        return;
+    }
+
+    if (result.FoundNames.len() == 1)
+    {
+        Spyglass_UIDQueryResult partialResult = Spyglass_FindUIDByName(result.FoundNames[0]);
+        Spyglass_SayPrivate(player, format("Found a partial username match '%s' from query '%s': [%s]", result.FoundNames[0], query, partialResult.FoundUID));
+        return;
+    }
+    
+    // We found some partial matches, output them if there's not too many results.
+    if (result.FoundNames.len() > 0)
+    {
+        if (result.FoundNames.len() > 10)
+        {
+            Spyglass_SayPrivate(player, format("Too many partial matches for username '%s', please try to narrow down your query.", query));
+            return;
+        }
+
+        Spyglass_SayPrivate(player, format("Found %i partial username matches for query '%s', did you mean:", result.FoundNames.len(), query));
+        string matches = format("'%s'", result.FoundNames[0]);
+
+        for (int idx = 1; idx < result.FoundNames.len(); ++idx)
+        {
+            string formatted = format(", '%s'", result.FoundNames[idx]);
+
+            if (matches.len() + formatted.len() <= 254)
+            {
+                matches += formatted;
+            }
+            else
+            {
+                Spyglass_SayPrivate(player, matches);
+                matches = result.FoundNames[idx];
+            }
+        }
+
+        if (matches.len() > 0)
+        {
+            Spyglass_SayPrivate(player, matches);
+        }
+    }
+    else
+    {
+        Spyglass_SayPrivate(player, "Could not find any UID or username matching the query.");
+    }
+}
+
 void function SpyglassCommand_Infractions(entity player, array<string> args)
 {
     if(args.len() == 0)
@@ -193,14 +183,14 @@ void function SpyglassCommand_Infractions(entity player, array<string> args)
     if (infractions.len() == 0)
     {
         Spyglass_UIDQueryResult result = Spyglass_FindUIDByName(clean);
-        if (!result.isExactMatch)
+        if (!result.IsExactMatch)
         {
             Spyglass_SayPrivate(player, format("Could not find an exact match for username or UID '%s'.\nPlease use the 'finduid' and 'findname' commands to narrow your query down.", clean));
             return;
         }
 
-        infractions = Spyglass_GetPlayerInfractions(result.foundUID);
-        uid = result.foundUID;
+        infractions = Spyglass_GetPlayerInfractions(result.FoundUID);
+        uid = result.FoundUID;
     }
     
     if (infractions.len() == 0)

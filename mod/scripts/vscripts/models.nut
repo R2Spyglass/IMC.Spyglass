@@ -27,9 +27,9 @@ global struct PlayerInfraction
 global struct Spyglass_UIDQueryResult
 {
     // If this query result contains an exact UID match.
-    bool isExactMatch
+    bool IsExactMatch
     // The UID we've found for the given name, if we have an exact match.
-    string foundUID
+    string FoundUID
     // If we don't have an exact match, an array of names that are a partial match.
-    array<string> foundNames
+    array<string> FoundNames
 }

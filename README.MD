@@ -45,6 +45,22 @@ Spyglass is only configured through convars, meaning you can add them to your se
 You shouldn't in any way, shape or form modify the mod itself if possible, to make it very easy for you to update the player infractions database as often as possible.
 
 ```ini
+[spyglass_admin_uids]
+Description = "The UIDs of your server's admins, separated by a comma."
+Type = "String"
+DefaultValue = ""
+
+[spyglass_admin_immunity]
+Description = "Whether or not server admins are immune to Spyglass sanctions."
+Type = "Boolean"
+DefaultValue = "1 (true)"
+
+[spyglass_maintainers_are_admins]
+Description = "Whether or not Spyglass' maintainers have the same rights as admins."
+Note = "Rights are only for querying the database and Spyglass immunity, and do not provide admin power. We will only use it for debugging purposes."
+Type = "Boolean"
+DefaultValue = "1 (true)"
+
 [spyglass_chat_welcome]
 Description = "Whether or not to welcome players when they join (tells them the server is running Spyglass for protection)."
 Type = "Boolean"
@@ -122,20 +138,4 @@ DefaultValue = "!"
 Description = "Whether or not Spyglass' commands can only be used by admins."
 Type = "Boolean"
 DefaultValue = "0 (false)"
-
-[spyglass_admin_uids]
-Description = "The UIDs of your server's admins that can use the commands, separated by a comma."
-Type = "String"
-DefaultValue = ""
-
-[spyglass_admin_immunity]
-Description = "Whether or not server admins are immune to Spyglass sanctions."
-Type = "Boolean"
-DefaultValue = "1 (true)"
-
-[spyglass_maintainers_are_admins]
-Description = "Whether or not Spyglass' maintainers have the same rights as admins."
-Note = "Rights are only for querying the database and Spyglass immunity, and do not provide admin power. We will only use it for debugging purposes."
-Type = "Boolean"
-DefaultValue = "1 (true)"
 ```

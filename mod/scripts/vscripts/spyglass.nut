@@ -380,7 +380,7 @@ bool function Spyglass_IsBanned(string uid)
 Spyglass_UIDQueryResult function Spyglass_FindUIDByName(string name)
 {
     string clean = strip(name.tolower());
-    Spyglass_UIDQueryResult result = { isExactMatch = false, foundUID = "", foundNames = [] };
+    Spyglass_UIDQueryResult result = { IsExactMatch = false, FoundUID = "", FoundNames = [] };
 
     if (clean.len() == 0)
     {
@@ -389,9 +389,9 @@ Spyglass_UIDQueryResult function Spyglass_FindUIDByName(string name)
 
     if (clean in Spyglass_PlayerNameUIDMap)
     {
-        result.isExactMatch = true;
-        result.foundNames.append(clean);
-        result.foundUID = Spyglass_PlayerNameUIDMap[clean];
+        result.IsExactMatch = true;
+        result.FoundNames.append(clean);
+        result.FoundUID = Spyglass_PlayerNameUIDMap[clean];
         return result;
     }
 
@@ -408,9 +408,9 @@ Spyglass_UIDQueryResult function Spyglass_FindUIDByName(string name)
                 foreach (PlayerInfraction infraction in infractions)
                 {
                     string partialName = infraction.PlayerUsername.tolower();
-                    if (partialName.find(clean) != null && result.foundNames.find(infraction.PlayerUsername) == -1)
+                    if (partialName.find(clean) != null && result.FoundNames.find(infraction.PlayerUsername) == -1)
                     {
-                        result.foundNames.append(infraction.PlayerUsername);
+                        result.FoundNames.append(infraction.PlayerUsername);
                         
                         if (allUIDs.find(value) == -1)
                         {
@@ -425,8 +425,8 @@ Spyglass_UIDQueryResult function Spyglass_FindUIDByName(string name)
     // If we only got one UID with a partial match, make it an exact match.
     if (allUIDs.len() == 1)
     {
-        result.isExactMatch = true;
-        result.foundUID = allUIDs[0];
+        result.IsExactMatch = true;
+        result.FoundUID = allUIDs[0];
     }
 
     return result;
