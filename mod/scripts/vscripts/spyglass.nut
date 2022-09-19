@@ -11,6 +11,7 @@ global function Spyglass_IsBanned;
 global function Spyglass_FindUIDByName;
 global function Spyglass_FindPlayerNameByUID;
 
+
 array<string> Spyglass_MutedPlayers;
 array<string> Spyglass_BannedPlayers;
 array<string> Spyglass_Maintainers = 
