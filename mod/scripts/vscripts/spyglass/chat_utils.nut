@@ -9,6 +9,7 @@ void function Spyglass_ChatUtils_Init()
     SpyglassCommands["find"] <- SpyglassCommand_FindPlayer;
     SpyglassCommands["quarantine"] <- SpyglassCommand_ToggleQuarantine;
     SpyglassCommands["auth"] <- SpyglassCommand_Authenticate;
+    SpyglassCommands["uid"] <- SpyglassCommand_GetUID;
 }
 
 ClServer_MessageStruct function HandleSpyglassCommand(ClServer_MessageStruct message)
@@ -265,4 +266,15 @@ void function SpyglassCommand_Authenticate(entity player, array<string> args)
     }
 
     Spyglass_SayPrivate(player, message);
+}
+
+void function SpyglassCommand_GetUID(entity player, array<string> args)
+{
+    foreach (entity target in GetPlayerArray())
+    {
+        if (IsValid(target) && target.IsPlayer())
+        {
+            Chat_ServerPrivateMessage(player, format("%s: %s", target.GetPlayerName(), target.GetUID()), false);
+        }
+    }
 }
