@@ -11,6 +11,8 @@ global function Spyglass_IsBanned;
 global function Spyglass_FindUIDByName;
 global function Spyglass_FindPlayerNameByUID;
 global function Spyglass_GetOnlineAdmins;
+global function Spyglass_AuthenticateAdmin;
+global function Spyglass_IsAuthenticated;
 
 array<string> Spyglass_MutedPlayers;
 array<string> Spyglass_BannedPlayers;
@@ -19,6 +21,8 @@ array<string> Spyglass_Maintainers =
     "1005829030626", // Erlite
     "1008806725370", // Neinguar
 ];
+
+array<string> Spyglass_AuthenticatedPlayers;
 
 // TODO: Custom callback for sanctions
 
@@ -29,6 +33,7 @@ void function Spyglass_Init()
     AddCallback_OnClientConnected(OnClientConnected);
     AddCallback_OnClientDisconnected(OnClientDisconnected);
     AddCallback_OnReceivedSayTextMessage(OnClientMessage);
+    AddCallback_EntitiesDidLoad(CheckAdminsForQuarantine);
 }
 
 void function OnClientConnecting(entity player)
@@ -191,7 +196,15 @@ void function OnClientDisconnected(entity player)
         {
             Spyglass_MutedPlayers.remove(foundIndex)
         }
+
+        int authIndex = Spyglass_AuthenticatedPlayers.find(player.GetUID())
+        if (authIndex != -1)
+        {
+            Spyglass_AuthenticatedPlayers.remove(authIndex);
+        }
     }
+
+    CheckAdminsForQuarantine();
 }
 
 ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
@@ -219,6 +232,20 @@ ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
     }
 
     return message;
+}
+
+void function CheckAdminsForQuarantine()
+{
+    // If quarantine is enabled, make sure there are admins online.
+    // Else, disable it.
+    if (GetConVarBool("sv_rejectConnections"))
+    {
+        array<entity> admins = Spyglass_GetOnlineAdmins();
+        if (admins.len() == 0)
+        {
+            ServerCommand("sv_rejectConnections 0");
+        }
+    }
 }
 
 /**
@@ -468,4 +495,53 @@ array<entity> function Spyglass_GetOnlineAdmins()
     }
 
     return admins;
+}
+
+/**
+ * Authenticates the given player using the password they inputted. 
+ * @param player The player that wishes to authenticate.
+ * @param password The password they've tried to authenticate with.
+ * @returns A Spyglass_AuthenticationResult enum value, as an int.
+ */
+int function Spyglass_AuthenticateAdmin(entity player, string password)
+{
+    if (!IsValid(player) || !player.IsPlayer())
+    {
+        return Spyglass_AuthenticationResult.InvalidPlayer;
+    }
+
+    if (!Spyglass_IsAdmin(player))
+    {
+        return Spyglass_AuthenticationResult.NotAdmin;
+    }
+
+    string authPassword = strip(GetConVarString("spyglass_admin_auth_password"));
+    if (authPassword.len() == 0)
+    {
+        return Spyglass_AuthenticationResult.AuthenticationDisabled;
+    }
+
+    if (authPassword == password)
+    {
+        if (Spyglass_IsAuthenticated(player))
+        {
+            return Spyglass_AuthenticationResult.AlreadyAuthenticated;
+        }
+
+        Spyglass_AuthenticatedPlayers.append(player.GetUID());
+        return Spyglass_AuthenticationResult.Success;
+    }
+
+    return Spyglass_AuthenticationResult.WrongPassword;
+}
+
+/** Returns true if the given player is an authenticated admin. */
+bool function Spyglass_IsAuthenticated(entity player)
+{
+    if (!IsValid(player) || !player.IsPlayer())
+    {
+        return false;
+    }
+
+    return Spyglass_AuthenticatedPlayers.find(player.GetUID()) != -1;
 }

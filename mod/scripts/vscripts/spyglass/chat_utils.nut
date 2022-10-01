@@ -7,6 +7,8 @@ void function Spyglass_ChatUtils_Init()
 
     SpyglassCommands["infractions"] <- SpyglassCommand_Infractions;
     SpyglassCommands["find"] <- SpyglassCommand_FindPlayer;
+    SpyglassCommands["quarantine"] <- SpyglassCommand_ToggleQuarantine;
+    SpyglassCommands["auth"] <- SpyglassCommand_Authenticate;
 }
 
 ClServer_MessageStruct function HandleSpyglassCommand(ClServer_MessageStruct message)
@@ -22,9 +24,8 @@ ClServer_MessageStruct function HandleSpyglassCommand(ClServer_MessageStruct mes
         return message;
     }
 
-    bool bAdminOnly = GetConVarBool("spyglass_commands_admin_only");
     // Check that the player is allowed to execute this command.
-    if (bAdminOnly && (!Spyglass_IsAdmin(message.player)))
+    if (!Spyglass_IsAdmin(message.player))
     {
         return message;
     }
@@ -50,7 +51,20 @@ ClServer_MessageStruct function HandleSpyglassCommand(ClServer_MessageStruct mes
     // Ensure the command name is a valid command.
     if(!(commandName in SpyglassCommands))
     {
+        Spyglass_SayPrivate(message.player, format("Unknown command '%s'.", commandName));
+        message.shouldBlock = true;
         return message;
+    }
+
+    // Check that the player is authenticated first.
+    if (!Spyglass_IsAuthenticated(message.player))
+    {
+        if (SpyglassCommands[commandName] != SpyglassCommand_Authenticate)
+        {
+            Spyglass_SayPrivate(message.player, "You must authenticate first!");
+            message.shouldBlock = true;
+            return message;
+        }
     }
     
     // Remove the command from the arguments.
@@ -68,7 +82,7 @@ ClServer_MessageStruct function HandleSpyglassCommand(ClServer_MessageStruct mes
 
 void function SpyglassCommand_FindPlayer(entity player, array<string> args)
 {
-    if(args.len() == 0)
+    if (args.len() == 0)
     {
         Spyglass_SayPrivate(player, "Please specify a username or UID to search for.");
         return;
@@ -201,4 +215,54 @@ void function SpyglassCommand_Infractions(entity player, array<string> args)
 
     Spyglass_SayPrivate(player, format("Found %i infraction(s) for '%s' [%s]:", infractions.len(), infractions[0].PlayerUsername, uid));
     Spyglass_ChatSendPlayerInfractions(uid, [ player ], 0, false);
+}
+
+void function SpyglassCommand_ToggleQuarantine(entity player, array<string> args)
+{
+    bool isRejectingConnections = GetConVarBool("sv_rejectConnections");
+
+    if (isRejectingConnections)
+    {
+        Spyglass_SayPrivate(player, "Quarantine is now disabled. Players can join the server without any issue.");
+        ServerCommand("sv_rejectConnections 0");
+    }
+    else
+    {
+        Spyglass_SayPrivate(player, "Quarantine is now enabled. No players can join this server until disabled, or all admins leave the server.");
+        ServerCommand("sv_rejectConnections 1");
+    }
+}
+
+void function SpyglassCommand_Authenticate(entity player, array<string> args)
+{
+    if (args.len() == 0)
+    {
+        Spyglass_SayPrivate(player, "Cannot authenticate: please input the password when trying to authenticate.");
+        return;
+    }
+
+    string password = strip(args[0]);
+    int result = Spyglass_AuthenticateAdmin(player, password);
+
+    string message = "An internal issue has occurred, please try again later.";
+    switch (result)
+    {
+        case Spyglass_AuthenticationResult.NotAdmin:
+            message = "Only admins can authenticate.";
+            break;
+        case Spyglass_AuthenticationResult.AuthenticationDisabled:
+            message = "The server is missing a valid auth password in the 'spyglass_admin_auth_password' convar.";
+            break;
+        case Spyglass_AuthenticationResult.WrongPassword:
+            message = "Wrong password.";
+            break;
+        case Spyglass_AuthenticationResult.AlreadyAuthenticated:
+            message = "You are already authenticated.";
+            break;
+        case Spyglass_AuthenticationResult.Success:
+            message = "Authentication successful, welcome back administrator.";
+            break;
+    }
+
+    Spyglass_SayPrivate(player, message);
 }

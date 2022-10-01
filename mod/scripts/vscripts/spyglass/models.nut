@@ -49,3 +49,13 @@ global enum Spyglass_SanctionNotificationMode
     AdminsOnly = 3, // Only server admins will see the sanction notification.
     Everyone = 4, // Everyone will see the notification.
 }
+
+global enum Spyglass_AuthenticationResult 
+{
+    NotAdmin,
+    AuthenticationDisabled,
+    WrongPassword,
+    InvalidPlayer,
+    AlreadyAuthenticated,
+    Success,
+}

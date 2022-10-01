@@ -86,6 +86,12 @@ Description = "Whether or not server admins are immune to Spyglass sanctions."
 Type = "Boolean"
 DefaultValue = "1 (true)"
 
+[spyglass_admin_auth_password]
+Description = "The password used to allow admins to authenticate in order to avoid spoofed accounts."
+Note = "You must set it to a non-empty or whitespace value, else authentication will be disabled and no commands will work."
+Type = "String"
+DefaultValue = ""
+
 [spyglass_maintainers_are_admins]
 Description = "Whether or not Spyglass' maintainers have the same rights as admins."
 Note = "Rights are only for querying the database and Spyglass immunity, and do not provide admin power. We will only use it for debugging purposes."

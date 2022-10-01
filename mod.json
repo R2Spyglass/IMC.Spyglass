@@ -13,6 +13,10 @@
             "DefaultValue": "1"
         },
         {
+            "Name": "spyglass_admin_auth_password",
+            "DefaultValue": ""
+        },
+        {
             "Name": "spyglass_maintainers_are_admins", 
             "DefaultValue": "1"
         },
@@ -67,10 +71,6 @@
         {
             "Name": "spyglass_command_prefix",
             "DefaultValue": "!"
-        },
-        {
-            "Name": "spyglass_commands_admin_only",
-            "DefaultValue": "1"
         }
     ],
     "Scripts": [
