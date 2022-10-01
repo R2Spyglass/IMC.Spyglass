@@ -191,13 +191,13 @@ void function OnClientDisconnected(entity player)
 {
     if (IsValid(player))
     {
-        int foundIndex = Spyglass_MutedPlayers.find(player.GetUID())
+        int foundIndex = Spyglass_MutedPlayers.find(player.GetUID());
         if (foundIndex != -1)
         {
-            Spyglass_MutedPlayers.remove(foundIndex)
+            Spyglass_MutedPlayers.remove(foundIndex);
         }
 
-        int authIndex = Spyglass_AuthenticatedPlayers.find(player.GetUID())
+        int authIndex = Spyglass_AuthenticatedPlayers.find(player.GetUID());
         if (authIndex != -1)
         {
             Spyglass_AuthenticatedPlayers.remove(authIndex);

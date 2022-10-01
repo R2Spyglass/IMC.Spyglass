@@ -1370,6 +1370,28 @@ void function Spyglass_Database_Init()
     infractions.append(clone currentInfraction);
     Spyglass_Infractions["2294597892"] <- clone infractions;
 
+    // 1003641394598
+    infractions = [];
+    currentInfraction.ID = 141;
+	currentInfraction.PlayerUsername = "FierfekTheKiller";
+	currentInfraction.Type = Spyglass_InfractionType.Discrimination;
+	currentInfraction.Date = "22-SEPT-22";
+	currentInfraction.Reason = "Homophobic slur in chat.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1003641394598"] <- clone infractions;
+
+    // 1003285500181
+    infractions = [];
+    currentInfraction.ID = 142;
+	currentInfraction.PlayerUsername = "111mayhem";
+	currentInfraction.Type = Spyglass_InfractionType.Discrimination;
+	currentInfraction.Date = "26-SEPT-22";
+	currentInfraction.Reason = "Racial slur in chat.";
+	
+    infractions.append(clone currentInfraction);
+    Spyglass_Infractions["1003285500181"] <- clone infractions;
+
 
     printt("==========================================");
     printt("[Spyglass] Mapping player names to UIDs.  ");
@@ -1477,6 +1499,8 @@ void function Spyglass_Database_Init()
     Spyglass_PlayerNameUIDMap["_r34litych3ck_"] <- "1007028668642";
     Spyglass_PlayerNameUIDMap["zabossthebigboss"] <- "1013453793571";
     Spyglass_PlayerNameUIDMap["duckduckdonkey"] <- "2294597892";
+    Spyglass_PlayerNameUIDMap["fierfekthekiller"] <- "1003641394598";
+    Spyglass_PlayerNameUIDMap["111mayhem"] <- "1003285500181";
 
     printt("==========================================");
     printt("[Spyglass] Loaded player database.        ");

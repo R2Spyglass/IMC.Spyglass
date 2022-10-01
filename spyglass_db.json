@@ -2274,7 +2274,41 @@
         "Reason": "Racial and homophobic slurs in chat.",
         "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/997916798005551184"
       }
+    ],
+    "1003641394598": [
+      {
+        "InfractionID": 141,
+        "PlayerUsername": "FierfekTheKiller",
+        "PlayerUniqueId": "1003641394598",
+        "Type": 3,
+        "DateTimestamp": 1663858783,
+        "DateAsString": "22-SEPT-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 244165871562391552,
+        "ReporterUsername": "Erlite",
+        "ServerName": "[EU/GER] Vanilla Attrition",
+        "Reason": "Homophobic slur in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/1022522591350624356"
+      }
+    ],
+    "1003285500181": [
+      {
+        "InfractionID": 142,
+        "PlayerUsername": "111mayhem",
+        "PlayerUniqueId": "1003285500181",
+        "Type": 3,
+        "DateTimestamp": 1664230854,
+        "DateAsString": "26-SEPT-22",
+        "IssuerUserId": 244165871562391552,
+        "IssuerUsername": "Erlite",
+        "ReporterUserId": 244165871562391552,
+        "ReporterUsername": "Erlite",
+        "ServerName": "[EU/GER] Vanilla Attrition",
+        "Reason": "Racial slur in chat.",
+        "Evidence": "https://discord.com/channels/920776187884732556/937922165163065384/1024083171869995039"
+      }
     ]
   },
-  "LastInfractionID": 140
+  "LastInfractionID": 142
 }
