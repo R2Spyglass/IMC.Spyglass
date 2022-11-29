@@ -2,8 +2,12 @@
     "Name": "IMC.Spyglass",
     "Description": "A server-side mod that handles player sanctions based on player reports on the community Northstar Discord.",
     "Version": "2.0.0",
-    "LoadPriority": 1,
+    "LoadPriority": 2,
     "ConVars": [
+        {
+            "Name": "spyglass_api_hostname",
+            "DefaultValue": "https://localhost:6001/"
+        },
         {
             "Name": "spyglass_admin_uids",
             "DefaultValue": ""
@@ -38,7 +42,7 @@
         },
         {
             "Name": "spyglass_mute_sanction_type",
-            "DefaultValue": "1"
+            "DefaultValue": "0"
         },
         {
             "Name": "spyglass_command_prefix",
