@@ -1,53 +1,89 @@
-// Contains Spyglass' valid infraction types.
+// The type of infraction that resulted in a player sanction.
 global enum Spyglass_InfractionType
 {
-    Spoof = 0, // The player was spoofed and this only serves as a warning for them.
-    Spamming = 1, // The player has spammed text or voice chat with malicious intent.
-    Toxicity = 2, // Insults/targeted harassment of one or more players. Generally bringing the mood down by being unnecessarily hurtful in chat/voice.
-    Discrimination = 3, // Harassment based on a player's gender, sexuality, race, religion etc. Slurs included.
-    Cheating = 4, // Usage of external programs that provide unfair advantage to the player (aimbot, wallhack, speedhack etc.)
+    // Spamming text and/or voice chat. 
+    Spamming = 0,
+    // Harassing a player through text and/or voice chat.
+    Harassment = 1, 
+    // Any discriminatory, threatening, abusive, hateful or otherwise offensive language.
+    // This is a level higher than harassment.
+    HateSpeech = 2, 
+    // Attempts to disrupt the game experience of one or more players outside of the accepted gameplay parameters.
+    // A good example would be purposefully causing damage to a teammate, either directly or indirectly.
+    // Or disconnecting to prevent the enemy team from getting points.
+    Griefing = 3,
+    // Use or attempted use of exploits that may deteriorate the performance of game clients and/or the server,
+    // or otherwise maliciously impact the set gameplay parameters of Titanfall 2.
+    Exploiting = 4,
+    // The use of third-party hacking or cheating clients (aimbot, wallhack etc.) or any tool that provides an advantage, like macros.
+    Cheating = 5,
 }
 
-// Contains the data about a single player infraction.
+// The type of punishment that should be applied for a sanction.
+global enum Spyglass_SanctionType
+{
+    // The player should receive a visible warning, either in text chat or as a pop-up notification.
+    Warn = 0,
+    // The player should be prevented from communicating using text and voice chat until the sanction expires.
+    Mute = 1,
+    // The player will be banned from playing on Spyglass protected servers until the sanction expires.
+    Ban = 2,
+}
+
+// Details about a sanction that was issued to a player.
 global struct Spyglass_PlayerInfraction
 {
-    // Unique ID of this infraction.
+    // The unique id given to this player sanction.
     int ID 
-    // The type of infraction the player has committed.
-    int Type
-    // The date the infraction was added to the database, in human readable format.
-    string Date
-    // The origin username of the user whose infraction this is.
-    string PlayerUsername
-    // The reason why this infraction was given to the user.
+    // The unique id (UID) of the player this sanction belongs to.
+    string UniqueId
+    // The unique id (UID) of the player who issued this sanction.
+    string IssuerId
+    // The unix timestamp seconds of the date & time the sanction was issued.
+    int IssuedAtTimestamp
+    // The date and time at which this sanction was issued, in a readable string format.
+    string IssuedAtReadable
+    // The unix timestamp seconds of the date & time this sanction expires, if any.
+    // Null, empty or -1 means this sanction never expires.
+    int ExpiresAtTimestamp
+    // The time at which this sanction expires, if any, in a readable string format.
+    string ExpiresAtReadable
+    // The reason why this sanction was applied to the player.
     string Reason
+    // The type of infraction that led to this sanction.
+    int Type
+    // A human readable, uppercase string of the sanction's infraction type.
+    string TypeString
+    // The punishment that should be applied for this sanction.
+    int PunishmentType
+    // A human readable, uppercase string of the sanction's punishment type.
+    string PunishmentString
 }
 
-// The result returned by the Spyglass_FindUIDByName() function.
-global struct Spyglass_UIDQueryResult
-{
-    // If this query result contains an exact UID match.
-    bool IsExactMatch
-    // The UID we've found for the given name, if we have an exact match.
-    string FoundUID
-    // If we don't have an exact match, an array of names that are a partial match.
-    array<string> FoundNames
-}
-
+// Type of notification type for muted players trying to chat.
 global enum Spyglass_MuteNotificationType
 {
-    Block = 0, // The message is blocked, with no notice from Spyglass.
-    Notify = 1, // The message is blocked, Spyglass notifies the user.
-    Shadowban = 2, // The message is blocked, but sent back to the player. Only they can see it.
+    // The message is blocked, with no notice from Spyglass.
+    Block = 0,
+    // The message is blocked, Spyglass notifies the user.
+    Notify = 1, 
+    // The message is blocked, but sent back to the player. Only they can see it.
+    Shadowban = 2, 
 }
 
+// Notification modes for sanctions when a sanctionned player joins the server, or gets sanctionned.
 global enum Spyglass_SanctionNotificationMode
 {
-    None = 0, // No sanction notification whatsoever for anyone.
-    PlayerOnly = 1, // Only the sanctioned player will see the notification.
-    PlayerAndAdmins = 2, // Only the sanctioned player and online admins will see the notification.
-    AdminsOnly = 3, // Only server admins will see the sanction notification.
-    Everyone = 4, // Everyone will see the notification.
+    // No sanction notification whatsoever for anyone.
+    None = 0,
+    // Only the sanctioned player will see the notification.
+    PlayerOnly = 1,
+    // Only the sanctioned player and online admins will see the notification.
+    PlayerAndAdmins = 2,
+    // Only server admins will see the sanction notification.
+    AdminsOnly = 3,
+    // Everyone will see the notification.
+    Everyone = 4,
 }
 
 global enum Spyglass_AuthenticationResult 
