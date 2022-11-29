@@ -78,36 +78,21 @@ array<string> function Spyglass_SplitEscapedString(string value, string separato
     return result;
 }
 
+/** Returns the string representation of a player infraction. */
 string function Spyglass_GetInfractionAsString(Spyglass_PlayerInfraction infraction)
 {
     string typeString = "Invalid";
     switch (infraction.Type)
     {
-        case Spyglass_InfractionType.Spoof: typeString = "Spoofed"; break;
         case Spyglass_InfractionType.Spamming: typeString = "Spamming"; break;
-        case Spyglass_InfractionType.Toxicity: typeString = "Toxicity"; break;
-        case Spyglass_InfractionType.Discrimination: typeString = "Discrimination"; break;
+        case Spyglass_InfractionType.Harassment: typeString = "Harassment"; break;
+        case Spyglass_InfractionType.HateSpeech: typeString = "Hate Speech"; break;
+        case Spyglass_InfractionType.Griefing: typeString = "Griefing"; break;
+        case Spyglass_InfractionType.Exploiting: typeString = "Exploiting"; break;
         case Spyglass_InfractionType.Cheating: typeString = "Cheating"; break;
     }
 
-    return format("\x1b[38;5;123m[#%i @ %s] \x1b[38;2;254;64;64m(%s): \x1b[0m%s", infraction.ID, infraction.Date, typeString, infraction.Reason);
-}
-
-float function Spyglass_GetInfractionWeight(Spyglass_PlayerInfraction infraction)
-{
-    switch (infraction.Type)
-    {
-        case Spyglass_InfractionType.Spamming:
-            return GetConVarFloat("spyglass_spamming_weight");
-        case Spyglass_InfractionType.Toxicity:
-            return GetConVarFloat("spyglass_toxicity_weight");
-        case Spyglass_InfractionType.Discrimination:
-            return GetConVarFloat("spyglass_discrimination_weight");
-        case Spyglass_InfractionType.Cheating:
-            return GetConVarFloat("spyglass_cheating_weight");
-    }
-
-    return 0.0;
+    return format("\x1b[38;5;123m[#%i @ %s] \x1b[38;2;254;64;64m(%s): \x1b[0m%s\nExpiry: %s", infraction.ID, infraction.IssuedAtReadable, typeString, infraction.Reason, infraction.ExpiresAtReadable);
 }
 
 /** Splits the value of the given string convar into an array, using commas as a separator. */

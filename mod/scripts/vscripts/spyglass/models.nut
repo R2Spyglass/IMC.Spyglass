@@ -53,11 +53,11 @@ global struct Spyglass_PlayerInfraction
     // The type of infraction that led to this sanction.
     int Type
     // A human readable, uppercase string of the sanction's infraction type.
-    string TypeString
+    string TypeReadable
     // The punishment that should be applied for this sanction.
     int PunishmentType
     // A human readable, uppercase string of the sanction's punishment type.
-    string PunishmentString
+    string PunishmentReadable
 }
 
 // Type of notification type for muted players trying to chat.
