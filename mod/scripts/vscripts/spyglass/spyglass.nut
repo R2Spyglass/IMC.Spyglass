@@ -4,7 +4,6 @@ global function Spyglass_ChatSendPlayerInfractions;
 global function Spyglass_SayAll;
 global function Spyglass_SayPrivate;
 global function Spyglass_IsAdmin;
-global function Spyglass_IsMaintainer;
 global function Spyglass_HasImmunity;
 global function Spyglass_IsMuted;
 global function Spyglass_IsBanned;
@@ -16,11 +15,6 @@ global function Spyglass_IsAuthenticated;
 
 array<string> Spyglass_MutedPlayers;
 array<string> Spyglass_BannedPlayers;
-array<string> Spyglass_Maintainers = 
-[
-    "1005829030626", // Erlite
-    "1008806725370", // Neinguar
-];
 
 array<string> Spyglass_AuthenticatedPlayers;
 
@@ -120,7 +114,7 @@ void function OnClientConnected(entity player)
 
     if (GetConVarBool("spyglass_welcome_message_enabled"))
     {
-        Chat_ServerPrivateMessage(player, Spyglass_GetColoredConVarString("spyglass_welcome_message"), false/*, false*/);
+        Chat_ServerPrivateMessage(player, Spyglass_GetColoredConVarString("spyglass_welcome_message"), false, false);
     }
 
     if (Spyglass_HasImmunity(player))
@@ -234,20 +228,6 @@ ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
     return message;
 }
 
-void function CheckAdminsForQuarantine()
-{
-    // If quarantine is enabled, make sure there are admins online.
-    // Else, disable it.
-    if (GetConVarBool("sv_rejectConnections"))
-    {
-        array<entity> admins = Spyglass_GetOnlineAdmins();
-        if (admins.len() == 0)
-        {
-            ServerCommand("sv_rejectConnections 0");
-        }
-    }
-}
-
 /**
  * Returns the infractions of a player, if any.
  * @param uid The UID of the player to retrieve the infractions for.
@@ -319,7 +299,7 @@ void function Spyglass_ChatSendPlayerInfractions(string uid, array<entity> targe
             {
                 if (IsValid(target) && target.IsPlayer())
                 {
-                    Chat_ServerPrivateMessage(target, currentMessage, false /*, false*/);
+                    Chat_ServerPrivateMessage(target, currentMessage, false, false);
                 }
             }
 
@@ -334,13 +314,11 @@ void function Spyglass_ChatSendPlayerInfractions(string uid, array<entity> targe
         {
             if (IsValid(target) && target.IsPlayer())
             {
-                Chat_ServerPrivateMessage(target, currentMessage, false/*, false*/);
+                Chat_ServerPrivateMessage(target, currentMessage, false, false);
             }
         }
     }
 }
-
-// TODO: Re-enable withServerTag once PR is merged.
 
 /**
  * Sends a message to everyone in the chat as Spyglass.
@@ -350,7 +328,7 @@ void function Spyglass_ChatSendPlayerInfractions(string uid, array<entity> targe
 void function Spyglass_SayAll(string message, bool withServerTag = false)
 {
     string finalMessage = format("\x1b[38;5;208mSpyglass:\x1b[0m %s", message);
-    Chat_ServerBroadcast(finalMessage /*, withServerTag*/);
+    Chat_ServerBroadcast(finalMessage, withServerTag);
 }
 
 /**
@@ -363,21 +341,14 @@ void function Spyglass_SayAll(string message, bool withServerTag = false)
 void function Spyglass_SayPrivate(entity player, string message, bool isWhisper = false, bool withServerTag = false)
 {
     string finalMessage = format("\x1b[38;5;208mSpyglass:\x1b[0m %s", message);
-    Chat_ServerPrivateMessage(player, finalMessage, isWhisper /*, withServerTag*/);
+    Chat_ServerPrivateMessage(player, finalMessage, isWhisper, withServerTag);
 }
 
 /** Checks whether or not the given player is in the admin uids convar. */
 bool function Spyglass_IsAdmin(entity player)
 {
     array<string> adminUIDs = Spyglass_GetConVarStringArray("spyglass_admin_uids");
-    return IsValid(player) && player.IsPlayer() 
-        && (adminUIDs.find(player.GetUID()) != -1 || GetConVarBool("spyglass_maintainers_are_admins") && Spyglass_IsMaintainer(player));
-}
-
-/** Checks whether or not the given player is a maintainer of Spyglass. */
-bool function Spyglass_IsMaintainer(entity player)
-{
-    return IsValid(player) && player.IsPlayer() && Spyglass_Maintainers.find(player.GetUID()) != -1;
+    return IsValid(player) && player.IsPlayer() && adminUIDs.find(player.GetUID()) != -1;
 }
 
 /** Checks whether or not the given player is immune to Spyglass sanctions. */
@@ -396,89 +367,6 @@ bool function Spyglass_IsMuted(entity player)
 bool function Spyglass_IsBanned(string uid)
 {
     return Spyglass_BannedPlayers.find(uid) != -1;
-}
-
-/**
- * Attempts to find a player's UID from the given name.
- * Only players in the infractions database can be found.
- * @param name The name of the player to find, can be a partial name.
- * @returns The result of the query. May either contain an exact matched UID, or an array of player names that partially match.
- */
-Spyglass_UIDQueryResult function Spyglass_FindUIDByName(string name)
-{
-    string clean = strip(name.tolower());
-    Spyglass_UIDQueryResult result = { IsExactMatch = false, FoundUID = "", FoundNames = [] };
-
-    if (clean.len() == 0)
-    {
-        return result;
-    }
-
-    if (clean in Spyglass_PlayerNameUIDMap)
-    {
-        result.IsExactMatch = true;
-        result.FoundNames.append(clean);
-        result.FoundUID = Spyglass_PlayerNameUIDMap[clean];
-        return result;
-    }
-
-    array<string> allUIDs = [];
-    // Try to find a partial match for the player name.
-    foreach (key, value in Spyglass_PlayerNameUIDMap)
-    {
-        if (key.find(clean) != null)
-        {
-            // Get the infractions for the player and use the player name that's equal to the query.
-            array<Spyglass_PlayerInfraction> infractions = Spyglass_GetSpyglass_PlayerInfractions(value);
-            if (infractions.len() > 0)
-            {
-                foreach (Spyglass_PlayerInfraction infraction in infractions)
-                {
-                    string partialName = infraction.PlayerUsername.tolower();
-                    if (partialName.find(clean) != null && result.FoundNames.find(infraction.PlayerUsername) == -1)
-                    {
-                        result.FoundNames.append(infraction.PlayerUsername);
-                        
-                        if (allUIDs.find(value) == -1)
-                        {
-                            allUIDs.append(value);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // If we only got one UID with a partial match, make it an exact match.
-    if (allUIDs.len() == 1)
-    {
-        result.IsExactMatch = true;
-        result.FoundUID = allUIDs[0];
-    }
-
-    return result;
-}
-
-/** Returns an array of player names that match the given uid. */
-array<string> function Spyglass_FindPlayerNameByUID(string uid)
-{
-    array<Spyglass_PlayerInfraction> infractions = Spyglass_GetSpyglass_PlayerInfractions(uid);
-    array<string> matches = [];
-
-    if (infractions.len() == 0)
-    {
-        return matches;
-    }
-
-    foreach (Spyglass_PlayerInfraction infraction in infractions)
-    {
-        if (matches.find(infraction.PlayerUsername) == -1)
-        {
-            matches.append(infraction.PlayerUsername);
-        }
-    }
-
-    return matches;
 }
 
 /** Returns an array of admins that are currently online on this server. */
