@@ -1,7 +1,7 @@
 {
     "Name": "IMC.Spyglass",
-    "Description": "A server-side mod that handles punishing players from a curated reports list on the Northstar Discord server.",
-    "Version": "1.1.0",
+    "Description": "A server-side mod that handles player sanctions based on player reports on the community Northstar Discord.",
+    "Version": "2.0.0",
     "LoadPriority": 1,
     "ConVars": [
         {
@@ -33,34 +33,6 @@
             "DefaultValue": "4"
         },
         {
-            "Name": "spyglass_spamming_weight",
-            "DefaultValue": "0.2"
-        },
-        {
-            "Name": "spyglass_toxicity_weight",
-            "DefaultValue": "0.3"
-        },
-        {
-            "Name": "spyglass_discrimination_weight",
-            "DefaultValue": "0.6"
-        },
-        {
-            "Name": "spyglass_cheating_weight",
-            "DefaultValue": "2.0"
-        },
-        {
-            "Name": "spyglass_ban_score_threshold",
-            "DefaultValue": "2.0"
-        },
-        {
-            "Name": "spyglass_mute_score_threshold",
-            "DefaultValue": "0.5"
-        },
-        {
-            "Name": "spyglass_warn_score_threshold",
-            "DefaultValue": "0.1"
-        },
-        {
             "Name": "spyglass_use_banlist_for_bans",
             "DefaultValue": "0"
         },
@@ -81,14 +53,6 @@
         {
             "Path": "spyglass/utils.nut",
             "RunOn": "SERVER && MP"
-        },
-        {
-            "Path": "spyglass/autogen_database.nut",
-            "RunOn": "SERVER && MP",
-            "ServerCallback":
-            {
-                "After": "Spyglass_Database_Init"
-            }
         },
         {
             "Path": "spyglass/spyglass.nut",
