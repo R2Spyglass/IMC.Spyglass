@@ -26,21 +26,31 @@ void function Spyglass_Init()
     // AddCallback_OnReceivedSayTextMessage(OnClientMessage);
 
     AddCallback_GameStateEnter(eGameState.Prematch, OnPrematchStarted);
+    AddCallback_GameStateEnter(eGameState.Playing, OnPlayingStarted)
 
-    if (GetGameState() < eGameState.Prematch)
-    {
-        printt("[Spyglass] Before prematch, waiting. ")
-    }
-    else
+    if (GetGameState() >= eGameState.Prematch)
     {
         OnPrematchStarted();
+    }
+
+    if (GetGameState() >= eGameState.Playing)
+    {
+        OnPlayingStarted();
     }
 }
 
 void function OnPrematchStarted()
 {
     printt("[Spyglass] Prematch started, connecting to API...");
-    Spyglass_SayAll("Connecting to online sanction service...");
+    Spyglass_SayAll("Establishing uplink to IMC sanction records...");
+}
+
+void function OnPlayingStarted()
+{
+    foreach (entity player in GetPlayerArray())
+    {
+        NSSendInfoMessageToPlayer(player, "This server is monitored by Spyglass. Global sanctions are in effect.");
+    }
 }
 
 void function OnClientConnecting(entity player)
