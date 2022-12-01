@@ -291,7 +291,7 @@ void function Spyglass_ChatSendPlayerInfractions(string uid, array<Spyglass_Play
 void function Spyglass_SayAll(string message, bool withServerTag = false)
 {
     string finalMessage = format("\x1b[38;5;208mSpyglass:\x1b[0m %s", message);
-    Chat_ServerBroadcast(finalMessage/*, withServerTag*/);
+    Chat_ServerBroadcast(finalMessage, withServerTag);
 }
 
 /**
