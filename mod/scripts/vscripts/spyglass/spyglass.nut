@@ -1,5 +1,4 @@
 global function Spyglass_Init;
-global function Spyglass_GetSpyglass_PlayerInfractions;
 global function Spyglass_ChatSendPlayerInfractions;
 global function Spyglass_SayAll;
 global function Spyglass_SayPrivate;
@@ -7,8 +6,6 @@ global function Spyglass_IsAdmin;
 global function Spyglass_HasImmunity;
 global function Spyglass_IsMuted;
 global function Spyglass_IsBanned;
-global function Spyglass_FindUIDByName;
-global function Spyglass_FindPlayerNameByUID;
 global function Spyglass_GetOnlineAdmins;
 global function Spyglass_AuthenticateAdmin;
 global function Spyglass_IsAuthenticated;
@@ -26,8 +23,24 @@ void function Spyglass_Init()
     AddCallback_OnClientConnecting(OnClientConnecting);
     AddCallback_OnClientConnected(OnClientConnected);
     AddCallback_OnClientDisconnected(OnClientDisconnected);
-    AddCallback_OnReceivedSayTextMessage(OnClientMessage);
-    AddCallback_EntitiesDidLoad(CheckAdminsForQuarantine);
+    // AddCallback_OnReceivedSayTextMessage(OnClientMessage);
+
+    AddCallback_GameStateEnter(eGameState.Prematch, OnPrematchStarted);
+
+    if (GetGameState() < eGameState.Prematch)
+    {
+        printt("[Spyglass] Before prematch, waiting. ")
+    }
+    else
+    {
+        OnPrematchStarted();
+    }
+}
+
+void function OnPrematchStarted()
+{
+    printt("[Spyglass] Prematch started, connecting to API...");
+    Spyglass_SayAll("Connecting to online sanction service...");
 }
 
 void function OnClientConnecting(entity player)
@@ -37,148 +50,115 @@ void function OnClientConnecting(entity player)
         return;
     }
 
-    array<Spyglass_PlayerInfraction> foundInfractions = Spyglass_GetSpyglass_PlayerInfractions(player.GetUID());
-    if (foundInfractions.len() == 0)
-    {
-        return;
-    }
+    // array<Spyglass_PlayerInfraction> foundInfractions = Spyglass_GetSpyglass_PlayerInfractions(player.GetUID());
+    // if (foundInfractions.len() == 0)
+    // {
+    //     return;
+    // }
 
-    float totalWeight = 0.0;
-    int validInfractions = 0;
+    // float totalWeight = 0.0;
+    // int validInfractions = 0;
 
-    int notifyMode = GetConVarInt("spyglass_sanction_notification_mode");
-    bool bannedAlready = Spyglass_BannedPlayers.find(player.GetUID()) != -1;
+    // int notifyMode = GetConVarInt("spyglass_sanction_notification_mode");
+    // bool bannedAlready = Spyglass_BannedPlayers.find(player.GetUID()) != -1;
 
-    // Calculate the weight of all the player's infractions.
-    // We're mostly going to see if they need to be banned while they're connecting.
-    foreach (Spyglass_PlayerInfraction infraction in foundInfractions)
-    {
-        totalWeight += Spyglass_GetInfractionWeight(infraction);
+    // // Calculate the weight of all the player's infractions.
+    // // We're mostly going to see if they need to be banned while they're connecting.
+    // foreach (Spyglass_PlayerInfraction infraction in foundInfractions)
+    // {
+    //     totalWeight += Spyglass_GetInfractionWeight(infraction);
 
-        if (infraction.Type != Spyglass_InfractionType.Spoof)
-        {
-            validInfractions += 1;
-        }
-    }
+    //     if (infraction.Type != Spyglass_InfractionType.Spoof)
+    //     {
+    //         validInfractions += 1;
+    //     }
+    // }
 
-    if(totalWeight >= GetConVarFloat("spyglass_ban_score_threshold"))
-    {
-        printt(format("[Spyglass] Player '%s' [%s] was banned due to reaching an infraction score of %f.", player.GetPlayerName(), player.GetUID(), totalWeight));
 
-        if (!bannedAlready)
-        {
-            string message = format("Player \x1b[111m%s\x1b[0m has been banned due to %i infraction(s):", player.GetPlayerName(), validInfractions);
-
-            int notifyMode = GetConVarInt("spyglass_sanction_notification_mode");
-            if (notifyMode == Spyglass_SanctionNotificationMode.Everyone)
-            {          
-                Spyglass_SayAll(message);
-                Spyglass_ChatSendPlayerInfractions(player.GetUID(), GetPlayerArray());
-            }
-
-            if (notifyMode == Spyglass_SanctionNotificationMode.PlayerOnly || notifyMode == Spyglass_SanctionNotificationMode.PlayerAndAdmins)
-            {
-                Spyglass_SayPrivate(player, message);
-                Spyglass_ChatSendPlayerInfractions(player.GetUID(), [ player ]);
-            }
-
-            if (notifyMode == Spyglass_SanctionNotificationMode.PlayerAndAdmins || notifyMode == Spyglass_SanctionNotificationMode.AdminsOnly)
-            {
-                array<entity> admins = Spyglass_GetOnlineAdmins();
-                foreach (entity target in admins)
-                {
-                    Spyglass_SayPrivate(target, message);
-                }
-
-                Spyglass_ChatSendPlayerInfractions(player.GetUID(), admins);
-            }
-        }
-
-        if (GetConVarBool("spyglass_use_banlist_for_bans"))
-        {
-            ServerCommand(format("ban %s", player.GetUID()));
-        }
-        else
-        {
-            ServerCommand(format("kick %s", player.GetPlayerName()));
-        }
-    }
+    // if (GetConVarBool("spyglass_use_banlist_for_bans"))
+    // {
+    //     ServerCommand(format("ban %s", player.GetUID()));
+    // }
+    // else
+    // {
+    //     ServerCommand(format("kick %s", player.GetPlayerName()));
+    // }
 }
 
 void function OnClientConnected(entity player)
 {
-    if (!IsValid(player))
-    {
-        return;
-    }
+    // if (!IsValid(player))
+    // {
+    //     return;
+    // }
 
-    if (GetConVarBool("spyglass_welcome_message_enabled"))
-    {
-        Chat_ServerPrivateMessage(player, Spyglass_GetColoredConVarString("spyglass_welcome_message"), false, false);
-    }
+    // if (GetConVarBool("spyglass_welcome_message_enabled"))
+    // {
+    //     Chat_ServerPrivateMessage(player, Spyglass_GetColoredConVarString("spyglass_welcome_message"), false, false);
+    // }
 
-    if (Spyglass_HasImmunity(player))
-    {
-        return;
-    }
+    // if (Spyglass_HasImmunity(player))
+    // {
+    //     return;
+    // }
 
-    array<Spyglass_PlayerInfraction> foundInfractions = Spyglass_GetSpyglass_PlayerInfractions(player.GetUID());
-    if (foundInfractions.len() == 0)
-    {
-        return;
-    }
+    // array<Spyglass_PlayerInfraction> foundInfractions = Spyglass_GetSpyglass_PlayerInfractions(player.GetUID());
+    // if (foundInfractions.len() == 0)
+    // {
+    //     return;
+    // }
 
-    int validInfractions = 0;
-    float totalWeight = 0.0;
+    // int validInfractions = 0;
+    // float totalWeight = 0.0;
 
-    // Calculate the weight of all the player's infractions.
-    // Bans are already handled in OnClientConnecting so we don't need to check again.
-    foreach (Spyglass_PlayerInfraction infraction in foundInfractions)
-    {
-        totalWeight += Spyglass_GetInfractionWeight(infraction);
-        if (infraction.Type != Spyglass_InfractionType.Spoof)
-        {
-            validInfractions += 1;
-        }
-    }
+    // // Calculate the weight of all the player's infractions.
+    // // Bans are already handled in OnClientConnecting so we don't need to check again.
+    // foreach (Spyglass_PlayerInfraction infraction in foundInfractions)
+    // {
+    //     totalWeight += Spyglass_GetInfractionWeight(infraction);
+    //     if (infraction.Type != Spyglass_InfractionType.Spoof)
+    //     {
+    //         validInfractions += 1;
+    //     }
+    // }
 
-    string message = "";
+    // string message = "";
 
-    if (totalWeight >= GetConVarFloat("spyglass_mute_score_threshold"))
-    {
-        Spyglass_MutedPlayers.append(player.GetUID())
-        printt(format("[Spyglass] Player '%s' [%s] was muted due to reaching an infraction score of %f.", player.GetPlayerName(), player.GetUID(), totalWeight))
-        message = format("Player \x1b[111m%s\x1b[0m has been muted due to %i infraction(s):", player.GetPlayerName(), validInfractions);
-    }
-    else if (totalWeight >= GetConVarFloat("spyglass_warn_score_threshold"))
-    {
-        printt(format("[Spyglass] Player '%s' [%s] was warned due to reaching an infraction score of %f.", player.GetPlayerName(), player.GetUID(), totalWeight))
-        message = format("Player \x1b[111m%s\x1b[0m has been warned due to %i infraction(s):", player.GetPlayerName(), validInfractions);
-    }
+    // if (totalWeight >= GetConVarFloat("spyglass_mute_score_threshold"))
+    // {
+    //     Spyglass_MutedPlayers.append(player.GetUID())
+    //     printt(format("[Spyglass] Player '%s' [%s] was muted due to reaching an infraction score of %f.", player.GetPlayerName(), player.GetUID(), totalWeight))
+    //     message = format("Player \x1b[111m%s\x1b[0m has been muted due to %i infraction(s):", player.GetPlayerName(), validInfractions);
+    // }
+    // else if (totalWeight >= GetConVarFloat("spyglass_warn_score_threshold"))
+    // {
+    //     printt(format("[Spyglass] Player '%s' [%s] was warned due to reaching an infraction score of %f.", player.GetPlayerName(), player.GetUID(), totalWeight))
+    //     message = format("Player \x1b[111m%s\x1b[0m has been warned due to %i infraction(s):", player.GetPlayerName(), validInfractions);
+    // }
 
-    int notifyMode = GetConVarInt("spyglass_sanction_notification_mode");
-    if (notifyMode == Spyglass_SanctionNotificationMode.Everyone)
-    {          
-        Spyglass_SayAll(message);
-        Spyglass_ChatSendPlayerInfractions(player.GetUID(), GetPlayerArray());
-    }
+    // int notifyMode = GetConVarInt("spyglass_sanction_notification_mode");
+    // if (notifyMode == Spyglass_SanctionNotificationMode.Everyone)
+    // {          
+    //     Spyglass_SayAll(message);
+    //     Spyglass_ChatSendPlayerInfractions(player.GetUID(), GetPlayerArray());
+    // }
 
-    if (notifyMode == Spyglass_SanctionNotificationMode.PlayerOnly || notifyMode == Spyglass_SanctionNotificationMode.PlayerAndAdmins)
-    {
-        Spyglass_SayPrivate(player, message);
-        Spyglass_ChatSendPlayerInfractions(player.GetUID(), [ player ]);
-    }
+    // if (notifyMode == Spyglass_SanctionNotificationMode.PlayerOnly || notifyMode == Spyglass_SanctionNotificationMode.PlayerAndAdmins)
+    // {
+    //     Spyglass_SayPrivate(player, message);
+    //     Spyglass_ChatSendPlayerInfractions(player.GetUID(), [ player ]);
+    // }
 
-    if (notifyMode == Spyglass_SanctionNotificationMode.PlayerAndAdmins || notifyMode == Spyglass_SanctionNotificationMode.AdminsOnly)
-    {
-        array<entity> admins = Spyglass_GetOnlineAdmins();
-        foreach (entity target in admins)
-        {
-            Spyglass_SayPrivate(target, message);
-        }
+    // if (notifyMode == Spyglass_SanctionNotificationMode.PlayerAndAdmins || notifyMode == Spyglass_SanctionNotificationMode.AdminsOnly)
+    // {
+    //     array<entity> admins = Spyglass_GetOnlineAdmins();
+    //     foreach (entity target in admins)
+    //     {
+    //         Spyglass_SayPrivate(target, message);
+    //     }
 
-        Spyglass_ChatSendPlayerInfractions(player.GetUID(), admins);
-    }
+    //     Spyglass_ChatSendPlayerInfractions(player.GetUID(), admins);
+    // }
 }
 
 void function OnClientDisconnected(entity player)
@@ -197,8 +177,6 @@ void function OnClientDisconnected(entity player)
             Spyglass_AuthenticatedPlayers.remove(authIndex);
         }
     }
-
-    CheckAdminsForQuarantine();
 }
 
 ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
@@ -229,27 +207,13 @@ ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
 }
 
 /**
- * Returns the infractions of a player, if any.
- * @param uid The UID of the player to retrieve the infractions for.
- * @retuns An array containing the player's infractions if any, or an empty array if not.
- */
-array<Spyglass_PlayerInfraction> function Spyglass_GetSpyglass_PlayerInfractions(string uid)
-{
-    array<Spyglass_PlayerInfraction> infractions = [];
-
-    return uid in Spyglass_Infractions 
-        ? clone Spyglass_Infractions[uid]
-        : infractions;
-}
-
-/**
  * Sends the player's infractions in chat, if any. Packs them into messages together when possible.
  * @param uid The UID of the player for which to retrieve the infractions.
  * @param targets If set, the infractions will only be sent to those players. Leave empty to send globally.
  * @param limit The limit of infractions to send to the chat. Leave at default for all infractions.
  * @param fromNewest Whether or not to print the newest infractions first, or start from the oldest.
  */
-void function Spyglass_ChatSendPlayerInfractions(string uid, array<entity> targets = [], int limit = 0, bool fromNewest = true)
+void function Spyglass_ChatSendPlayerInfractions(string uid, array<Spyglass_PlayerInfraction> infractions, array<entity> targets = [], int limit = 0, bool fromNewest = true)
 {
     foreach (entity target in targets)
     {
@@ -261,7 +225,6 @@ void function Spyglass_ChatSendPlayerInfractions(string uid, array<entity> targe
     }
 
     // Get the player's infractions if any.
-    array<Spyglass_PlayerInfraction> infractions = Spyglass_GetSpyglass_PlayerInfractions(uid);
     if (infractions.len() == 0)
     {
         return;
@@ -299,7 +262,7 @@ void function Spyglass_ChatSendPlayerInfractions(string uid, array<entity> targe
             {
                 if (IsValid(target) && target.IsPlayer())
                 {
-                    Chat_ServerPrivateMessage(target, currentMessage, false, false);
+                    Spyglass_SayPrivate(target, currentMessage, false, false);
                 }
             }
 
@@ -314,7 +277,7 @@ void function Spyglass_ChatSendPlayerInfractions(string uid, array<entity> targe
         {
             if (IsValid(target) && target.IsPlayer())
             {
-                Chat_ServerPrivateMessage(target, currentMessage, false, false);
+                Spyglass_SayPrivate(target, currentMessage, false, false);
             }
         }
     }
@@ -328,7 +291,7 @@ void function Spyglass_ChatSendPlayerInfractions(string uid, array<entity> targe
 void function Spyglass_SayAll(string message, bool withServerTag = false)
 {
     string finalMessage = format("\x1b[38;5;208mSpyglass:\x1b[0m %s", message);
-    Chat_ServerBroadcast(finalMessage, withServerTag);
+    Chat_ServerBroadcast(finalMessage/*, withServerTag*/);
 }
 
 /**
@@ -341,7 +304,7 @@ void function Spyglass_SayAll(string message, bool withServerTag = false)
 void function Spyglass_SayPrivate(entity player, string message, bool isWhisper = false, bool withServerTag = false)
 {
     string finalMessage = format("\x1b[38;5;208mSpyglass:\x1b[0m %s", message);
-    Chat_ServerPrivateMessage(player, finalMessage, isWhisper, withServerTag);
+    Chat_ServerPrivateMessage(player, finalMessage, isWhisper/*, withServerTag*/);
 }
 
 /** Checks whether or not the given player is in the admin uids convar. */
