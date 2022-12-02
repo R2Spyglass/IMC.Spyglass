@@ -101,3 +101,20 @@ array<string> function Spyglass_GetConVarStringArray(string cvarName)
     string clean = strip(GetConVarString(cvarName));
     return split(clean, ",");
 }
+
+/** Returns the base hostname of the configured Spyglass API backend. */
+string function Spyglass_GetApiHostname()
+{
+    return GetConVarString("spyglass_api_hostname");
+}
+
+/** Returns a sanitized url for the Spyglass API */
+string function Spyglass_SanitizeUrl(string url)
+{
+    while (url.find("//") != null)
+    {
+        url = StringReplace(url, "//", "/", true, true);
+    }
+    
+    return strip(url);
+}

@@ -95,3 +95,33 @@ global enum Spyglass_AuthenticationResult
     AlreadyAuthenticated,
     Success,
 }
+
+// Base class for API response results.
+global struct Spyglass_ApiResult
+{
+    // Whether or not the API request was successful.
+    bool Success
+    // The message that was returned by the API for the error, if any.
+    string Error
+}
+
+// Contains data about the API's current version, and the minimum client version required to interact with it.
+global struct Spyglass_ApiVersion
+{
+    Spyglass_ApiResult ApiResult
+    
+    // The current version of the Spyglass API.
+    string Version
+    // The minimum client version required to interact with this API.
+    string MinimumVersion
+}
+
+// API stats returned by the /stats endpoint.
+global struct Spyglass_ApiStats
+{
+    Spyglass_ApiResult ApiResult
+    // The amount of players tracked in the database.
+    int Players
+    // The amount of sanctions tracked in the database.
+    int Sanctions
+}

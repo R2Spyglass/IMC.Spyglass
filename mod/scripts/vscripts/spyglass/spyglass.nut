@@ -39,10 +39,25 @@ void function Spyglass_Init()
     }
 }
 
+void function OnStatsRequestComplete(Spyglass_ApiStats response)
+{
+    if (response.ApiResult.Success)
+    {
+        Spyglass_SayAll(format("Uplink established successfully, API version v%s.", SpyglassApi_GetLatestVersion()));
+        Spyglass_SayAll(format("I am currently tracking %i players and %i sanctions.", response.Players, response.Sanctions));
+    }
+    else
+    {
+        Spyglass_SayAll(format("An error has occurred while establishing the uplink: %s", response.ApiResult.Error));
+    }
+}
+
 void function OnPrematchStarted()
 {
     printt("[Spyglass] Prematch started, connecting to API...");
-    Spyglass_SayAll("Establishing uplink to IMC sanction records...");
+    Spyglass_SayAll("Establishing uplink to IMC sanction database...");
+
+    SpyglassApi_GetStats(OnStatsRequestComplete);
 }
 
 void function OnPlayingStarted()
@@ -300,7 +315,7 @@ void function Spyglass_ChatSendPlayerInfractions(string uid, array<Spyglass_Play
  */
 void function Spyglass_SayAll(string message, bool withServerTag = false)
 {
-    string finalMessage = format("\x1b[38;5;208mSpyglass:\x1b[0m %s", message);
+    string finalMessage = format("\x1b[113mSpyglass:\x1b[0m %s", message);
     Chat_ServerBroadcast(finalMessage, withServerTag);
 }
 
@@ -313,7 +328,7 @@ void function Spyglass_SayAll(string message, bool withServerTag = false)
  */
 void function Spyglass_SayPrivate(entity player, string message, bool isWhisper = false, bool withServerTag = false)
 {
-    string finalMessage = format("\x1b[38;5;208mSpyglass:\x1b[0m %s", message);
+    string finalMessage = format("\x1b[113mSpyglass:\x1b[0m %s", message);
     Chat_ServerPrivateMessage(player, finalMessage, isWhisper/*, withServerTag*/);
 }
 

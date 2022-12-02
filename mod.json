@@ -47,16 +47,32 @@
         {
             "Name": "spyglass_command_prefix",
             "DefaultValue": "!"
+        },
+        {
+            "Name": "spyglass_cache_api_latest_version",
+            "DefaultValue": ""
+        },
+        {
+            "Name": "spyglass_cache_api_minimum_version",
+            "DefaultValue": ""
         }
     ],
     "Scripts": [
         {
             "Path": "spyglass/models.nut",
-            "RunOn": "SERVER && MP"
+            "RunOn": "(CLIENT || SERVER) && MP"
         },
         {
             "Path": "spyglass/utils.nut",
-            "RunOn": "SERVER && MP"
+            "RunOn": "(CLIENT || SERVER) && MP"
+        },
+        {
+            "Path": "spyglass/json_parsers.nut",
+            "RunOn": "(CLIENT || SERVER) && MP"
+        },
+        {
+            "Path": "spyglass/api/api_root.nut",
+            "RunOn": "(CLIENT || SERVER) && MP"
         },
         {
             "Path": "spyglass/spyglass.nut",
