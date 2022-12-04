@@ -33,49 +33,21 @@ string function SpyglassApi_GetMinimumVersion()
 }
 
 /** Internal only - retrieves and caches the version and minimum version from response headers. */
-void function SpyglassApi_ParseVersionHeaders(string headers)
+void function SpyglassApi_ParseVersionHeaders(HttpRequestResponse response)
 {
-    array<string> values = split(headers, "\n");
-
-    foreach (string header in values)
+    if ("Spyglass-API-Version" in response.headers)
     {
-        printt(header);
-        var index = header.find(":");
-        if (index == null)
-        {
-            continue;
-        }
+        SetConVarString("spyglass_cache_api_latest_version", response.headers["Spyglass-API-Version"][0]);
+    }
 
-        string name = strip(header.slice(0, expect int(index)))
-        string value = strip(header.slice(expect int(index) + 1));
-
-        if (name == "Spyglass-API-Version")
-        {
-            SetConVarString("spyglass_cache_api_latest_version", value);
-        }
-
-        if (name == "Spyglass-API-MinimumVersion")
-        {
-            SetConVarString("spyglass_cache_api_minimum_version", value);
-        }
+    if ("Spyglass-API-MinimumVersion" in response.headers)
+    {
+        SetConVarString("spyglass_cache_api_minimum_version", response.headers["Spyglass-API-MinimumVersion"][0]);
     }
 }
 
-/** Called when an attempt to retrieve the api version was completed. */
-void function SpyglassApi_OnApiVersionRequestComplete(int statusCode, string body, string headers)
+void function SpyglassApi_ExecuteApiVersionCallbacks(Spyglass_ApiVersion data, bool empty = true)
 {
-    Spyglass_ApiVersion data;
-    data.ApiResult.Success = false;
-    data.ApiResult.Error = format("API returned a non-200 status code: %i", statusCode);
-
-    if (statusCode == 200)
-    {
-        SpyglassApi_ParseVersionHeaders(headers);
-
-        table response = DecodeJSON(body);
-        Spyglass_TryParseApiVersion(response, data);
-    }
-
     foreach (void functionref(Spyglass_ApiVersion) callback in ApiVersionCallbacks)
     {
         if (callback != null)
@@ -84,26 +56,40 @@ void function SpyglassApi_OnApiVersionRequestComplete(int statusCode, string bod
         }
     }
 
-    ApiVersionCallbacks = [];
+    if (empty)
+    {
+        ApiVersionCallbacks = [];
+    }
 }
 
+/** Called when an attempt to retrieve the api version was completed. */
+void function SpyglassApi_OnApiVersionRequestComplete(HttpRequestResponse response)
+{
+    Spyglass_ApiVersion data;
+    data.ApiResult.Success = false;
+    data.ApiResult.Error = format("API returned a non-200 status code: %i", response.statusCode);
+
+    if (response.statusCode == 200)
+    {
+        SpyglassApi_ParseVersionHeaders(response);
+
+        table decodedBody = DecodeJSON(response.body);
+        Spyglass_TryParseApiVersion(decodedBody, data);
+    }
+
+    SpyglassApi_ExecuteApiVersionCallbacks(data);
+}
+
+/** Called when an attempt to retrieve the api version has failed. */
 void function SpyglassApi_OnApiVersionRequestFailed(int errorCode, string errorMessage)
 {
     printt(format("[Spyglass] SpyglassApi_GetApiVersion() failed with error code %i: %s", errorCode, errorMessage));
     
     Spyglass_ApiVersion data;
     data.ApiResult.Success = false;
-    data.ApiResult.Error = format("An internal error has occurred while processing the request (%i): %s", errorCode, errorMessage);
+    data.ApiResult.Error = format("(%i) %s", errorCode, errorMessage);
 
-    foreach (void functionref(Spyglass_ApiVersion) callback in ApiVersionCallbacks)
-    {
-        if (callback != null)
-        {
-            callback(data);
-        }
-    }
-
-    ApiVersionCallbacks = [];
+    SpyglassApi_ExecuteApiVersionCallbacks(data);
 }
 
 /** 
@@ -131,21 +117,8 @@ bool function SpyglassApi_GetApiVersion(void functionref(Spyglass_ApiVersion) ca
     return false;
 }
 
-/** Called when an attempt to retrieve the api stats was completed. */
-void function SpyglassApi_OnApiStatsRequestComplete(int statusCode, string body, string headers)
+void function SpyglassApi_ExecuteApiStatsCallbacks(Spyglass_ApiStats data, bool empty = true)
 {
-    Spyglass_ApiStats data;
-    data.ApiResult.Success = false;
-    data.ApiResult.Error = format("API returned a non-200 status code: %i", statusCode);
-
-    if (statusCode == 200)
-    {
-        SpyglassApi_ParseVersionHeaders(headers);
-
-        table response = DecodeJSON(body);
-        Spyglass_TryParseApiStats(response, data);
-    }
-
     foreach (void functionref(Spyglass_ApiStats) callback in ApiStatsCallbacks)
     {
         if (callback != null)
@@ -154,26 +127,40 @@ void function SpyglassApi_OnApiStatsRequestComplete(int statusCode, string body,
         }
     }
 
-    ApiStatsCallbacks = [];
+    if (empty)
+    {
+        ApiStatsCallbacks = [];
+    }
 }
 
+/** Called when an attempt to retrieve the api stats was completed. */
+void function SpyglassApi_OnApiStatsRequestComplete(HttpRequestResponse response)
+{
+    Spyglass_ApiStats data;
+    data.ApiResult.Success = false;
+    data.ApiResult.Error = format("API returned a non-200 status code: %i", response.statusCode);
+
+    if (response.statusCode == 200)
+    {
+        SpyglassApi_ParseVersionHeaders(response);
+
+        table decodedBody = DecodeJSON(response.body);
+        Spyglass_TryParseApiStats(decodedBody, data);
+    }
+
+    SpyglassApi_ExecuteApiStatsCallbacks(data);
+}
+
+/** Called when an attempt to retrieve the api stats has failed. */
 void function SpyglassApi_OnApiStatsRequestFailed(int errorCode, string errorMessage)
 {
     printt(format("[Spyglass] SpyglassApi_GetApiStats() failed with error code %i: %s", errorCode, errorMessage));
     
     Spyglass_ApiStats data;
     data.ApiResult.Success = false;
-    data.ApiResult.Error = format("An internal error has occurred while processing the request (%i): %s", errorCode, errorMessage);
+    data.ApiResult.Error = format("(%i) %s", errorCode, errorMessage);
     
-    foreach (void functionref(Spyglass_ApiStats) callback in ApiStatsCallbacks)
-    {
-        if (callback != null)
-        {
-            callback(data);
-        }
-    }
-
-    ApiStatsCallbacks = [];
+    SpyglassApi_ExecuteApiStatsCallbacks(data);
 }
 
 bool function SpyglassApi_GetStats(void functionref(Spyglass_ApiStats) callback)

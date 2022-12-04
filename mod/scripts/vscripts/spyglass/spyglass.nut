@@ -44,7 +44,7 @@ void function OnStatsRequestComplete(Spyglass_ApiStats response)
     if (response.ApiResult.Success)
     {
         Spyglass_SayAll(format("Uplink established successfully, API version v%s.", SpyglassApi_GetLatestVersion()));
-        Spyglass_SayAll(format("I am currently tracking %i players and %i sanctions.", response.Players, response.Sanctions));
+        Spyglass_SayAll(format("I am currently tracking %i pilots and %i sanctions.", response.Players, response.Sanctions));
     }
     else
     {

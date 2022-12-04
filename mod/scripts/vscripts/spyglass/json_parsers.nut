@@ -143,7 +143,7 @@ bool function Spyglass_TryParseApiStats(table response, Spyglass_ApiStats outSta
 {
     outStats.ApiResult.Success = false;
     outStats.ApiResult.Error = "Failed to parse API response into a Spyglass_ApiVersion struct.";
-    PrintTable(response);
+
     if (response.len() == 0)
     {
         return false;
