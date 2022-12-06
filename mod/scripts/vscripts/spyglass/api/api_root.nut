@@ -7,7 +7,7 @@
 
 global function SpyglassApi_GetLatestVersion;
 global function SpyglassApi_GetMinimumVersion;
-global function SpyglassApi_ParseVersionHeaders;
+global function SpyglassApi_MakeHttpRequest;
 global function SpyglassApi_GetApiVersion;
 global function SpyglassApi_GetStats;
 
@@ -32,6 +32,34 @@ string function SpyglassApi_GetMinimumVersion()
     return GetConVarString("spyglass_cache_api_minimum_version");
 }
 
+/**
+ * Wraps NSHttpRequest() to setup special headers in a request, and capture responses for processing. 
+ * @param request The parameters to use for this request.
+ * @param onSuccess The callback to execute if the request is successful.
+ * @param onFailure The callback to execute if the request has failed.
+ * @returns Whether or not the request has been successfully started.
+ */
+bool function SpyglassApi_MakeHttpRequest(HttpRequest request, void functionref(HttpRequestResponse) onSuccess = null, void functionref(HttpRequestFailure) onFailure = null)
+{
+    SpyglassApi_SetupHeaders(request);
+
+    // Wrap the success callback to capture headers.
+    void functionref(HttpRequestResponse) responseCapture = void function (HttpRequestResponse response) : (onSuccess)
+    {
+        if (response.statusCode == 200)
+        {
+            SpyglassApi_ParseVersionHeaders(response);
+        }
+        
+        if (onSuccess != null)
+        {
+            onSuccess(response);
+        }
+    }
+
+    return NSHttpRequest(request, responseCapture, onFailure);
+}
+
 /** Internal only - retrieves and caches the version and minimum version from response headers. */
 void function SpyglassApi_ParseVersionHeaders(HttpRequestResponse response)
 {
@@ -43,6 +71,15 @@ void function SpyglassApi_ParseVersionHeaders(HttpRequestResponse response)
     if ("Spyglass-API-MinimumVersion" in response.headers)
     {
         SetConVarString("spyglass_cache_api_minimum_version", response.headers["Spyglass-API-MinimumVersion"][0]);
+    }
+}
+
+/** Internal only - sets up headers that may be used by the API. */
+void function SpyglassApi_SetupHeaders(HttpRequest request)
+{
+    if (!("Northstar-Server-Name" in request.headers))
+    {
+        request.headers["Northstar-Server-Name"] <- [ GetConVarString("ns_server_name") ];
     }
 }
 
@@ -71,8 +108,6 @@ void function SpyglassApi_OnApiVersionRequestComplete(HttpRequestResponse respon
 
     if (response.statusCode == 200)
     {
-        SpyglassApi_ParseVersionHeaders(response);
-
         table decodedBody = DecodeJSON(response.body);
         Spyglass_TryParseApiVersion(decodedBody, data);
     }
@@ -81,13 +116,13 @@ void function SpyglassApi_OnApiVersionRequestComplete(HttpRequestResponse respon
 }
 
 /** Called when an attempt to retrieve the api version has failed. */
-void function SpyglassApi_OnApiVersionRequestFailed(int errorCode, string errorMessage)
+void function SpyglassApi_OnApiVersionRequestFailed(HttpRequestFailure failure)
 {
-    printt(format("[Spyglass] SpyglassApi_GetApiVersion() failed with error code %i: %s", errorCode, errorMessage));
+    printt(format("[Spyglass] SpyglassApi_GetApiVersion() failed with error code %i: %s", failure.errorCode, failure.errorMessage));
     
     Spyglass_ApiVersion data;
     data.ApiResult.Success = false;
-    data.ApiResult.Error = format("(%i) %s", errorCode, errorMessage);
+    data.ApiResult.Error = format("(%i) %s", failure.errorCode, failure.errorMessage);
 
     SpyglassApi_ExecuteApiVersionCallbacks(data);
 }
@@ -107,8 +142,11 @@ bool function SpyglassApi_GetApiVersion(void functionref(Spyglass_ApiVersion) ca
     }
 
     // Make the request, and if successfully started, queue the callback.
-    string apiUrl = Spyglass_SanitizeUrl(format("%s/version", Spyglass_GetApiHostname()));
-    if (NSHttpGet(apiUrl, {}, SpyglassApi_OnApiVersionRequestComplete, SpyglassApi_OnApiVersionRequestFailed))
+    HttpRequest request;
+    request.method = HttpRequestMethod.GET;
+    request.url = Spyglass_SanitizeUrl(format("%s/version", Spyglass_GetApiHostname()));
+
+    if (SpyglassApi_MakeHttpRequest(request, SpyglassApi_OnApiVersionRequestComplete, SpyglassApi_OnApiVersionRequestFailed))
     {
         ApiVersionCallbacks.append(callback);
         return true;
@@ -142,8 +180,6 @@ void function SpyglassApi_OnApiStatsRequestComplete(HttpRequestResponse response
 
     if (response.statusCode == 200)
     {
-        SpyglassApi_ParseVersionHeaders(response);
-
         table decodedBody = DecodeJSON(response.body);
         Spyglass_TryParseApiStats(decodedBody, data);
     }
@@ -152,13 +188,13 @@ void function SpyglassApi_OnApiStatsRequestComplete(HttpRequestResponse response
 }
 
 /** Called when an attempt to retrieve the api stats has failed. */
-void function SpyglassApi_OnApiStatsRequestFailed(int errorCode, string errorMessage)
+void function SpyglassApi_OnApiStatsRequestFailed(HttpRequestFailure failure)
 {
-    printt(format("[Spyglass] SpyglassApi_GetApiStats() failed with error code %i: %s", errorCode, errorMessage));
+    printt(format("[Spyglass] SpyglassApi_GetApiStats() failed with error code %i: %s", failure.errorCode, failure.errorMessage));
     
     Spyglass_ApiStats data;
     data.ApiResult.Success = false;
-    data.ApiResult.Error = format("(%i) %s", errorCode, errorMessage);
+    data.ApiResult.Error = format("(%i) %s", failure.errorCode, failure.errorMessage);
     
     SpyglassApi_ExecuteApiStatsCallbacks(data);
 }
@@ -173,8 +209,11 @@ bool function SpyglassApi_GetStats(void functionref(Spyglass_ApiStats) callback)
     }
 
     // Make the request, and if successfully started, queue the callback.
-    string apiUrl = Spyglass_SanitizeUrl(format("%s/stats", Spyglass_GetApiHostname()));
-    if (NSHttpGet(apiUrl, {}, SpyglassApi_OnApiStatsRequestComplete, SpyglassApi_OnApiStatsRequestFailed))
+    HttpRequest request;
+    request.method = HttpRequestMethod.GET;
+    request.url = Spyglass_SanitizeUrl(format("%s/stats", Spyglass_GetApiHostname()));
+
+    if (SpyglassApi_MakeHttpRequest(request, SpyglassApi_OnApiStatsRequestComplete, SpyglassApi_OnApiStatsRequestFailed))
     {
         ApiStatsCallbacks.append(callback);
         return true;

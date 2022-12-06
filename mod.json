@@ -75,6 +75,10 @@
             "RunOn": "(CLIENT || SERVER) && MP"
         },
         {
+            "Path": "spyglass/api/api_sanctions.nut",
+            "RunOn": "(CLIENT || SERVER) && MP"
+        },
+        {
             "Path": "spyglass/spyglass.nut",
             "RunOn": "SERVER && MP",
             "ServerCallback":

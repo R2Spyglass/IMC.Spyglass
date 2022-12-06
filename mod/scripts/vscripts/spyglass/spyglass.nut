@@ -66,6 +66,8 @@ void function OnPlayingStarted()
     {
         NSSendInfoMessageToPlayer(player, "This server is monitored by Spyglass. Global sanctions are in effect.");
     }
+
+    SpyglassApi_QueryPlayerSanctions([GetPlayerArray()[0].GetUID()], null);
 }
 
 void function OnClientConnecting(entity player)

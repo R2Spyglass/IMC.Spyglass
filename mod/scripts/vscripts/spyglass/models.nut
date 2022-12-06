@@ -125,3 +125,16 @@ global struct Spyglass_ApiStats
     // The amount of sanctions tracked in the database.
     int Sanctions
 }
+
+// Contains the result of an attempt to search for a sanction, either by id or owning player uid.
+global struct Spyglass_SanctionSearchResult
+{
+    Spyglass_ApiResult ApiResult
+    
+    // The unique ids (UID) that were used to search for sanctions, if any.
+    array<string> UniqueIDs
+    // The id that was used to search for the sanction, if any. (-1 if it wasn't used)
+    int Id
+    // The list of players who match the query and their sanctions, if any.
+    table<string, array<Spyglass_PlayerInfraction> > Matches
+}
