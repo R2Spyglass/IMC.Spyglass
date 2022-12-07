@@ -92,7 +92,7 @@ string function Spyglass_GetInfractionAsString(Spyglass_PlayerInfraction infract
         case Spyglass_InfractionType.Cheating: typeString = "Cheating"; break;
     }
 
-    return format("\x1b[38;5;123m[#%i @ %s] \x1b[38;2;254;64;64m(%s): \x1b[0m%s\nExpiry: %s", infraction.ID, infraction.IssuedAtReadable, typeString, infraction.Reason, infraction.ExpiresAtReadable);
+    return format("\x1b[38;5;123m[#%i @ %s] \x1b[38;2;254;64;64m(%s): \x1b[0m%s\nExpires: %s", infraction.ID, infraction.IssuedAtReadable, typeString, infraction.Reason, infraction.ExpiresAtReadable);
 }
 
 /** Splits the value of the given string convar into an array, using commas as a separator. */

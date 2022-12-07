@@ -43,6 +43,7 @@ void function OnStatsRequestComplete(Spyglass_ApiStats response)
 {
     if (response.ApiResult.Success)
     {
+        // TODO: version check
         Spyglass_SayAll(format("Uplink established successfully, API version v%s.", SpyglassApi_GetLatestVersion()));
         Spyglass_SayAll(format("I am currently tracking %i pilots and %i sanctions.", response.Players, response.Sanctions));
     }
@@ -64,10 +65,11 @@ void function OnPlayingStarted()
 {
     foreach (entity player in GetPlayerArray())
     {
-        NSSendInfoMessageToPlayer(player, "This server is monitored by Spyglass. Global sanctions are in effect.");
+        if (IsValid(player))
+        {
+            NSSendInfoMessageToPlayer(player, "This server is monitored by Spyglass. Global sanctions are in effect.");
+        }
     }
-
-    SpyglassApi_QueryPlayerSanctions([GetPlayerArray()[0].GetUID()], null);
 }
 
 void function OnClientConnecting(entity player)

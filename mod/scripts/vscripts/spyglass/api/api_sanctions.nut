@@ -10,10 +10,38 @@ global function SpyglassApi_QueryPlayerSanctions;
 
 void function SpyglassApi_OnQueryPlayerSanctionsSuccessful(HttpRequestResponse response, void functionref(Spyglass_SanctionSearchResult) callback)
 {
+    if (callback == null)
+    {
+        return;
+    }
+
+    Spyglass_SanctionSearchResult data;
+    data.ApiResult.Success = false;
+    data.ApiResult.Error = format("API returned a non-200 status code: %i", response.statusCode);
+
+    if (response.statusCode == 200)
+    {
+        table decodedBody = DecodeJSON(response.body);
+        Spyglass_TryParseSanctionSearchResult(decodedBody, data);
+    }
+
+    callback(data);
 }
 
 void function SpyglassApi_OnQueryPlayerSanctionsFailed(HttpRequestFailure failure, void functionref(Spyglass_SanctionSearchResult) callback)
 {
+    printt(format("[Spyglass] SpyglassApi_QueryPlayerSanctions() failed with error code %i: %s", failure.errorCode, failure.errorMessage));
+    
+    if (callback == null)
+    {
+        return;
+    }
+
+    Spyglass_SanctionSearchResult data;
+    data.ApiResult.Success = false;
+    data.ApiResult.Error = format("(%i) %s", failure.errorCode, failure.errorMessage);
+
+    callback(data);
 }
 
 /**
@@ -29,6 +57,12 @@ bool function SpyglassApi_QueryPlayerSanctions(array<string> uids, void function
     if (uids.len() == 0)
     {
         CodeWarning("[Spyglass] Attempted to query player sanctions with an empty list of uids.");
+        return false;
+    }
+
+    if (callback == null)
+    {
+        CodeWarning("[Spyglass] Attempted to query player sanctions with no callback.");
         return false;
     }
 

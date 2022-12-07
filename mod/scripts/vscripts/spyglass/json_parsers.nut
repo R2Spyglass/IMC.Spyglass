@@ -134,6 +134,39 @@ bool function Spyglass_TryParseArray(table data, string key)
 }
 
 /**
+ * Tries to parse the given API response into a Spyglass_ApiResult struct.
+ * @param response The decoded JSON response from the API.
+ * @param outResult The parsed Spyglass_ApiResult struct on success.
+ * @returns True if we've parsed the response successfully (check the ApiResult field first!).
+ */
+bool function Spyglass_TryParseApiResult(table response, Spyglass_ApiResult outResult)
+{
+    outResult.Success = false;
+    outResult.Error = "Failed to parse API response into a Spyglass_ApiResult struct.";
+
+    if (Spyglass_TryParseBool(response, "success"))
+    {
+        outResult.Success = expect bool(response["success"]);
+
+        if (!outResult.Success)
+        {
+            if (Spyglass_TryParseString(response, "error"))
+            {
+                outResult.Error = expect string(response["error"]);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Tries to parse the given API response into a Spyglass_ApiVersion struct.
  * @param response The decoded JSON response from the API.
  * @param outVersion The parsed Spyglass_ApiVersion struct on success.
@@ -149,20 +182,17 @@ bool function Spyglass_TryParseApiVersion(table response, Spyglass_ApiVersion ou
         return false;
     }
 
-    if (!Spyglass_TryParseBool(response, "success"))
+    Spyglass_ApiResult parsedResult;
+    if (!Spyglass_TryParseApiResult(response, parsedResult))
     {
         return false;
     }
 
-    outVersion.ApiResult.Success = expect bool(response["success"]);
+    outVersion.ApiResult.Success = parsedResult.Success;
+    outVersion.ApiResult.Error = parsedResult.Error;
 
     if (!outVersion.ApiResult.Success)
     {
-        if (Spyglass_TryParseString(response, "error"))
-        {
-            outVersion.ApiResult.Error = expect string(response["error"]);
-        }
-
         return true;
     }
 
@@ -194,20 +224,17 @@ bool function Spyglass_TryParseApiStats(table response, Spyglass_ApiStats outSta
         return false;
     }
 
-    if (!Spyglass_TryParseBool(response, "success"))
+    Spyglass_ApiResult parsedResult;
+    if (!Spyglass_TryParseApiResult(response, parsedResult))
     {
         return false;
     }
-
-    outStats.ApiResult.Success = expect bool(response["success"]);
+    
+    outStats.ApiResult.Success = parsedResult.Success;
+    outStats.ApiResult.Error = parsedResult.Error;
 
     if (!outStats.ApiResult.Success)
     {
-        if (Spyglass_TryParseString(response, "error"))
-        {
-            outStats.ApiResult.Error = expect string(response["error"]);
-        }
-
         return true;
     }
 
@@ -258,11 +285,11 @@ bool function Spyglass_TryParsePlayerInfraction(table response, Spyglass_PlayerI
 
         if (Spyglass_TryParseInt(response, "expiresAt"))
         {
-            response.ExpiresAtTimestamp = expect int(response["expiresAt"]);
+            outInfraction.ExpiresAtTimestamp = expect int(response["expiresAt"]);
         }
         else
         {
-            response.ExpiresAtTimestamp = -1
+            outInfraction.ExpiresAtTimestamp = -1;
         }
 
         outInfraction.ExpiresAtReadable = expect string(response["expiresAtReadable"]);
@@ -291,18 +318,31 @@ bool function Spyglass_TryParseSanctionSearchResult(table response, Spyglass_San
         return false;
     }
 
-    if (!Spyglass_TryParseInt(response, "id"))
+    outResult.ApiResult.Success = false;
+    outResult.ApiResult.Error = "Failed to parse API response into a Spyglass_SanctionSearchResult struct.";
+
+    Spyglass_ApiResult parsedResult;
+    if (!Spyglass_TryParseApiResult(response, parsedResult))
     {
         return false;
     }
 
+    outResult.ApiResult.Success = parsedResult.Success;
+    outResult.ApiResult.Error = parsedResult.Error;
+
+    if (!outResult.ApiResult.Success)
+    {
+        return true;
+    }
+
+
     outResult.UniqueIDs = [];
     outResult.Matches = {};
-    outResult.Id = expect int(response["id"]);
+    outResult.Id = -1;
 
-    if (Spyglass_TryParseArray(response, "uniqueIds"))
+    if (Spyglass_TryParseArray(response, "uniqueIDs"))
     {
-        foreach (var value in expect array(response["uniqueIds"]))
+        foreach (var value in expect array(response["uniqueIDs"]))
         {
             if (typeof value == "string")
             {
@@ -310,7 +350,16 @@ bool function Spyglass_TryParseSanctionSearchResult(table response, Spyglass_San
             }
         }
     }
-    else if (Spyglass_TryParseTable(response, "matches"))
+    else if (Spyglass_TryParseInt(response, "id"))
+    {
+        outResult.Id = expect int(response["id"]);
+    }
+    else
+    {
+        return false;
+    }
+    
+    if (Spyglass_TryParseTable(response, "matches"))
     {
         table matches = expect table(response["matches"]);
 
@@ -333,10 +382,6 @@ bool function Spyglass_TryParseSanctionSearchResult(table response, Spyglass_San
                 }
             }
         }
-    }
-    else
-    {
-        return false;
     }
 
     return true;
