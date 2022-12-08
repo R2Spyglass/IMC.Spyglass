@@ -251,6 +251,65 @@ bool function Spyglass_TryParseApiStats(table response, Spyglass_ApiStats outSta
 }
 
 /**
+ * Tries to parse the given API response into a Spyglass_PlayerInfo struct.
+ * @param response The decoded JSON response from the API.
+ * @param outPlayerInfo The parsed Spyglass_PlayerInfo struct on success.
+ * @returns True if we've parsed the response successfully.
+ */
+bool function Spyglass_TryParsePlayerInfo(table response, Spyglass_PlayerInfo outPlayerInfo)
+{
+    if (response.len() == 0)
+    {
+        return false;
+    }
+
+    outPlayerInfo.KnownAliases = [];
+
+    bool success = Spyglass_TryParseString(response, "uniqueId");
+    success = success && Spyglass_TryParseString(response, "username");
+    success = success && Spyglass_TryParseBool(response, "isMaintainer");
+    success = success && Spyglass_TryParseInt(response, "createdAt");
+    success = success && Spyglass_TryParseString(response, "createdAtReadable");
+    success = success && Spyglass_TryParseInt(response, "lastSeenAt");
+    success = success && Spyglass_TryParseString(response, "lastSeenAtReadable");
+
+    if (success)
+    {
+        outPlayerInfo.UniqueId = expect string(response["uniqueId"]);
+        outPlayerInfo.Username = expect string(response["username"]);
+        outPlayerInfo.IsMaintainer = expect bool(response["isMaintainer"]);
+        outPlayerInfo.CreatedAtTimestamp = expect int(response["createdAt"]);
+        outPlayerInfo.CreatedAtReadable = expect string(response["createdAtReadable"]);
+        outPlayerInfo.LastSeenAtTimestamp = expect int(response["lastSeenAt"]);
+        outPlayerInfo.LastSeenAtReadable = expect string(response["lastSeenAtReadable"]);
+
+        if (Spyglass_TryParseString(response, "lastSeenOnServer"))
+        {
+            outPlayerInfo.LastSeenOnServer = expect string(response["lastSeenOnServer"]);
+        }
+        else
+        {
+            outPlayerInfo.LastSeenOnServer = null;
+        }
+
+        if (Spyglass_TryParseArray(response, "knownAliases"))
+        {
+            foreach (var alias in expect array(response["knownAliases"]))
+            {
+                if (typeof alias == "string")
+                {
+                    outPlayerInfo.KnownAliases.append(expect string(alias));
+                }
+            }
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Tries to parse the given API response into a Spyglass_PlayerInfraction struct.
  * @param response The decoded JSON response from the API.
  * @param outInfraction The parsed Spyglass_PlayerInfraction struct on success.
@@ -279,7 +338,31 @@ bool function Spyglass_TryParsePlayerInfraction(table response, Spyglass_PlayerI
     {
         outInfraction.ID = expect int(response["id"]);
         outInfraction.UniqueId = expect string(response["uniqueId"]);
+
+        if (Spyglass_TryParseTable(response, "owningPlayer"))
+        {
+            table owner = expect table(response["owningPlayer"]);
+            Spyglass_PlayerInfo parsedOwner;
+            
+            if (Spyglass_TryParsePlayerInfo(owner, parsedOwner))
+            {
+                outInfraction.OwningPlayer = parsedOwner;
+            }
+        }
+
         outInfraction.IssuerId = expect string(response["issuerId"]);
+
+        if (Spyglass_TryParseTable(response, "issuerInfo"))
+        {
+            table issuer = expect table(response["issuerInfo"]);
+            Spyglass_PlayerInfo parsedIssuer;
+            
+            if (Spyglass_TryParsePlayerInfo(issuer, parsedIssuer))
+            {
+                outInfraction.IssuerInfo = parsedIssuer;
+            }
+        }
+
         outInfraction.IssuedAtTimestamp = expect int(response["issuedAt"]);
         outInfraction.IssuedAtReadable = expect string(response["issuedAtReadable"]);
 
@@ -289,7 +372,7 @@ bool function Spyglass_TryParsePlayerInfraction(table response, Spyglass_PlayerI
         }
         else
         {
-            outInfraction.ExpiresAtTimestamp = -1;
+            outInfraction.ExpiresAtTimestamp = null;
         }
 
         outInfraction.ExpiresAtReadable = expect string(response["expiresAtReadable"]);

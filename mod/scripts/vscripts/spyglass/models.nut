@@ -30,6 +30,29 @@ global enum Spyglass_SanctionType
     Ban = 2,
 }
 
+// Basic information about a tracked Titanfall 2 player.
+global struct Spyglass_PlayerInfo
+{
+    // The unique id (UID) of the player.
+    string UniqueId
+    // The username this player was initially seen with.
+    string Username
+    // Whether or not this player is a maintainer for Spyglass.
+    bool IsMaintainer
+    // The unix timestamp seconds of the date & time the player was added.
+    int CreatedAtTimestamp
+    // The time at which the player was added, in a readable string format.
+    string CreatedAtReadable
+    // The unix timestamp seconds of the date & time the player was last seen at.
+    int LastSeenAtTimestamp
+    // The time at which this player was last seen at, in a readable string format.
+    string LastSeenAtReadable
+    // The name of the server this player was last seen on, if any.
+    string ornull LastSeenOnServer
+    // List of known username aliases for this player.
+    array<string> KnownAliases
+}
+
 // Details about a sanction that was issued to a player.
 global struct Spyglass_PlayerInfraction
 {
@@ -37,15 +60,18 @@ global struct Spyglass_PlayerInfraction
     int ID 
     // The unique id (UID) of the player this sanction belongs to.
     string UniqueId
+    // Information about the player this sanction belongs to, if queried.
+    Spyglass_PlayerInfo ornull OwningPlayer
     // The unique id (UID) of the player who issued this sanction.
     string IssuerId
+    // Information about the player who issued this sanction, if queried.
+    Spyglass_PlayerInfo ornull IssuerInfo
     // The unix timestamp seconds of the date & time the sanction was issued.
     int IssuedAtTimestamp
     // The date and time at which this sanction was issued, in a readable string format.
     string IssuedAtReadable
     // The unix timestamp seconds of the date & time this sanction expires, if any.
-    // Null, empty or -1 means this sanction never expires.
-    int ExpiresAtTimestamp
+    int ornull ExpiresAtTimestamp
     // The time at which this sanction expires, if any, in a readable string format.
     string ExpiresAtReadable
     // The reason why this sanction was applied to the player.
