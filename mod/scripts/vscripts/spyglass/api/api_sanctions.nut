@@ -5,7 +5,6 @@
  * Controller: /sanctions
  */
 
-// TODO: Add convar to kick player on sanction query timeout. Defaults to disabled with a hefty warning on the danger of enabling!
 global function SpyglassApi_QueryPlayerSanctions;
 global function SpyglassApi_QuerySanctionById;
 

@@ -30,7 +30,7 @@
         },
         {
             "Name": "spyglass_welcome_message",
-            "DefaultValue": "\\x1b[38;5;208mSpyglass:\\x1b[0m I am currently monitoring this server, and global sanctions are in effect."
+            "DefaultValue": "This server is monitored by Spyglass. Global sanctions are in effect."
         },
         {
             "Name": "spyglass_sanction_notification_mode",
@@ -55,6 +55,18 @@
         {
             "Name": "spyglass_cache_api_minimum_version",
             "DefaultValue": ""
+        },
+        {
+            "Name": "spyglass_cache_muted_players",
+            "DefaultValue": ""
+        },
+        {
+            "Name": "spyglass_cache_banned_players",
+            "DefaultValue": ""
+        },
+        {
+            "Name": "spyglass_cache_disabled_from_error",
+            "DefaultValue": "0"
         }
     ],
     "Scripts": [
@@ -76,6 +88,10 @@
         },
         {
             "Path": "spyglass/api/api_sanctions.nut",
+            "RunOn": "(CLIENT || SERVER) && MP"
+        },
+        {
+            "Path": "spyglass/sanction_manager.nut",
             "RunOn": "(CLIENT || SERVER) && MP"
         },
         {

@@ -15,11 +15,12 @@ array<string> Spyglass_BannedPlayers;
 
 array<string> Spyglass_AuthenticatedPlayers;
 
-// TODO: Custom callback for sanctions
-
 void function Spyglass_Init()
 {
     printt("[Spyglass] Spyglass_Init() called.");
+    // Reset disabled flag, will be reset on init() if required.
+    SetConVarBool("spyglass_cache_disabled_from_error", false);
+
     AddCallback_OnClientConnecting(OnClientConnecting);
     AddCallback_OnClientConnected(OnClientConnected);
     AddCallback_OnClientDisconnected(OnClientDisconnected);
@@ -43,8 +44,21 @@ void function OnStatsRequestComplete(Spyglass_ApiStats response)
 {
     if (response.ApiResult.Success)
     {
-        // TODO: version check
-        Spyglass_SayAll(format("Uplink established successfully, API version v%s.", SpyglassApi_GetLatestVersion()));
+        Spyglass_SayAll(format("Uplink established successfully, API version v%s.", Spyglass_GetLatestVersion()));
+        
+        switch (Spyglass_VersionCheck())
+        {
+            case Spyglass_VersionCheckResult.Outdated:
+                Spyglass_SayAll(format("A new version '%s' is available. Please update whenever possible.", Spyglass_GetLatestVersion()));
+                break;
+            case Spyglass_VersionCheckResult.OutdatedIncompatible:
+                Spyglass_SayAll(format("\x1b[38;2;254;0;0mThis server is running an incompatible version of Spyglass, please update to '%s'.\x1b[0m", Spyglass_GetLatestVersion()));
+                Spyglass_SayAll("\x1b[38;2;254;0;0mThis mod will not work until updated.\x1b[0m");
+                printt("[Spyglass] Outdated and not meeting minimum required version by the API. Update as soon as possible.");
+                SetConVarBool("spyglass_cache_disabled_from_error", true);
+                return;
+        }
+
         Spyglass_SayAll(format("I am currently tracking %i pilots and %i sanctions.", response.Players, response.Sanctions));
     }
     else
@@ -56,18 +70,32 @@ void function OnStatsRequestComplete(Spyglass_ApiStats response)
 void function OnPrematchStarted()
 {
     printt("[Spyglass] Prematch started, connecting to API...");
+    Spyglass_SayAll(format("Initializing core, version %s.", NSGetModVersionByModName("IMC.Spyglass")));
     Spyglass_SayAll("Establishing uplink to IMC sanction database...");
 
-    SpyglassApi_GetStats(OnStatsRequestComplete);
+    if (!SpyglassApi_GetStats(OnStatsRequestComplete))
+    {
+        SetConVarBool("spyglass_cache_disabled_from_error", true);
+        Spyglass_SayAll("\x1b[38;2;254;0;0mAn error has occurred, check server console for more information.\x1b[0m");
+        Spyglass_SayAll("\x1b[38;2;254;0;0mThis mod will not work until the issue is resolved.\x1b[0m");
+    }
 }
 
 void function OnPlayingStarted()
 {
-    foreach (entity player in GetPlayerArray())
+    if (Spyglass_IsDisabled())
     {
-        if (IsValid(player))
+        return;
+    }
+
+    if (GetConVarBool("spyglass_welcome_message_enabled"))
+    {
+        foreach (entity player in GetPlayerArray())
         {
-            NSSendInfoMessageToPlayer(player, "This server is monitored by Spyglass. Global sanctions are in effect.");
+            if (IsValid(player))
+            {
+                NSSendInfoMessageToPlayer(player, GetConVarString("spyglass_welcome_message"));
+            }
         }
     }
 }

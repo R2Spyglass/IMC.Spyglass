@@ -5,32 +5,12 @@
  * Controller: /
  */
 
-global function SpyglassApi_GetLatestVersion;
-global function SpyglassApi_GetMinimumVersion;
 global function SpyglassApi_MakeHttpRequest;
 global function SpyglassApi_GetApiVersion;
 global function SpyglassApi_GetStats;
 
 array<void functionref(Spyglass_ApiVersion)> ApiVersionCallbacks;
 array<void functionref(Spyglass_ApiStats)> ApiStatsCallbacks;
-
-/** 
- * Returns the cached latest version of Spyglass.
- * Updated every time we make a successful API call.
- */
-string function SpyglassApi_GetLatestVersion()
-{
-    return GetConVarString("spyglass_cache_api_latest_version");
-}
-
-/** 
- * Returns the cached minimum required version of Spyglass.
- * Updated every time we make a successful API call.
- */
-string function SpyglassApi_GetMinimumVersion()
-{
-    return GetConVarString("spyglass_cache_api_minimum_version");
-}
 
 /**
  * Wraps NSHttpRequest() to setup special headers in a request, and capture responses for processing. 
@@ -41,6 +21,12 @@ string function SpyglassApi_GetMinimumVersion()
  */
 bool function SpyglassApi_MakeHttpRequest(HttpRequest request, void functionref(HttpRequestResponse) onSuccess = null, void functionref(HttpRequestFailure) onFailure = null)
 {
+    if (Spyglass_IsDisabled())
+    {
+        CodeWarning(format("[Spyglass] HTTP request to '%s' aborted, disabled to due error.", request.url));
+        return false;
+    }
+
     SpyglassApi_SetupHeaders(request);
 
     // Wrap the success callback to capture headers.

@@ -1,3 +1,25 @@
+// Result of a version check.
+global enum Spyglass_VersionCheckResult
+{
+    /** We do not have any remote version to compare to. */
+    Unknown = 0,
+    /** We are outdated and incompatible with the API. Spyglass will not function. */
+    OutdatedIncompatible = 1,
+    /** We are outdated but will still function correctly. */
+    Outdated = 2,
+    /** We are up to date with the latest version. */
+    UpToDate = 3,
+}
+
+// Holds data about a spyglass local or remote version, with major.minor.patch.
+global struct Spyglass_Version
+{
+    // Major.Minor.Patch
+    int Major
+    int Minor
+    int Patch
+}
+
 // The type of infraction that resulted in a player sanction.
 global enum Spyglass_InfractionType
 {

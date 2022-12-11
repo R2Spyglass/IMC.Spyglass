@@ -118,3 +118,116 @@ string function Spyglass_SanitizeUrl(string url)
     
     return strip(url);
 }
+
+/** 
+ * Returns the cached latest version of Spyglass.
+ * Updated every time we make a successful API call.
+ */
+string function Spyglass_GetLatestVersion()
+{
+    return strip(GetConVarString("spyglass_cache_api_latest_version"));
+}
+
+/** 
+ * Returns the cached minimum required version of Spyglass.
+ * Updated every time we make a successful API call.
+ */
+string function Spyglass_GetMinimumVersion()
+{
+    return strip(GetConVarString("spyglass_cache_api_minimum_version"));
+}
+
+/**
+ * Parses the text representation of a version into a version structure.
+ * Must be in Major.Minor.Patch form.
+ * @param text The text representation of the version.
+ * @param outVersion The version data that was parsed from the string.
+ * @returns True if parsing was successful.
+ */
+bool function Spyglass_ParseVersion(string text, Spyglass_Version outVersion)
+{
+    text = strip(text);
+    array<string> components = split(text, ".");
+    
+    if (components.len() != 3)
+    {
+        return false;
+    }
+
+    for (int i = 0; i < components.len(); i++)
+    {
+        components[i] = strip(components[i]);
+    }
+
+    outVersion.Major = components[0].tointeger();
+    outVersion.Minor = components[1].tointeger();
+    outVersion.Patch = components[2].tointeger();
+
+    // Make sure parsing worked by comparing them back into strings.
+    return outVersion.Major.tostring() == components[0]
+        && outVersion.Minor.tostring() == components[1]
+        && outVersion.Patch.tostring() == components[2];
+}
+
+/**
+ * Compares the local version to the other version.
+ * @param localVersion The local version to compare the other version to. 
+ * @param otherVersion The other version to compare the local one to.
+ * @returns -1 if outdated, 0 if equal, +1 if greater than the other version.
+ */
+int function Spyglass_CompareVersions(Spyglass_Version localVersion, Spyglass_Version otherVersion)
+{
+    if (localVersion.Major == otherVersion.Major
+        && localVersion.Minor == otherVersion.Minor
+        && localVersion.Patch == otherVersion.Patch)
+    {
+        return 0;
+    }
+
+    if (localVersion.Major > otherVersion.Major
+        || localVersion.Major == otherVersion.Major && localVersion.Minor > otherVersion.Minor
+        || localVersion.Major == otherVersion.Major && localVersion.Minor == otherVersion.Minor && localVersion.Patch > otherVersion.Patch)
+    {
+        return 1;
+    }
+
+    return -1;
+}
+
+/** 
+ * Checks the local version against the API's version if cached. 
+ * Returns a Spyglass_VersionCheckResult in integer form.
+ */
+int function Spyglass_VersionCheck()
+{
+    Spyglass_Version localVersion;
+    Spyglass_Version minimumVersion;
+    Spyglass_Version latestVersion;
+
+    if (!Spyglass_ParseVersion(NSGetModVersionByModName("IMC.Spyglass"), localVersion)
+        || !Spyglass_ParseVersion(Spyglass_GetMinimumVersion(), minimumVersion)
+        || !Spyglass_ParseVersion(Spyglass_GetLatestVersion(), latestVersion))
+    {
+        return Spyglass_VersionCheckResult.Unknown;
+    }
+
+    int minimumCheck = Spyglass_CompareVersions(localVersion, minimumVersion);
+    if (minimumCheck == -1)
+    {
+        return Spyglass_VersionCheckResult.OutdatedIncompatible;
+    }
+
+    int latestCheck = Spyglass_CompareVersions(localVersion, latestVersion);
+    if (latestCheck == -1)
+    {
+        return Spyglass_VersionCheckResult.Outdated;
+    }
+
+    return Spyglass_VersionCheckResult.UpToDate;
+}
+
+/** Returns whether or not Spyglass is currently disabled due to an error. */
+bool function Spyglass_IsDisabled()
+{
+    return GetConVarBool("spyglass_cache_disabled_from_error");
+}
