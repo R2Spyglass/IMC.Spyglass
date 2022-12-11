@@ -7,7 +7,7 @@ global function Spyglass_IsPlayerInSanctionCache;
 global function Spyglass_GetCachedPlayerSanctions;
 global function Spyglass_IsSanctionInCache;
 global function Spyglass_GetCachedSanction;
-// global function Spyglass_RefreshAllPlayerSanctions;
+global function Spyglass_RefreshAllPlayerSanctions;
 
 // TODO: Custom callback for sanctions
 
@@ -68,4 +68,95 @@ Spyglass_PlayerInfraction function Spyglass_GetCachedSanction(int id)
     }
 
     return clone Spyglass_CachedSanctions[id];
+}
+
+void function Spyglass_UpdateSanctions(Spyglass_SanctionSearchResult result)
+{
+    // Remove cached sanctions for players that returned no sanctions.
+    foreach (string uid in result.UniqueIDs)
+    {
+        if (!(uid in result.Matches))
+        {
+            if (uid in Spyglass_CachedPlayerSanctions)
+            {
+                // Clear all sanctions with that id.
+                foreach (Spyglass_PlayerInfraction sanction in Spyglass_CachedPlayerSanctions[uid])
+                {
+                    if (sanction.ID in Spyglass_CachedSanctions)
+                    {
+                        delete Spyglass_CachedSanctions[sanction.ID];
+                    }
+                }
+
+                Spyglass_CachedPlayerSanctions[uid] = [];
+            }
+            else
+            {
+                Spyglass_CachedPlayerSanctions[uid] <- [];
+            }
+        }
+    }
+
+    // Update sanctions that differ from the currently known ones.
+    foreach (string uid, array<Spyglass_PlayerInfraction> sanctions in result.Matches)
+    {
+
+    }
+}
+
+void function Spyglass_OnPlayerSanctionsRefreshed(Spyglass_SanctionSearchResult result)
+{
+    if (!result.ApiResult.Success)
+    {
+        Spyglass_SayAll(format("Failed to refresh player sanctions: %s", result.ApiResult.Error));
+        return;
+    }
+
+    Spyglass_UpdateSanctions(result);
+}
+
+/**
+ * Queries the sanctions of all connected players in order to ensure they are up to date.
+ * @param invalidateCache Whether or not to clear the local cache. Only set to true if you know what you're doing.
+ */
+bool function Spyglass_RefreshAllPlayerSanctions(bool invalidateCache = false)
+{
+    if (invalidateCache)
+    {
+        Spyglass_CachedPlayerSanctions = {};
+        Spyglass_CachedSanctions = {};
+    }
+
+    array<string> uids = [];
+
+    foreach (entity player in GetPlayerArray())
+    {
+        if (IsValid(player))
+        {
+            if (!Spyglass_HasImmunity(player))
+            {
+                uids.append(player.GetUID());
+            }
+        }
+    }
+
+    if (uids.len() == 0)
+    {
+        // Fire the callback with no matches to refresh our local cache if required.
+        Spyglass_SanctionSearchResult result;
+        result.ApiResult.Success = true;
+
+        foreach (entity player in GetPlayerArray())
+        {
+            if (IsValid(player))
+            {
+                result.UniqueIDs.append(player.GetUID());
+            }
+        }
+
+        Spyglass_OnPlayerSanctionsRefreshed(result);
+        return true;
+    }
+
+    return SpyglassApi_QueryPlayerSanctions(uids, Spyglass_OnPlayerSanctionsRefreshed, GetConVarBool("spyglass_maintainers_are_admins"), false, false);
 }

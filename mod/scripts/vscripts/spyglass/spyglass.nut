@@ -2,8 +2,6 @@ global function Spyglass_Init;
 global function Spyglass_ChatSendPlayerInfractions;
 global function Spyglass_SayAll;
 global function Spyglass_SayPrivate;
-global function Spyglass_IsAdmin;
-global function Spyglass_HasImmunity;
 global function Spyglass_IsMuted;
 global function Spyglass_IsBanned;
 global function Spyglass_GetOnlineAdmins;
@@ -18,7 +16,7 @@ array<string> Spyglass_AuthenticatedPlayers;
 void function Spyglass_Init()
 {
     printt("[Spyglass] Spyglass_Init() called.");
-    // Reset disabled flag, will be reset on init() if required.
+    // Reset disabled flag, will be reset on init if required.
     SetConVarBool("spyglass_cache_disabled_from_error", false);
 
     AddCallback_OnClientConnecting(OnClientConnecting);
@@ -40,6 +38,7 @@ void function Spyglass_Init()
     }
 }
 
+// TODO: Retry on error, up to three times. Local error not counting (fail immediate).
 void function OnStatsRequestComplete(Spyglass_ApiStats response)
 {
     if (response.ApiResult.Success)
@@ -51,6 +50,7 @@ void function OnStatsRequestComplete(Spyglass_ApiStats response)
             case Spyglass_VersionCheckResult.Outdated:
                 Spyglass_SayAll(format("A new version '%s' is available. Please update whenever possible.", Spyglass_GetLatestVersion()));
                 break;
+            case Spyglass_VersionCheckResult.Unknown:
             case Spyglass_VersionCheckResult.OutdatedIncompatible:
                 Spyglass_SayAll(format("\x1b[38;2;254;0;0mThis server is running an incompatible version of Spyglass, please update to '%s'.\x1b[0m", Spyglass_GetLatestVersion()));
                 Spyglass_SayAll("\x1b[38;2;254;0;0mThis mod will not work until updated.\x1b[0m");
@@ -60,6 +60,7 @@ void function OnStatsRequestComplete(Spyglass_ApiStats response)
         }
 
         Spyglass_SayAll(format("I am currently tracking %i pilots and %i sanctions.", response.Players, response.Sanctions));
+        Spyglass_RefreshAllPlayerSanctions();
     }
     else
     {
@@ -362,19 +363,6 @@ void function Spyglass_SayPrivate(entity player, string message, bool isWhisper 
 {
     string finalMessage = format("\x1b[113mSpyglass:\x1b[0m %s", message);
     Chat_ServerPrivateMessage(player, finalMessage, isWhisper/*, withServerTag*/);
-}
-
-/** Checks whether or not the given player is in the admin uids convar. */
-bool function Spyglass_IsAdmin(entity player)
-{
-    array<string> adminUIDs = Spyglass_GetConVarStringArray("spyglass_admin_uids");
-    return IsValid(player) && player.IsPlayer() && adminUIDs.find(player.GetUID()) != -1;
-}
-
-/** Checks whether or not the given player is immune to Spyglass sanctions. */
-bool function Spyglass_HasImmunity(entity player)
-{
-    return GetConVarBool("spyglass_admin_immunity") && IsValid(player) && player.IsPlayer() && Spyglass_IsAdmin(player);
 }
 
 /** Checks whether or not the given player is currently muted. */

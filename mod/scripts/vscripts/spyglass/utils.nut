@@ -231,3 +231,18 @@ bool function Spyglass_IsDisabled()
 {
     return GetConVarBool("spyglass_cache_disabled_from_error");
 }
+
+#if SERVER
+/** Checks whether or not the given player is in the admin uids convar. */
+bool function Spyglass_IsAdmin(entity player)
+{
+    array<string> adminUIDs = Spyglass_GetConVarStringArray("spyglass_admin_uids");
+    return IsValid(player) && player.IsPlayer() && adminUIDs.find(player.GetUID()) != -1;
+}
+
+/** Checks whether or not the given player is immune to Spyglass sanctions. */
+bool function Spyglass_HasImmunity(entity player)
+{
+    return GetConVarBool("spyglass_admin_immunity") && IsValid(player) && player.IsPlayer() && Spyglass_IsAdmin(player);
+}
+#endif

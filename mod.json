@@ -92,7 +92,7 @@
         },
         {
             "Path": "spyglass/sanction_manager.nut",
-            "RunOn": "(CLIENT || SERVER) && MP"
+            "RunOn": "SERVER && MP"
         },
         {
             "Path": "spyglass/spyglass.nut",
