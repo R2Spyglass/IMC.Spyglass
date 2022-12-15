@@ -24,6 +24,14 @@ float function Spyglass_Maxf(float a, float b)
     return a >= b ? a : b;
 }
 
+/** 
+ * Returns the singular representation of a string if the count is equal to one, else returns the plural representation. 
+ */
+string function Spyglass_Pluralize(string singular, string plural, int count)
+{
+    return count == 1 ? singular : plural;
+}
+
 // Nabbed from Fifty's Server Utils, go check them out! https://northstar.thunderstore.io/package/Fifty/Server_Utilities/
 string function Spyglass_GetColoredConVarString(string cvarName)
 {
@@ -79,7 +87,7 @@ array<string> function Spyglass_SplitEscapedString(string value, string separato
 }
 
 /** Returns the string representation of a player infraction. */
-string function Spyglass_GetInfractionAsString(Spyglass_PlayerInfraction infraction)
+string function Spyglass_GetInfractionAsString(Spyglass_PlayerInfraction infraction, bool disconnectMessage = false)
 {
     string typeString = "Invalid";
     switch (infraction.Type)
@@ -92,7 +100,27 @@ string function Spyglass_GetInfractionAsString(Spyglass_PlayerInfraction infract
         case Spyglass_InfractionType.Cheating: typeString = "Cheating"; break;
     }
 
-    return format("\x1b[38;5;123m[#%i @ %s] \x1b[38;2;254;64;64m(%s): \x1b[0m%s\nExpires: %s", infraction.ID, infraction.IssuedAtReadable, typeString, infraction.Reason, infraction.ExpiresAtReadable);
+    string punishmentString = "Invalid";
+    switch (infraction.PunishmentType)
+    {
+        case Spyglass_SanctionType.Warn: punishmentString = "Warned"; break;
+        case Spyglass_SanctionType.Mute: punishmentString = "Muted"; break;
+        case Spyglass_SanctionType.Ban: punishmentString = "Banned"; break; 
+    }
+
+    if (!disconnectMessage)
+    {
+        return format("\x1b[38;5;123m[#%i @ %s] \x1b[38;2;254;64;64m(%s for %s): \x1b[0m%s\nExpires: %s", infraction.ID, infraction.IssuedAtReadable, punishmentString, typeString, infraction.Reason, infraction.ExpiresAtReadable);
+    }
+
+    string str = format("[Spyglass]: [#%i] %s for %s on %s. Reason: %s. Expires: %s.", infraction.ID, punishmentString, typeString, infraction.IssuedAtReadable, infraction.Reason, infraction.ExpiresAtReadable);
+    string appeal = strip(GetConVarString("spyglass_appeal_server"));
+    if (appeal.len() != 0)
+    {
+        str = format("%s Appeal on: %s", str, appeal);
+    }
+
+    return str;
 }
 
 /** Splits the value of the given string convar into an array, using commas as a separator. */
@@ -233,11 +261,96 @@ bool function Spyglass_IsDisabled()
 }
 
 #if SERVER
+
+/**
+ * Sends a message to everyone in the chat as Spyglass.
+ * @param message The message that Spyglass should send in chat.
+ * @param withServerTag Whether or not to display the [SERVER] tag prior to Spyglass' name.
+ */
+void function Spyglass_SayAll(string message, bool withServerTag = false)
+{
+    string finalMessage = format("\x1b[113mSpyglass:\x1b[0m %s", message);
+    Chat_ServerBroadcast(finalMessage, withServerTag);
+}
+
+/**
+ * Sends a message to the target player in the chat as Spyglass.
+ * @param player The player to send the message to.
+ * @param message The message that Spyglass should send in chat.
+ * @param isWhisper Whether or not to display the [WHISPER] tag prior to Spyglass' name.
+ * @param withServerTag Whether or not to display the [SERVER] tag prior to Spyglass' name.
+ */
+void function Spyglass_SayPrivate(entity player, string message, bool isWhisper = false, bool withServerTag = false)
+{
+    string finalMessage = format("\x1b[113mSpyglass:\x1b[0m %s", message);
+    Chat_ServerPrivateMessage(player, finalMessage, isWhisper, withServerTag);
+}
+
 /** Checks whether or not the given player is in the admin uids convar. */
 bool function Spyglass_IsAdmin(entity player)
 {
     array<string> adminUIDs = Spyglass_GetConVarStringArray("spyglass_admin_uids");
     return IsValid(player) && player.IsPlayer() && adminUIDs.find(player.GetUID()) != -1;
+}
+
+/**
+ * Sends the player's infractions in chat, if any. Packs them into messages together when possible.
+ * @param playerName The name of the player that owns the given infractions.
+ * @param targets If set, the infractions will only be sent to those players. Leave empty to send globally.
+ * @param limit The limit of infractions to send to the chat. Leave at default for all infractions.
+ * @param fromNewest Whether or not to print the newest infractions first, or start from the oldest.
+ */
+void function Spyglass_ChatSendPlayerInfractions(string playerName, array<Spyglass_PlayerInfraction> infractions, array<entity> targets = [], int limit = 0, bool fromNewest = true)
+{
+    foreach (entity target in targets)
+    {
+        if (!IsValid(target) || !target.IsPlayer())
+        {
+            CodeWarning("[Spyglass] Error: attempted to print player infractions to chat with invalid target entity.");
+            return;
+        }
+    }
+
+    // Get the player's infractions if any.
+    if (infractions.len() == 0)
+    {
+        return;
+    }
+
+    foreach (entity target in targets)
+    {
+        if (IsValid(target) && target.IsPlayer())
+        {
+            Spyglass_SayPrivate(target, format("Player \x1b[111m%s\x1b[0m has been sanctioned due to %i %s:", playerName, infractions.len(), 
+                Spyglass_Pluralize("infraction", "infractions", infractions.len())), false, false);
+        }
+    }
+
+    // Define loop start index and direction + condition here to avoid writing code twice.
+    int startIdx = fromNewest ? infractions.len() - 1 : 0;
+    bool functionref(int, int, int, int, bool) loopCond = bool function (int start, int curr, int len, int limit, bool newest)
+    {
+        return newest
+            ? (limit == 0  && curr >= 0) || curr >= Spyglass_Max(len - limit, 0)
+            : curr < Spyglass_Max(limit, len);
+    }
+
+    int functionref(int, bool) loopInc = int function (int curr, bool newest) { return newest ? curr - 1 : curr + 1 }
+
+    // Loop through all infractions to get their string respresentations.
+    for (int idx = startIdx; loopCond(startIdx, idx, infractions.len(), limit, fromNewest); idx = loopInc(idx, fromNewest))
+    {
+        Spyglass_PlayerInfraction infraction = infractions[idx];
+        string infractionStr = Spyglass_GetInfractionAsString(infraction);
+
+        foreach (entity target in targets)
+        {
+            if (IsValid(target) && target.IsPlayer())
+            {
+                Spyglass_SayPrivate(target, infractionStr, false, false);
+            }
+        }
+    }
 }
 
 /** Checks whether or not the given player is immune to Spyglass sanctions. */

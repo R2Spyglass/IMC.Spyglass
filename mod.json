@@ -9,6 +9,10 @@
             "DefaultValue": "https://localhost:6001/"
         },
         {
+            "Name": "spyglass_appeal_server",
+            "DefaultValue": "https://discord.gg/whKMsPN3nu"
+        },
+        {
             "Name": "spyglass_admin_uids",
             "DefaultValue": ""
         },

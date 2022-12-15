@@ -1,15 +1,7 @@
 global function Spyglass_Init;
-global function Spyglass_ChatSendPlayerInfractions;
-global function Spyglass_SayAll;
-global function Spyglass_SayPrivate;
-global function Spyglass_IsMuted;
-global function Spyglass_IsBanned;
 global function Spyglass_GetOnlineAdmins;
 global function Spyglass_AuthenticateAdmin;
 global function Spyglass_IsAuthenticated;
-
-array<string> Spyglass_MutedPlayers;
-array<string> Spyglass_BannedPlayers;
 
 array<string> Spyglass_AuthenticatedPlayers;
 
@@ -21,7 +13,7 @@ void function Spyglass_Init()
 
     AddCallback_OnClientConnecting(OnClientConnecting);
     AddCallback_OnClientConnected(OnClientConnected);
-    AddCallback_OnClientDisconnected(OnClientDisconnected);
+    //AddCallback_OnClientDisconnected(OnClientDisconnected);
     // AddCallback_OnReceivedSayTextMessage(OnClientMessage);
 
     AddCallback_GameStateEnter(eGameState.Prematch, OnPrematchStarted);
@@ -59,7 +51,8 @@ void function OnStatsRequestComplete(Spyglass_ApiStats response)
                 return;
         }
 
-        Spyglass_SayAll(format("I am currently tracking %i pilots and %i sanctions.", response.Players, response.Sanctions));
+        Spyglass_SayAll(format("I am currently tracking %i %s and %i %s.", response.Players, Spyglass_Pluralize("pilot", "pilots", response.Players), response.Sanctions,
+            Spyglass_Pluralize("sanction", "sanctions", response.Sanctions)));
         Spyglass_RefreshAllPlayerSanctions();
     }
     else
@@ -186,7 +179,7 @@ void function OnClientConnected(entity player)
     // {
     //     Spyglass_MutedPlayers.append(player.GetUID())
     //     printt(format("[Spyglass] Player '%s' [%s] was muted due to reaching an infraction score of %f.", player.GetPlayerName(), player.GetUID(), totalWeight))
-    //     message = format("Player \x1b[111m%s\x1b[0m has been muted due to %i infraction(s):", player.GetPlayerName(), validInfractions);
+    //     message = ;
     // }
     // else if (totalWeight >= GetConVarFloat("spyglass_warn_score_threshold"))
     // {
@@ -219,23 +212,23 @@ void function OnClientConnected(entity player)
     // }
 }
 
-void function OnClientDisconnected(entity player)
-{
-    if (IsValid(player))
-    {
-        int foundIndex = Spyglass_MutedPlayers.find(player.GetUID());
-        if (foundIndex != -1)
-        {
-            Spyglass_MutedPlayers.remove(foundIndex);
-        }
+// void function OnClientDisconnected(entity player)
+// {
+//     if (IsValid(player))
+//     {
+//         int foundIndex = Spyglass_MutedPlayers.find(player.GetUID());
+//         if (foundIndex != -1)
+//         {
+//             Spyglass_MutedPlayers.remove(foundIndex);
+//         }
 
-        int authIndex = Spyglass_AuthenticatedPlayers.find(player.GetUID());
-        if (authIndex != -1)
-        {
-            Spyglass_AuthenticatedPlayers.remove(authIndex);
-        }
-    }
-}
+//         int authIndex = Spyglass_AuthenticatedPlayers.find(player.GetUID());
+//         if (authIndex != -1)
+//         {
+//             Spyglass_AuthenticatedPlayers.remove(authIndex);
+//         }
+//     }
+// }
 
 ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
 {
@@ -245,7 +238,7 @@ ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
         return message;
     }
 
-    if (Spyglass_IsMuted(message.player))
+    if (Spyglass_IsPlayerMuted(message.player.GetUID()))
     {
         message.shouldBlock = true;
 
@@ -262,119 +255,6 @@ ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
     }
 
     return message;
-}
-
-/**
- * Sends the player's infractions in chat, if any. Packs them into messages together when possible.
- * @param uid The UID of the player for which to retrieve the infractions.
- * @param targets If set, the infractions will only be sent to those players. Leave empty to send globally.
- * @param limit The limit of infractions to send to the chat. Leave at default for all infractions.
- * @param fromNewest Whether or not to print the newest infractions first, or start from the oldest.
- */
-void function Spyglass_ChatSendPlayerInfractions(string uid, array<Spyglass_PlayerInfraction> infractions, array<entity> targets = [], int limit = 0, bool fromNewest = true)
-{
-    foreach (entity target in targets)
-    {
-        if (!IsValid(target) || !target.IsPlayer())
-        {
-            printt("[Spyglass] Error: attempted to print player infractions to chat with invalid target entity.");
-            return;
-        }
-    }
-
-    // Get the player's infractions if any.
-    if (infractions.len() == 0)
-    {
-        return;
-    }
-
-    // Define loop start index and direction + condition here to avoid writing code twice.
-    int startIdx = fromNewest ? infractions.len() - 1 : 0;
-    bool functionref(int, int, int, int, bool) loopCond = bool function (int start, int curr, int len, int limit, bool newest)
-    {
-        return newest
-            ? (limit == 0  && curr >= 0) || curr >= Spyglass_Max(len - limit, 0)
-            : curr < Spyglass_Max(limit, len);
-    }
-
-    int functionref(int, bool) loopInc = int function (int curr, bool newest) { return newest ? curr - 1 : curr + 1 }
-
-    // Loop through all infractions to get their string respresentations.
-    string currentMessage = "";
-    for (int idx = startIdx; loopCond(startIdx, idx, infractions.len(), limit, fromNewest); idx = loopInc(idx, fromNewest))
-    {
-        Spyglass_PlayerInfraction infraction = infractions[idx];
-        string infractionStr = Spyglass_GetInfractionAsString(infraction);
-
-        // Check if we can merge the message together (limit is 254 characters)
-        if (currentMessage.len() + infractionStr.len() + 1 <= 254)
-        {
-            currentMessage += currentMessage.len() != 0 
-                ? format("\n%s", infractionStr)
-                : infractionStr;
-        }
-        else
-        {
-            // Send the current message globally/to the targets.
-            foreach (entity target in targets)
-            {
-                if (IsValid(target) && target.IsPlayer())
-                {
-                    Spyglass_SayPrivate(target, currentMessage, false, false);
-                }
-            }
-
-            currentMessage = infractionStr;
-        }
-    }
-
-    // If we have a message left, send it.
-    if (currentMessage.len() > 0)
-    {
-        foreach (entity target in targets)
-        {
-            if (IsValid(target) && target.IsPlayer())
-            {
-                Spyglass_SayPrivate(target, currentMessage, false, false);
-            }
-        }
-    }
-}
-
-/**
- * Sends a message to everyone in the chat as Spyglass.
- * @param message The message that Spyglass should send in chat.
- * @param withServerTag Whether or not to display the [SERVER] tag prior to Spyglass' name.
- */
-void function Spyglass_SayAll(string message, bool withServerTag = false)
-{
-    string finalMessage = format("\x1b[113mSpyglass:\x1b[0m %s", message);
-    Chat_ServerBroadcast(finalMessage, withServerTag);
-}
-
-/**
- * Sends a message to the target player in the chat as Spyglass.
- * @param player The player to send the message to.
- * @param message The message that Spyglass should send in chat.
- * @param isWhisper Whether or not to display the [WHISPER] tag prior to Spyglass' name.
- * @param withServerTag Whether or not to display the [SERVER] tag prior to Spyglass' name.
- */
-void function Spyglass_SayPrivate(entity player, string message, bool isWhisper = false, bool withServerTag = false)
-{
-    string finalMessage = format("\x1b[113mSpyglass:\x1b[0m %s", message);
-    Chat_ServerPrivateMessage(player, finalMessage, isWhisper/*, withServerTag*/);
-}
-
-/** Checks whether or not the given player is currently muted. */
-bool function Spyglass_IsMuted(entity player)
-{
-    return IsValid(player) && player.IsPlayer() && Spyglass_MutedPlayers.find(player.GetUID()) != -1;
-}
-
-/** Checks whether or not the given player uid is banned, and has attempted to join the server this map. */
-bool function Spyglass_IsBanned(string uid)
-{
-    return Spyglass_BannedPlayers.find(uid) != -1;
 }
 
 /** Returns an array of admins that are currently online on this server. */

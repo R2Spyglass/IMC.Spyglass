@@ -11,6 +11,17 @@ global enum Spyglass_VersionCheckResult
     UpToDate = 3,
 }
 
+/** Results for a Spyglass sanction override (see sanction_manager.nut:Spyglass_AddPlayerSanctionOverrideCallback) */
+global enum Spyglass_SanctionOverrideResult
+{
+    /** This sanction was not handled, and we should continue calling other callbacks or fallback to default implementation. */
+    Unhandled = 0,
+    /** This sanction was ignored, and we shouldn't handle it any further. */
+    Ignored = 1,
+    /** This sanction was applied manually, and we shouldn't handle it any further. This will also execute the Spyglass_AddOnPlayerSanctionAppliedCallback() registered callbacks. */
+    AppliedSanction = 2,
+}
+
 // Holds data about a spyglass local or remote version, with major.minor.patch.
 global struct Spyglass_Version
 {
