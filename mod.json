@@ -45,10 +45,6 @@
             "DefaultValue": "0"
         },
         {
-            "Name": "spyglass_mute_sanction_type",
-            "DefaultValue": "0"
-        },
-        {
             "Name": "spyglass_command_prefix",
             "DefaultValue": "!"
         },
@@ -62,10 +58,6 @@
         },
         {
             "Name": "spyglass_cache_muted_players",
-            "DefaultValue": ""
-        },
-        {
-            "Name": "spyglass_cache_banned_players",
             "DefaultValue": ""
         },
         {
@@ -96,7 +88,11 @@
         },
         {
             "Path": "spyglass/sanction_manager.nut",
-            "RunOn": "SERVER && MP"
+            "RunOn": "SERVER && MP",
+            "ServerCallback":
+            {
+                "After": "Spyglass_InitSanctionManager"
+            }
         },
         {
             "Path": "spyglass/spyglass.nut",

@@ -13,8 +13,7 @@ void function Spyglass_Init()
 
     AddCallback_OnClientConnecting(OnClientConnecting);
     AddCallback_OnClientConnected(OnClientConnected);
-    //AddCallback_OnClientDisconnected(OnClientDisconnected);
-    // AddCallback_OnReceivedSayTextMessage(OnClientMessage);
+    AddCallback_OnReceivedSayTextMessage(OnClientMessage);
 
     AddCallback_GameStateEnter(eGameState.Prematch, OnPrematchStarted);
     AddCallback_GameStateEnter(eGameState.Playing, OnPlayingStarted)
@@ -44,8 +43,8 @@ void function OnStatsRequestComplete(Spyglass_ApiStats response)
                 break;
             case Spyglass_VersionCheckResult.Unknown:
             case Spyglass_VersionCheckResult.OutdatedIncompatible:
-                Spyglass_SayAll(format("\x1b[38;2;254;0;0mThis server is running an incompatible version of Spyglass, please update to '%s'.\x1b[0m", Spyglass_GetLatestVersion()));
-                Spyglass_SayAll("\x1b[38;2;254;0;0mThis mod will not work until updated.\x1b[0m");
+                Spyglass_SayAllError(format("This server is running an incompatible version of Spyglass, please update to '%s'.", Spyglass_GetLatestVersion()));
+                Spyglass_SayAllError("This mod will not work until updated");
                 printt("[Spyglass] Outdated and not meeting minimum required version by the API. Update as soon as possible.");
                 SetConVarBool("spyglass_cache_disabled_from_error", true);
                 return;
@@ -57,7 +56,7 @@ void function OnStatsRequestComplete(Spyglass_ApiStats response)
     }
     else
     {
-        Spyglass_SayAll(format("An error has occurred while establishing the uplink: %s", response.ApiResult.Error));
+        Spyglass_SayAllError(format("An error has occurred while establishing the uplink: %s", response.ApiResult.Error));
     }
 }
 
@@ -70,8 +69,8 @@ void function OnPrematchStarted()
     if (!SpyglassApi_GetStats(OnStatsRequestComplete))
     {
         SetConVarBool("spyglass_cache_disabled_from_error", true);
-        Spyglass_SayAll("\x1b[38;2;254;0;0mAn error has occurred, check server console for more information.\x1b[0m");
-        Spyglass_SayAll("\x1b[38;2;254;0;0mThis mod will not work until the issue is resolved.\x1b[0m");
+        Spyglass_SayAllError("An error has occurred, check server console for more information.");
+        Spyglass_SayAllError("This mod will not work until the issue is resolved.");
     }
 }
 
@@ -212,24 +211,6 @@ void function OnClientConnected(entity player)
     // }
 }
 
-// void function OnClientDisconnected(entity player)
-// {
-//     if (IsValid(player))
-//     {
-//         int foundIndex = Spyglass_MutedPlayers.find(player.GetUID());
-//         if (foundIndex != -1)
-//         {
-//             Spyglass_MutedPlayers.remove(foundIndex);
-//         }
-
-//         int authIndex = Spyglass_AuthenticatedPlayers.find(player.GetUID());
-//         if (authIndex != -1)
-//         {
-//             Spyglass_AuthenticatedPlayers.remove(authIndex);
-//         }
-//     }
-// }
-
 ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
 {
     // Ignore if the message is already blocked, if the player is invalid or the player is immune.
@@ -241,17 +222,6 @@ ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
     if (Spyglass_IsPlayerMuted(message.player.GetUID()))
     {
         message.shouldBlock = true;
-
-        int muteType = GetConVarInt("spyglass_mute_sanction_type");
-        if (muteType == Spyglass_MuteNotificationType.Notify)
-        {
-            Spyglass_SayPrivate(message.player, "I prevented you from talking as you are permanently muted.", true, false);
-        }
-        else if (muteType == Spyglass_MuteNotificationType.Shadowban)
-        {
-            // Send the message back to them so they don't even know it was muted.
-            Chat_PrivateMessage(message.player, message.player, message.message, false);
-        }
     }
 
     return message;

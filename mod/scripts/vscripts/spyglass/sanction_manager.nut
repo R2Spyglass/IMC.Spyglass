@@ -3,6 +3,8 @@
  * It caches sanctions and refreshes them when needed. 
  */
 
+global function Spyglass_InitSanctionManager;
+
 global function Spyglass_IsPlayerInSanctionCache;
 global function Spyglass_GetCachedPlayerSanctions;
 global function Spyglass_IsSanctionInCache;
@@ -39,6 +41,33 @@ array<string> Spyglass_MutedPlayers;
 
 /** List of currently banned players. */
 table<string, string> Spyglass_BannedPlayers;
+
+void function Spyglass_InitSanctionManager()
+{
+    printt("[Spyglass] Spyglass_InitSanctionManager() called.");
+    AddCallback_OnClientDisconnected(OnClientDisconnected);
+
+    // Apply muted players from the cache so we keep them muted until we refresh their sanctions.
+    Spyglass_ApplyMutedPlayersCache();
+}
+
+/**
+ * Callbacks
+ */
+
+/** Removes the player from muted players on disconnect. */
+void function OnClientDisconnected(entity player)
+{
+    if (IsValid(player))
+    {
+        int foundIndex = Spyglass_MutedPlayers.find(player.GetUID());
+        if (foundIndex != -1)
+        {
+            Spyglass_MutedPlayers.remove(foundIndex);
+            Spyglass_CacheMutedPlayers();
+        }
+    }
+}
 
 /** 
  * Add a callback that lets you manually handle player sanctions.
@@ -300,7 +329,7 @@ bool function Spyglass_ApplySanction(entity player, Spyglass_PlayerInfraction sa
     return false;
 }
 
-void function Spyglass_OnPlayerSanctionsRefreshed(Spyglass_SanctionSearchResult result)
+void function Spyglass_OnPlayerSanctionsRefreshed(Spyglass_SanctionSearchResult result, bool invalidateCache)
 {
     if (!result.ApiResult.Success)
     {
@@ -309,6 +338,19 @@ void function Spyglass_OnPlayerSanctionsRefreshed(Spyglass_SanctionSearchResult 
     }
 
     printt(format("[Spyglass] Player sanctions refreshed successfully, received %i matches.", result.Matches.len()));
+
+    if (invalidateCache)
+    {
+        Spyglass_CachedPlayerSanctions = {};
+        Spyglass_CachedSanctions = {};
+        Spyglass_AppliedSanctionCache = [];
+
+        // Refresh the mute and ban caches.
+        Spyglass_MutedPlayers = [];
+        Spyglass_BannedPlayers = {};
+
+        Spyglass_CacheMutedPlayers();
+    }
 
     table<string, array<Spyglass_PlayerInfraction> > deltaSanctions = Spyglass_UpdateSanctions(result);
     
@@ -378,13 +420,6 @@ void function Spyglass_OnPlayerSanctionsRefreshed(Spyglass_SanctionSearchResult 
  */
 bool function Spyglass_RefreshAllPlayerSanctions(bool invalidateCache = false)
 {
-    if (invalidateCache)
-    {
-        Spyglass_CachedPlayerSanctions = {};
-        Spyglass_CachedSanctions = {};
-        Spyglass_AppliedSanctionCache = [];
-    }
-
     array<string> uids = [];
 
     foreach (entity player in GetPlayerArray())
@@ -412,11 +447,16 @@ bool function Spyglass_RefreshAllPlayerSanctions(bool invalidateCache = false)
             }
         }
 
-        Spyglass_OnPlayerSanctionsRefreshed(result);
+        Spyglass_OnPlayerSanctionsRefreshed(result, true);
         return true;
     }
 
-    return SpyglassApi_QueryPlayerSanctions(uids, Spyglass_OnPlayerSanctionsRefreshed, GetConVarBool("spyglass_maintainers_are_admins"), false, false);
+    void functionref(Spyglass_SanctionSearchResult) onSanctionsRefreshed = void function(Spyglass_SanctionSearchResult result) : (invalidateCache)
+    {
+        Spyglass_OnPlayerSanctionsRefreshed(result, invalidateCache);
+    }
+
+    return SpyglassApi_QueryPlayerSanctions(uids, onSanctionsRefreshed, GetConVarBool("spyglass_maintainers_are_admins"), false, false);
 }
 
 /** Checks whether or not the given player uid is currently muted. */
@@ -431,6 +471,38 @@ bool function Spyglass_IsPlayerBanned(string uid)
     return uid in Spyglass_BannedPlayers;
 }
 
+/** Caches the currently muted players in a convar, in order to keep them muted after map change. */
+void function Spyglass_CacheMutedPlayers()
+{
+    string cache = "";
+
+    foreach (entity player in GetPlayerArray())
+    {
+        if (IsValid(player) && player.IsPlayer() && Spyglass_IsPlayerMuted(player.GetUID()))
+        {
+            cache = format("%s%s,", cache, player.GetUID());
+        }
+    }
+
+    SetConVarString("spyglass_cache_muted_players", cache);
+}
+
+/** Reads the muted players cache and applies the mutes. */
+void function Spyglass_ApplyMutedPlayersCache()
+{
+    array<string> muted = Spyglass_GetConVarStringArray("spyglass_cache_muted_players");
+
+    foreach (string uid in muted)
+    {
+        string sanitized = strip(uid);
+
+        if (uid.len() != 0 && !Spyglass_IsPlayerMuted(uid))
+        {
+            Spyglass_MutedPlayers.append(uid);
+        }
+    }
+}
+
 /** Mutes the given player. They won't be able to type in chat anymore. */
 void function Spyglass_MutePlayer(entity player)
 {
@@ -439,6 +511,7 @@ void function Spyglass_MutePlayer(entity player)
         if (!Spyglass_IsPlayerMuted(player.GetUID()))
         {
             Spyglass_MutedPlayers.append(player.GetUID());
+            Spyglass_CacheMutedPlayers();
         }
     }
 }
@@ -469,8 +542,8 @@ bool function Spyglass_BanPlayer(entity player, string reason)
     }
     else
     {
-        //ClientCommand(player, format("disconnect \"%s\"", reason));
-        ServerCommand(format("kick %s", player.GetPlayerName()));
+        ClientCommand(player, format("disconnect \"%s\"", reason));
+        //ServerCommand(format("kick %s", player.GetPlayerName()));
     }
 
     return true;

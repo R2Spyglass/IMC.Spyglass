@@ -110,10 +110,27 @@ string function Spyglass_GetInfractionAsString(Spyglass_PlayerInfraction infract
 
     if (!disconnectMessage)
     {
-        return format("\x1b[38;5;123m[#%i @ %s] \x1b[38;2;254;64;64m(%s for %s): \x1b[0m%s\nExpires: %s", infraction.ID, infraction.IssuedAtReadable, punishmentString, typeString, infraction.Reason, infraction.ExpiresAtReadable);
+        if (infraction.ExpiresAtTimestamp != null)
+        {
+            return format("\x1b[38;5;123m[#%i @ %s] \x1b[38;2;254;64;64m(%s for %s): \x1b[0m%s\nExpires: %s", infraction.ID, infraction.IssuedAtReadable, punishmentString, typeString, infraction.Reason, infraction.ExpiresAtReadable);
+        }
+        else
+        {
+            return format("\x1b[38;5;123m[#%i @ %s] \x1b[38;2;254;64;64m(Permanently %s for %s): \x1b[0m%s", infraction.ID, infraction.IssuedAtReadable, punishmentString, typeString, infraction.Reason);
+        }        
     }
 
-    string str = format("[Spyglass]: [#%i] %s for %s on %s. Reason: %s. Expires: %s.", infraction.ID, punishmentString, typeString, infraction.IssuedAtReadable, infraction.Reason, infraction.ExpiresAtReadable);
+    string str = "";
+
+    if (infraction.ExpiresAtTimestamp != null)
+    {
+        str = format("Spyglass: [#%i] %s for %s on %s. Reason: %s. Expires: %s.", infraction.ID, punishmentString, typeString, infraction.IssuedAtReadable, infraction.Reason, infraction.ExpiresAtReadable);
+    }
+    else
+    {
+        str = format("Spyglass: [#%i] Permanently %s for %s on %s. Reason: %s.", infraction.ID, punishmentString, typeString, infraction.IssuedAtReadable, infraction.Reason);
+    }
+
     string appeal = strip(GetConVarString("spyglass_appeal_server"));
     if (appeal.len() != 0)
     {
@@ -265,12 +282,21 @@ bool function Spyglass_IsDisabled()
 /**
  * Sends a message to everyone in the chat as Spyglass.
  * @param message The message that Spyglass should send in chat.
- * @param withServerTag Whether or not to display the [SERVER] tag prior to Spyglass' name.
  */
-void function Spyglass_SayAll(string message, bool withServerTag = false)
+void function Spyglass_SayAll(string message)
 {
     string finalMessage = format("\x1b[113mSpyglass:\x1b[0m %s", message);
-    Chat_ServerBroadcast(finalMessage, withServerTag);
+    Chat_ServerBroadcast(finalMessage, false);
+}
+
+/**
+ * Sends a message to everyone in the chat as Spyglass.
+ * @param message The message that Spyglass should send in chat.
+ */
+void function Spyglass_SayAllError(string message)
+{
+    string finalMessage = format("\x1b[113mSpyglass:\x1b[0m \x1b[38;2;254;0;0m%s\x1b[0m", message);
+    Chat_ServerBroadcast(finalMessage, false);
 }
 
 /**
