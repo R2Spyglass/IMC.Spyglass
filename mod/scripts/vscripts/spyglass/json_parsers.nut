@@ -396,13 +396,13 @@ bool function Spyglass_TryParsePlayerInfraction(table response, Spyglass_PlayerI
  */
 bool function Spyglass_TryParseSanctionSearchResult(table response, Spyglass_SanctionSearchResult outResult)
 {
+    outResult.ApiResult.Success = false;
+    outResult.ApiResult.Error = "Failed to parse API response into a Spyglass_SanctionSearchResult struct.";
+
     if (response.len() == 0)
     {
         return false;
     }
-
-    outResult.ApiResult.Success = false;
-    outResult.ApiResult.Error = "Failed to parse API response into a Spyglass_SanctionSearchResult struct.";
 
     Spyglass_ApiResult parsedResult;
     if (!Spyglass_TryParseApiResult(response, parsedResult))
@@ -417,7 +417,6 @@ bool function Spyglass_TryParseSanctionSearchResult(table response, Spyglass_San
     {
         return true;
     }
-
 
     outResult.UniqueIDs = [];
     outResult.Matches = {};
@@ -465,6 +464,115 @@ bool function Spyglass_TryParseSanctionSearchResult(table response, Spyglass_San
                 }
             }
         }
+    }
+
+    return true;
+}
+
+/**
+ * Tries to parse the given API response into a Spyglass_MaintainerAuthenticationTicket struct.
+ * @param response The decoded JSON response from the API.
+ * @param outResult The parsed Spyglass_MaintainerAuthenticationTicket struct on success.
+ * @returns True if we've parsed the response successfully.
+ */
+bool function Spyglass_TryParseMaintainerAuthenticationTicket(table response, Spyglass_MaintainerAuthenticationTicket outResult)
+{
+    if (Spyglass_TryParseString(response, "token"))
+    {
+        outResult.Token = expect string(response["token"]);
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Tries to parse the given API response into a Spyglass_MaintainerTicketValidationResult struct.
+ * @param response The decoded JSON response from the API.
+ * @param outResult The parsed Spyglass_MaintainerTicketValidationResult struct on success.
+ * @returns True if we've parsed the response successfully.
+ */
+bool function Spyglass_TryParseMaintainerTicketValidationResult(table response, Spyglass_MaintainerTicketValidationResult outResult)
+{
+    outResult.ApiResult.Success = false;
+    outResult.ApiResult.Error = "Failed to parse API response into a Spyglass_MaintainerTicketValidationResult struct.";
+
+    if (response.len() == 0)
+    {
+        return false;
+    }
+
+    Spyglass_ApiResult parsedResult;
+    if (!Spyglass_TryParseApiResult(response, parsedResult))
+    {
+        return false;
+    }
+
+    outResult.ApiResult.Success = parsedResult.Success;
+    outResult.ApiResult.Error = parsedResult.Error;
+
+    if (!outResult.ApiResult.Success)
+    {
+        return true;
+    }
+
+    if (Spyglass_TryParseBool(response, "isValid"))
+    {
+        outResult.IsValid = expect bool(response["isValid"]);
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Tries to parse the given API response into a Spyglass_MaintainerAuthenticationResult struct.
+ * @param response The decoded JSON response from the API.
+ * @param outResult The parsed Spyglass_MaintainerAuthenticationResult struct on success.
+ * @returns True if we've parsed the response successfully.
+ */
+bool function Spyglass_TryParseMaintainerAuthenticationResult(table response, Spyglass_MaintainerAuthenticationResult outResult)
+{
+    outResult.ApiResult.Success = false;
+    outResult.ApiResult.Error = "Failed to parse API response into a Spyglass_MaintainerAuthenticationResult struct.";
+
+    if (response.len() == 0)
+    {
+        return false;
+    }
+
+    Spyglass_ApiResult parsedResult;
+    if (!Spyglass_TryParseApiResult(response, parsedResult))
+    {
+        return false;
+    }
+
+    outResult.ApiResult.Success = parsedResult.Success;
+    outResult.ApiResult.Error = parsedResult.Error;
+
+    if (!outResult.ApiResult.Success)
+    {
+        return true;
+    }
+
+    if (Spyglass_TryParseTable(response, "ticket"))
+    {
+        table ticketData = expect table(response["ticket"]);
+        Spyglass_MaintainerAuthenticationTicket ticket;
+        if (Spyglass_TryParseMaintainerAuthenticationTicket(ticketData, ticket))
+        {
+            outResult.Ticket = ticket;
+        }
+        else
+        {
+            outResult.ApiResult.Success = false;
+            outResult.ApiResult.Error = "Failed to parse API response into a Spyglass_MaintainerAuthenticationResult struct (ticket parameter is invalid).";
+            return false;
+        }
+    }
+    else
+    {
+        outResult.Ticket = null;
     }
 
     return true;

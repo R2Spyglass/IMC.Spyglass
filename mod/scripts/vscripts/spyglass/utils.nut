@@ -131,7 +131,7 @@ string function Spyglass_GetInfractionAsString(Spyglass_PlayerInfraction infract
         str = format("Spyglass: [#%i] Permanently %s for %s on %s. Reason: %s.", infraction.ID, punishmentString, typeString, infraction.IssuedAtReadable, infraction.Reason);
     }
 
-    string appeal = strip(GetConVarString("spyglass_appeal_server"));
+    string appeal = strip(GetConVarString("spyglass_appeal_link"));
     if (appeal.len() != 0)
     {
         str = format("%s Appeal on: %s", str, appeal);
@@ -150,7 +150,13 @@ array<string> function Spyglass_GetConVarStringArray(string cvarName)
 /** Returns the base hostname of the configured Spyglass API backend. */
 string function Spyglass_GetApiHostname()
 {
-    return GetConVarString("spyglass_api_hostname");
+    return strip(GetConVarString("spyglass_api_hostname"));
+}
+
+/** Returns the configured api token if any. */
+string function Spyglass_GetApiToken()
+{
+    return strip(GetConVarString("spyglass_api_token"));
 }
 
 /** Returns a sanitized url for the Spyglass API */
@@ -277,6 +283,28 @@ bool function Spyglass_IsDisabled()
     return GetConVarBool("spyglass_cache_disabled_from_error");
 }
 
+#if CLIENT
+/**
+ * Writes a message to the local client's chat as Spyglass.
+ * @param message The message that Spyglass should send in chat.
+ */
+void function Spyglass_ClientSay(string message)
+{
+    string finalMessage = format("\x1b[95m[CLIENT] \x1b[113mSpyglass: \x1b[0m%s", message);
+    Chat_GameWriteLine(finalMessage);
+}
+
+/**
+ * Writes an error message to the local client's chat as Spyglass.
+ * @param message The message that Spyglass should send in chat.
+ */
+void function Spyglass_ClientSayError(string message)
+{
+    string finalMessage = format("\x1b[95m[CLIENT] \x1b[113mSpyglass: \x1b[38;2;254;0;0m%s", message);
+    Chat_GameWriteLine(finalMessage);
+}
+#endif
+
 #if SERVER
 
 /**
@@ -347,7 +375,7 @@ void function Spyglass_ChatSendPlayerInfractions(string playerName, array<Spygla
     {
         if (IsValid(target) && target.IsPlayer())
         {
-            Spyglass_SayPrivate(target, format("Player \x1b[111m%s\x1b[0m has been sanctioned due to %i %s:", playerName, infractions.len(), 
+            Spyglass_SayPrivate(target, format("Player %s has been sanctioned due to %i %s:", Spyglass_FriendlyColor(playerName), infractions.len(), 
                 Spyglass_Pluralize("infraction", "infractions", infractions.len())), false, false);
         }
     }
@@ -384,4 +412,11 @@ bool function Spyglass_HasImmunity(entity player)
 {
     return GetConVarBool("spyglass_admin_immunity") && IsValid(player) && player.IsPlayer() && Spyglass_IsAdmin(player);
 }
+
+/** Adds the friendly player color codes to the given input. */
+string function Spyglass_FriendlyColor(string input)
+{
+    return format("\x1b[111m%s\x1b[0m", input);
+}
+
 #endif

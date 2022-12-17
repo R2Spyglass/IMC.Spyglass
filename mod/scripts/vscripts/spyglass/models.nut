@@ -197,3 +197,28 @@ global struct Spyglass_SanctionSearchResult
     // The list of players who match the query and their sanctions, if any.
     table<string, array<Spyglass_PlayerInfraction> > Matches
 }
+
+// An authentication ticket allowing a maintainer to authenticate on a Northstar server.
+global struct Spyglass_MaintainerAuthenticationTicket
+{
+    // The token used to ensure the authentication attempt is valid.
+    string Token
+}
+
+// Contains the result of a maintainer's authentication attempt.
+global struct Spyglass_MaintainerAuthenticationResult
+{
+    Spyglass_ApiResult ApiResult
+
+    // The authentication ticket that was created on success.
+    Spyglass_MaintainerAuthenticationTicket ornull Ticket
+}
+
+// The result of an attempt to validate a maintainer's authentication token.
+global struct Spyglass_MaintainerTicketValidationResult
+{
+    Spyglass_ApiResult ApiResult
+
+    // Whether or not the authentication token is valid.
+    bool IsValid
+}

@@ -9,7 +9,11 @@
             "DefaultValue": "https://localhost:6001/"
         },
         {
-            "Name": "spyglass_appeal_server",
+            "Name": "spyglass_api_token",
+            "DefaultValue": "EEE0E372042654FE3C7175A90EBD75B8CB282C1727BA13E6F8ABDCB652963138"
+        },
+        {
+            "Name": "spyglass_appeal_link",
             "DefaultValue": "https://discord.gg/whKMsPN3nu"
         },
         {
@@ -85,6 +89,26 @@
         {
             "Path": "spyglass/api/api_sanctions.nut",
             "RunOn": "(CLIENT || SERVER) && MP"
+        },
+        {
+            "Path": "spyglass/api/api_authentication.nut",
+            "RunOn": "(CLIENT || SERVER) && MP"
+        },
+        {
+            "Path": "spyglass/server_authentication.nut",
+            "RunOn": "SERVER && MP",
+            "ServerCallback":
+            {
+                "Before": "Spyglass_AuthenticationServerInit"
+            }
+        },
+        {
+            "Path": "spyglass/client_authentication.nut",
+            "RunOn": "CLIENT && MP",
+            "ClientCallback":
+            {
+                "Before": "Spyglass_AuthenticationClientInit"
+            }
         },
         {
             "Path": "spyglass/sanction_manager.nut",
