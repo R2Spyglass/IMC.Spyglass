@@ -1,7 +1,5 @@
 global function Spyglass_AuthenticationServerInit;
-global function Spyglass_IsMaintainer;
-
-array<string> Spyglass_Maintainers = [];
+global function Spyglass_AuthenticationServerInitAfter;
 
 void function Spyglass_AuthenticationServerInit()
 {
@@ -10,15 +8,19 @@ void function Spyglass_AuthenticationServerInit()
     AddClientCommandCallback("spyglass_validateauthtoken", OnAuthenticationTokenValidationRequested);
 }
 
-/** Returns true if the given player is an authenticated maintainer. */
-bool function Spyglass_IsMaintainer(entity player)
+void function Spyglass_AuthenticationServerInitAfter()
 {
-    if (!IsValid(player) || !player.IsPlayer())
-    {
-        return false;
-    }
+    printt("[Spyglass] Spyglass_AuthenticationServerInitAfter() called.");
 
-    return Spyglass_Maintainers.find(player.GetUID()) != -1;
+    AddCallback_OnClientDisconnected(OnClientDisconnected);
+}
+
+void function OnClientDisconnected(entity player)
+{
+    if (IsValid(player) && player.IsPlayer())
+    {
+        Spyglass_RemoveMaintainer(player.GetUID());
+    }
 }
 
 void function OnAuthenticationTokenValidationComplete(string uniqueId, Spyglass_MaintainerTicketValidationResult result)
@@ -44,7 +46,7 @@ void function OnAuthenticationTokenValidationComplete(string uniqueId, Spyglass_
         return;
     }
 
-    if (Spyglass_IsMaintainer(target))
+    if (Spyglass_IsMaintainer(target.GetUID()))
     {
         return;
     }
@@ -61,7 +63,7 @@ void function OnAuthenticationTokenValidationComplete(string uniqueId, Spyglass_
         return;
     }
 
-    Spyglass_Maintainers.append(target.GetUID());
+    Spyglass_AddMaintainer(target.GetUID());
     Spyglass_SayAll(format("Administrator %s has authenticated with the Spyglass API.", Spyglass_FriendlyColor(target.GetPlayerName())));
 }
 
@@ -79,7 +81,7 @@ bool function OnAuthenticationTokenValidationRequested(entity player, array<stri
         return false;
     }
     
-    if (Spyglass_IsMaintainer(player))
+    if (Spyglass_IsMaintainer(player.GetUID()))
     {
         return false;
     }
@@ -121,7 +123,7 @@ bool function OnReceiveAuthenticationRequest(entity player, array<string> args)
         return true;
     }
     
-    if (Spyglass_IsMaintainer(player))
+    if (Spyglass_IsMaintainer(player.GetUID()))
     {
         Spyglass_SayPrivate(player, format("You are already authenticated, %s.", Spyglass_FriendlyColor(player.GetPlayerName())));
         return true;

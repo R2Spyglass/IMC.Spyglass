@@ -75,6 +75,10 @@
             "RunOn": "(CLIENT || SERVER) && MP"
         },
         {
+            "Path": "spyglass/server_globals.nut",
+            "RunOn": "SERVER && MP"
+        },
+        {
             "Path": "spyglass/utils.nut",
             "RunOn": "(CLIENT || SERVER) && MP"
         },
@@ -99,7 +103,8 @@
             "RunOn": "SERVER && MP",
             "ServerCallback":
             {
-                "Before": "Spyglass_AuthenticationServerInit"
+                "Before": "Spyglass_AuthenticationServerInit",
+                "After": "Spyglass_AuthenticationServerInitAfter"
             }
         },
         {

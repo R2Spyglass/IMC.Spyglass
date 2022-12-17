@@ -16,7 +16,7 @@ ClServer_MessageStruct function HandleSpyglassCommand(ClServer_MessageStruct mes
     }
 
     // Ignore if the player is muted or the message has been blocked by another callback.
-    if (Spyglass_IsPlayerMuted(message.player.GetUID()) || message.shouldBlock)
+    if (Spyglass_IsMuted(message.player.GetUID()) || message.shouldBlock)
     {
         return message;
     }

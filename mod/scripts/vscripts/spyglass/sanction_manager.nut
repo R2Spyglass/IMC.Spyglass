@@ -14,10 +14,7 @@ global function Spyglass_RefreshAllPlayerSanctions;
 global function Spyglass_AddPlayerSanctionOverrideCallback;
 global function Spyglass_AddOnPlayerSanctionAppliedCallback;
 
-global function Spyglass_IsPlayerMuted;
 global function Spyglass_IsPlayerBanned;
-
-// TODO: Custom callback for sanctions
 
 /** List of player UIDs with ongoing sanction queries. */
 array<string> Spyglass_OngoingSanctionQueries;
@@ -29,15 +26,14 @@ table<string, array<Spyglass_PlayerInfraction> > Spyglass_CachedPlayerSanctions;
 table<int, Spyglass_PlayerInfraction> Spyglass_CachedSanctions;
 
 /** List of sanctions that were already applied and shouldn't have global chat notifications again. */
-array<int> Spyglass_AppliedSanctionCache;
+table<int, bool> Spyglass_NotifiedSanctionCache;
+/** List of sanctions to notify the server when a player finishes connecting. */
+table<string, array<Spyglass_PlayerInfraction> > Spyglass_OnConnectNotification;
 
 /** List of callbacks to override handling of player sanctions. */
 array<int functionref(entity, Spyglass_PlayerInfraction)> Spyglass_PlayerSanctionOverrideCallbacks;
 /** List of callbacks to run when a player sanction is applied. */
 array<void functionref(entity, Spyglass_PlayerInfraction)> Spyglass_OnPlayerSanctionAppliedCallbacks;
-
-/** List of currently muted players. */
-array<string> Spyglass_MutedPlayers;
 
 /** List of currently banned players. */
 table<string, string> Spyglass_BannedPlayers;
@@ -45,6 +41,8 @@ table<string, string> Spyglass_BannedPlayers;
 void function Spyglass_InitSanctionManager()
 {
     printt("[Spyglass] Spyglass_InitSanctionManager() called.");
+    AddCallback_OnClientConnecting(OnClientConnecting);
+    AddCallback_OnClientConnected(OnClientConnected);
     AddCallback_OnClientDisconnected(OnClientDisconnected);
 
     // Apply muted players from the cache so we keep them muted until we refresh their sanctions.
@@ -55,17 +53,119 @@ void function Spyglass_InitSanctionManager()
  * Callbacks
  */
 
+/** Prevent banned players from connecting. */
+void function OnClientConnecting(entity player)
+{
+    if (!IsValid(player) || !player.IsPlayer() || Spyglass_HasImmunity(player))
+    {
+        return;
+    }
+
+    if (Spyglass_IsPlayerBanned(player.GetUID()))
+    {
+        if (GetConVarBool("spyglass_use_banlist_for_bans"))
+        {
+            ServerCommand(format("ban %s", player.GetUID()));
+        }
+        else
+        {
+            ClientCommand(player, format("disconnect \"%s\"", Spyglass_BannedPlayers[player.GetUID()]));
+            ServerCommand(format("kick %s", player.GetPlayerName()));
+        }
+
+        return;
+    }
+
+    // Query the player's sanctions if they're not in cache and apply them.
+    if (Spyglass_IsPlayerInSanctionCache(player.GetUID()))
+    {
+        array<Spyglass_PlayerInfraction> sanctions = Spyglass_GetCachedPlayerSanctions(player.GetUID());
+        string playerName = player.GetPlayerName();
+
+        Spyglass_AppliedSanctionResult result = Spyglass_ApplySanctionsToPlayer(player, sanctions);
+        if (result.DisconnectedPlayer)
+        {
+            array<Spyglass_PlayerInfraction> notificationList = [];
+            foreach (Spyglass_PlayerInfraction sanction in sanctions)
+            {
+                if (!(sanction.ID in Spyglass_NotifiedSanctionCache))
+                {
+                    notificationList.append(sanction);
+                    Spyglass_NotifiedSanctionCache[sanction.ID] <- true;
+                }
+            }
+
+            if (notificationList.len() != 0)
+            {
+                Spyglass_ChatSendPlayerInfractions(playerName, notificationList, GetPlayerArray());
+            }
+        }
+        else
+        {
+            if (player.GetUID() in Spyglass_OnConnectNotification)
+            {
+                Spyglass_OnConnectNotification[player.GetUID()] = result.AppliedSanctions;
+            }
+            else
+            {
+                Spyglass_OnConnectNotification[player.GetUID()] <- result.AppliedSanctions;
+            }
+        }
+    }
+    else
+    {
+        if (!Spyglass_VerifyPlayerSanctions(player))
+        {
+            Spyglass_SayAllError(format("Failed to start verifying sanctions for player '%s'.", Spyglass_FriendlyColor(player.GetPlayerName())));
+            return;
+        }
+    }
+}
+
+/** Displays the player's sanctions if any. */
+void function OnClientConnected(entity player)
+{
+    if (!IsValid(player) || !player.IsPlayer() || Spyglass_HasImmunity(player))
+    {
+        return;
+    }
+
+    Spyglass_AddConnectedPlayer(player.GetUID());
+
+    if (!(player.GetUID() in Spyglass_OnConnectNotification))
+    {
+        return;
+    }
+
+    array<Spyglass_PlayerInfraction> notificationList = [];
+    foreach (Spyglass_PlayerInfraction sanction in Spyglass_OnConnectNotification[player.GetUID()])
+    {
+        if (!(sanction.ID in Spyglass_NotifiedSanctionCache))
+        {
+            notificationList.append(sanction);
+            Spyglass_NotifiedSanctionCache[sanction.ID] <- true;
+        }
+    }
+
+    delete Spyglass_OnConnectNotification[player.GetUID()];
+    if (notificationList.len() != 0)
+    {
+        Spyglass_ChatSendPlayerInfractions(player.GetPlayerName(), notificationList, GetPlayerArray());
+    }
+}
+
 /** Removes the player from muted players on disconnect. */
 void function OnClientDisconnected(entity player)
 {
     if (IsValid(player))
     {
-        int foundIndex = Spyglass_MutedPlayers.find(player.GetUID());
-        if (foundIndex != -1)
+        if (Spyglass_IsMuted(player.GetUID()))
         {
-            Spyglass_MutedPlayers.remove(foundIndex);
+            Spyglass_RemoveMutedPlayer(player.GetUID());
             Spyglass_CacheMutedPlayers();
         }
+
+        Spyglass_RemoveConnectedPlayer(player.GetUID());
     }
 }
 
@@ -329,11 +429,54 @@ bool function Spyglass_ApplySanction(entity player, Spyglass_PlayerInfraction sa
     return false;
 }
 
+/**
+ * Applies the sanctions to the given player, calling the necessary callbacks.
+ * @param player The player to apply the sanctions to.
+ * @param sanctions The sanctions to apply to the player.
+ * @returns An array containing the applied sanctions.
+ */
+Spyglass_AppliedSanctionResult function Spyglass_ApplySanctionsToPlayer(entity player, array<Spyglass_PlayerInfraction> sanctions)
+{
+    Spyglass_AppliedSanctionResult applyResult;
+    applyResult.AppliedSanctions = [];
+
+    if (!IsValid(player) || !player.IsPlayer())
+    {
+        CodeWarning("[Spyglass] Attempted to call Spyglass_ApplySanctionsToPlayer() on invalid or non-player entity.");
+        return applyResult;
+    }
+
+    string playerName = player.GetPlayerName();
+
+    foreach (Spyglass_PlayerInfraction sanction in sanctions)
+    {
+        int result = Spyglass_CallPlayerSanctionOverrideCallbacks(player, clone sanction);
+        
+        if (result == Spyglass_SanctionOverrideResult.Unhandled)
+        {
+            applyResult.DisconnectedPlayer = Spyglass_ApplySanction(player, sanction);
+            applyResult.AppliedSanctions.append(sanction);
+
+            if (applyResult.DisconnectedPlayer)
+            {
+                break;
+            }
+        }
+        else if (result == Spyglass_SanctionOverrideResult.AppliedSanction)
+        {
+            Spyglass_CallOnPlayerSanctionAppliedCallbacks(player, clone sanction);
+            applyResult.AppliedSanctions.append(sanction);
+        }
+    }
+
+    return applyResult;
+}
+
 void function Spyglass_OnPlayerSanctionsRefreshed(Spyglass_SanctionSearchResult result, bool invalidateCache)
 {
     if (!result.ApiResult.Success)
     {
-        Spyglass_SayAll(format("Failed to refresh player sanctions: %s", result.ApiResult.Error));
+        Spyglass_SayAllError(format("Failed to refresh player sanctions: %s", result.ApiResult.Error));
         return;
     }
 
@@ -343,10 +486,10 @@ void function Spyglass_OnPlayerSanctionsRefreshed(Spyglass_SanctionSearchResult 
     {
         Spyglass_CachedPlayerSanctions = {};
         Spyglass_CachedSanctions = {};
-        Spyglass_AppliedSanctionCache = [];
+        Spyglass_NotifiedSanctionCache = {};
 
         // Refresh the mute and ban caches.
-        Spyglass_MutedPlayers = [];
+        Spyglass_EmptyMutedPlayers();
         Spyglass_BannedPlayers = {};
 
         Spyglass_CacheMutedPlayers();
@@ -362,33 +505,21 @@ void function Spyglass_OnPlayerSanctionsRefreshed(Spyglass_SanctionSearchResult 
         }
 
         string playerName = player.GetPlayerName();
+        Spyglass_AppliedSanctionResult result = Spyglass_ApplySanctionsToPlayer(player, deltaSanctions[player.GetUID()]);
 
-        array<Spyglass_PlayerInfraction> appliedSanctions = [];
-
-        foreach (Spyglass_PlayerInfraction sanction in deltaSanctions[player.GetUID()])
+        array<Spyglass_PlayerInfraction> notificationList = [];
+        foreach (Spyglass_PlayerInfraction sanction in result.AppliedSanctions)
         {
-            int result = Spyglass_CallPlayerSanctionOverrideCallbacks(player, clone sanction);
-            
-            if (result == Spyglass_SanctionOverrideResult.Unhandled)
+            if (!(sanction.ID in Spyglass_NotifiedSanctionCache))
             {
-                bool disconnected = Spyglass_ApplySanction(player, sanction);
-                appliedSanctions.append(sanction);
-
-                if (disconnected)
-                {
-                    break;
-                }
-            }
-            else if (result == Spyglass_SanctionOverrideResult.AppliedSanction)
-            {
-                Spyglass_CallOnPlayerSanctionAppliedCallbacks(player, clone sanction);
-                appliedSanctions.append(sanction);
+                notificationList.append(sanction);
+                Spyglass_NotifiedSanctionCache[sanction.ID] <- true;
             }
         }
 
-        if (appliedSanctions.len() != 0)
+        if (notificationList.len() != 0)
         {
-            Spyglass_ChatSendPlayerInfractions(playerName, appliedSanctions, GetPlayerArray());
+            Spyglass_ChatSendPlayerInfractions(playerName, notificationList, GetPlayerArray());
         }
 
         // TODO: Re-enable if this is fixed: https://github.com/R2Northstar/NorthstarMods/issues/524
@@ -412,6 +543,132 @@ void function Spyglass_OnPlayerSanctionsRefreshed(Spyglass_SanctionSearchResult 
         //     }
         // }
     }
+}
+
+void function Spyglass_OnVerifyPlayerSanctionsComplete(Spyglass_SanctionSearchResult result, string playerName, string uid)
+{
+    // Remove the queried uid from ongoing sanction queries.
+    int index = Spyglass_OngoingSanctionQueries.find(uid);
+    if (index != -1)
+    {
+        Spyglass_OngoingSanctionQueries.remove(index);
+    }
+    
+
+    if (!result.ApiResult.Success)
+    {
+        Spyglass_SayAllError(format("Failed to verify player sanctions for player %s: ", Spyglass_FriendlyColor(playerName), result.ApiResult.Error));
+        return;
+    }
+
+    table<string, array<Spyglass_PlayerInfraction> > deltaSanctions = Spyglass_UpdateSanctions(result);
+    if (!(uid in deltaSanctions))
+    {
+        return;
+    }
+
+    foreach (entity player in GetPlayerArray())
+    {
+        if (!IsValid(player) || player.GetUID() != uid || Spyglass_HasImmunity(player))
+        {
+            continue;
+        }
+
+        // Keep track of whether or not the player finished connecting.
+        bool isConnected = Spyglass_IsConnected(player.GetUID());
+        Spyglass_AppliedSanctionResult result = Spyglass_ApplySanctionsToPlayer(player, deltaSanctions[player.GetUID()]);
+
+        // If we got rid of the player, or the player finished connecting, notify everyone immediately, if the game state isn't waiting for players.
+        if (result.DisconnectedPlayer || isConnected)
+        {
+            array<Spyglass_PlayerInfraction> notificationList = [];
+            foreach (Spyglass_PlayerInfraction sanction in result.AppliedSanctions)
+            {
+                if (!(sanction.ID in Spyglass_NotifiedSanctionCache))
+                {
+                    notificationList.append(sanction);
+                    Spyglass_NotifiedSanctionCache[sanction.ID] <- true;
+                }
+            }
+
+            if (notificationList.len() != 0)
+            {
+                Spyglass_ChatSendPlayerInfractions(playerName, notificationList, GetPlayerArray());
+            }
+        }
+        // Else if the player isn't connected, way for them to finish connecting first.
+        else if (!isConnected)
+        {
+            if (uid in Spyglass_OnConnectNotification)
+            {
+                Spyglass_OnConnectNotification[player.GetUID()] = result.AppliedSanctions;
+            }
+            else
+            {
+                Spyglass_OnConnectNotification[player.GetUID()] <- result.AppliedSanctions;
+            }
+        }
+
+        return;
+
+        // TODO: Re-enable if this is fixed: https://github.com/R2Northstar/NorthstarMods/issues/524
+        // if (IsValid(player))
+        // {
+        //     if (GetGameState() >= eGameState.Playing)
+        //     {
+        //         NSSendAnnouncementMessageToPlayer(player, "Sanction Applied", "Check chat for more information.", <1,0,0>, 1, 1);
+        //     }
+        //     else
+        //     {
+        //         void functionref() announcement = void function() : (player)
+        //         {
+        //             if (IsValid(player))
+        //             {
+        //                 NSSendAnnouncementMessageToPlayer(player, "Sanction Applied", "Check chat for more information.", <1,0,0>, 1, 1);
+        //             }
+        //         }
+
+        //         AddCallback_GameStateEnter(eGameState.Playing, announcement);
+        //     }
+        // }
+    }
+}
+
+/**
+ * Queries the sanctions of the given player, generally called while they're connecting.
+ * @param player The player to verify the sanctions for.
+ * @returns Whether or not the request started successfully.
+ */
+bool function Spyglass_VerifyPlayerSanctions(entity player)
+{
+    if (!IsValid(player) || !player.IsPlayer())
+    {
+        CodeWarning("[Spyglass] Attempted to verify player sanctions of null or non-player entity.");
+        return false;
+    }
+
+    string playerName = player.GetPlayerName();
+    string uid = player.GetUID();
+
+    if (Spyglass_OngoingSanctionQueries.find(uid) != -1)
+    {
+        CodeWarning(format("[Spyglass] Attempted to verify player sanctions of player %s, but a verification is already ongoing.", player.GetPlayerName()));
+        return true;
+    }
+
+    void functionref(Spyglass_SanctionSearchResult) callback = void function (Spyglass_SanctionSearchResult result) : (playerName, uid)
+    {
+        Spyglass_OnVerifyPlayerSanctionsComplete(result, playerName, uid);
+    }
+
+    bool excludeMaintainers = GetConVarBool("spyglass_maintainers_are_admins") && GetConVarBool("spyglass_admin_immunity");
+    if (SpyglassApi_QueryPlayerSanctions([uid], callback, excludeMaintainers, false, false))
+    {
+        Spyglass_OngoingSanctionQueries.append(uid);
+        return true;
+    }
+
+    return false;
 }
 
 /**
@@ -456,13 +713,8 @@ bool function Spyglass_RefreshAllPlayerSanctions(bool invalidateCache = false)
         Spyglass_OnPlayerSanctionsRefreshed(result, invalidateCache);
     }
 
-    return SpyglassApi_QueryPlayerSanctions(uids, onSanctionsRefreshed, GetConVarBool("spyglass_maintainers_are_admins"), false, false);
-}
-
-/** Checks whether or not the given player uid is currently muted. */
-bool function Spyglass_IsPlayerMuted(string uid)
-{
-    return Spyglass_MutedPlayers.find(uid) != -1;
+    bool excludeMaintainers = GetConVarBool("spyglass_maintainers_are_admins") && GetConVarBool("spyglass_admin_immunity");
+    return SpyglassApi_QueryPlayerSanctions(uids, onSanctionsRefreshed, excludeMaintainers, false, false);
 }
 
 /** Checks whether or not the given player uid is banned, and has attempted to join the server this map. */
@@ -478,7 +730,7 @@ void function Spyglass_CacheMutedPlayers()
 
     foreach (entity player in GetPlayerArray())
     {
-        if (IsValid(player) && player.IsPlayer() && Spyglass_IsPlayerMuted(player.GetUID()))
+        if (IsValid(player) && player.IsPlayer() && Spyglass_IsMuted(player.GetUID()))
         {
             cache = format("%s%s,", cache, player.GetUID());
         }
@@ -496,9 +748,9 @@ void function Spyglass_ApplyMutedPlayersCache()
     {
         string sanitized = strip(uid);
 
-        if (uid.len() != 0 && !Spyglass_IsPlayerMuted(uid))
+        if (uid.len() != 0 && !Spyglass_IsMuted(uid))
         {
-            Spyglass_MutedPlayers.append(uid);
+            Spyglass_AddMutedPlayer(uid);
         }
     }
 }
@@ -508,9 +760,9 @@ void function Spyglass_MutePlayer(entity player)
 {
     if (IsValid(player) && player.IsPlayer())
     {
-        if (!Spyglass_IsPlayerMuted(player.GetUID()))
+        if (!Spyglass_IsMuted(player.GetUID()))
         {
-            Spyglass_MutedPlayers.append(player.GetUID());
+            Spyglass_AddMutedPlayer(player.GetUID());
             Spyglass_CacheMutedPlayers();
         }
     }
@@ -543,7 +795,7 @@ bool function Spyglass_BanPlayer(entity player, string reason)
     else
     {
         ClientCommand(player, format("disconnect \"%s\"", reason));
-        //ServerCommand(format("kick %s", player.GetPlayerName()));
+        ServerCommand(format("kick %s", player.GetPlayerName()));
     }
 
     return true;

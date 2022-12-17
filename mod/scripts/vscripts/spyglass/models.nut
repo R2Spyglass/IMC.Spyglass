@@ -198,6 +198,14 @@ global struct Spyglass_SanctionSearchResult
     table<string, array<Spyglass_PlayerInfraction> > Matches
 }
 
+global struct Spyglass_AppliedSanctionResult
+{
+    // The array of sanctions we applied to the player.
+    array<Spyglass_PlayerInfraction> AppliedSanctions
+    // True if we disconnected the player.
+    bool DisconnectedPlayer
+}
+
 // An authentication ticket allowing a maintainer to authenticate on a Northstar server.
 global struct Spyglass_MaintainerAuthenticationTicket
 {

@@ -1,5 +1,4 @@
 global function Spyglass_Init;
-global function Spyglass_GetOnlineAdmins;
 global function Spyglass_AuthenticateAdmin;
 global function Spyglass_IsAuthenticated;
 
@@ -219,28 +218,12 @@ ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
         return message;
     }
 
-    if (Spyglass_IsPlayerMuted(message.player.GetUID()))
+    if (Spyglass_IsMuted(message.player.GetUID()))
     {
         message.shouldBlock = true;
     }
 
     return message;
-}
-
-/** Returns an array of admins that are currently online on this server. */
-array<entity> function Spyglass_GetOnlineAdmins()
-{
-    array<entity> admins = [];
-
-    foreach (entity ply in GetPlayerArray())
-    {
-        if (IsValid(ply) && Spyglass_IsAdmin(ply))
-        {
-            admins.append(ply);
-        }
-    }
-
-    return admins;
 }
 
 /**
