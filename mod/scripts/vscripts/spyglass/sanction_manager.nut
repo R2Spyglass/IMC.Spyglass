@@ -56,6 +56,11 @@ void function Spyglass_InitSanctionManager()
 /** Prevent banned players from connecting. */
 void function OnClientConnecting(entity player)
 {
+    if (Spyglass_IsDisabled())
+    {
+        return;
+    }
+
     if (!IsValid(player) || !player.IsPlayer() || Spyglass_HasImmunity(player))
     {
         return;
@@ -125,6 +130,11 @@ void function OnClientConnecting(entity player)
 /** Displays the player's sanctions if any. */
 void function OnClientConnected(entity player)
 {
+    if (Spyglass_IsDisabled())
+    {
+        return;
+    }
+
     if (!IsValid(player) || !player.IsPlayer() || Spyglass_HasImmunity(player))
     {
         return;
@@ -157,6 +167,11 @@ void function OnClientConnected(entity player)
 /** Removes the player from muted players on disconnect. */
 void function OnClientDisconnected(entity player)
 {
+    if (Spyglass_IsDisabled())
+    {
+        return;
+    }
+    
     if (IsValid(player))
     {
         if (Spyglass_IsMuted(player.GetUID()))

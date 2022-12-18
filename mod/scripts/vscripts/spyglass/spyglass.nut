@@ -1,8 +1,4 @@
 global function Spyglass_Init;
-global function Spyglass_AuthenticateAdmin;
-global function Spyglass_IsAuthenticated;
-
-array<string> Spyglass_AuthenticatedPlayers;
 
 void function Spyglass_Init()
 {
@@ -10,8 +6,6 @@ void function Spyglass_Init()
     // Reset disabled flag, will be reset on init if required.
     SetConVarBool("spyglass_cache_disabled_from_error", false);
 
-    AddCallback_OnClientConnecting(OnClientConnecting);
-    AddCallback_OnClientConnected(OnClientConnected);
     AddCallback_OnReceivedSayTextMessage(OnClientMessage);
 
     AddCallback_GameStateEnter(eGameState.Prematch, OnPrematchStarted);
@@ -92,124 +86,6 @@ void function OnPlayingStarted()
     }
 }
 
-void function OnClientConnecting(entity player)
-{
-    if (!IsValid(player) || Spyglass_HasImmunity(player))
-    {
-        return;
-    }
-
-    // array<Spyglass_PlayerInfraction> foundInfractions = Spyglass_GetSpyglass_PlayerInfractions(player.GetUID());
-    // if (foundInfractions.len() == 0)
-    // {
-    //     return;
-    // }
-
-    // float totalWeight = 0.0;
-    // int validInfractions = 0;
-
-    // int notifyMode = GetConVarInt("spyglass_sanction_notification_mode");
-    // bool bannedAlready = Spyglass_BannedPlayers.find(player.GetUID()) != -1;
-
-    // // Calculate the weight of all the player's infractions.
-    // // We're mostly going to see if they need to be banned while they're connecting.
-    // foreach (Spyglass_PlayerInfraction infraction in foundInfractions)
-    // {
-    //     totalWeight += Spyglass_GetInfractionWeight(infraction);
-
-    //     if (infraction.Type != Spyglass_InfractionType.Spoof)
-    //     {
-    //         validInfractions += 1;
-    //     }
-    // }
-
-
-    // if (GetConVarBool("spyglass_use_banlist_for_bans"))
-    // {
-    //     ServerCommand(format("ban %s", player.GetUID()));
-    // }
-    // else
-    // {
-    //     ServerCommand(format("kick %s", player.GetPlayerName()));
-    // }
-}
-
-void function OnClientConnected(entity player)
-{
-    // if (!IsValid(player))
-    // {
-    //     return;
-    // }
-
-    // if (GetConVarBool("spyglass_welcome_message_enabled"))
-    // {
-    //     Chat_ServerPrivateMessage(player, Spyglass_GetColoredConVarString("spyglass_welcome_message"), false, false);
-    // }
-
-    // if (Spyglass_HasImmunity(player))
-    // {
-    //     return;
-    // }
-
-    // array<Spyglass_PlayerInfraction> foundInfractions = Spyglass_GetSpyglass_PlayerInfractions(player.GetUID());
-    // if (foundInfractions.len() == 0)
-    // {
-    //     return;
-    // }
-
-    // int validInfractions = 0;
-    // float totalWeight = 0.0;
-
-    // // Calculate the weight of all the player's infractions.
-    // // Bans are already handled in OnClientConnecting so we don't need to check again.
-    // foreach (Spyglass_PlayerInfraction infraction in foundInfractions)
-    // {
-    //     totalWeight += Spyglass_GetInfractionWeight(infraction);
-    //     if (infraction.Type != Spyglass_InfractionType.Spoof)
-    //     {
-    //         validInfractions += 1;
-    //     }
-    // }
-
-    // string message = "";
-
-    // if (totalWeight >= GetConVarFloat("spyglass_mute_score_threshold"))
-    // {
-    //     Spyglass_MutedPlayers.append(player.GetUID())
-    //     printt(format("[Spyglass] Player '%s' [%s] was muted due to reaching an infraction score of %f.", player.GetPlayerName(), player.GetUID(), totalWeight))
-    //     message = ;
-    // }
-    // else if (totalWeight >= GetConVarFloat("spyglass_warn_score_threshold"))
-    // {
-    //     printt(format("[Spyglass] Player '%s' [%s] was warned due to reaching an infraction score of %f.", player.GetPlayerName(), player.GetUID(), totalWeight))
-    //     message = format("Player \x1b[111m%s\x1b[0m has been warned due to %i infraction(s):", player.GetPlayerName(), validInfractions);
-    // }
-
-    // int notifyMode = GetConVarInt("spyglass_sanction_notification_mode");
-    // if (notifyMode == Spyglass_SanctionNotificationMode.Everyone)
-    // {          
-    //     Spyglass_SayAll(message);
-    //     Spyglass_ChatSendPlayerInfractions(player.GetUID(), GetPlayerArray());
-    // }
-
-    // if (notifyMode == Spyglass_SanctionNotificationMode.PlayerOnly || notifyMode == Spyglass_SanctionNotificationMode.PlayerAndAdmins)
-    // {
-    //     Spyglass_SayPrivate(player, message);
-    //     Spyglass_ChatSendPlayerInfractions(player.GetUID(), [ player ]);
-    // }
-
-    // if (notifyMode == Spyglass_SanctionNotificationMode.PlayerAndAdmins || notifyMode == Spyglass_SanctionNotificationMode.AdminsOnly)
-    // {
-    //     array<entity> admins = Spyglass_GetOnlineAdmins();
-    //     foreach (entity target in admins)
-    //     {
-    //         Spyglass_SayPrivate(target, message);
-    //     }
-
-    //     Spyglass_ChatSendPlayerInfractions(player.GetUID(), admins);
-    // }
-}
-
 ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
 {
     // Ignore if the message is already blocked, if the player is invalid or the player is immune.
@@ -224,53 +100,4 @@ ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
     }
 
     return message;
-}
-
-/**
- * Authenticates the given player using the password they inputted. 
- * @param player The player that wishes to authenticate.
- * @param password The password they've tried to authenticate with.
- * @returns A Spyglass_AuthenticationResult enum value, as an int.
- */
-int function Spyglass_AuthenticateAdmin(entity player, string password)
-{
-    if (!IsValid(player) || !player.IsPlayer())
-    {
-        return Spyglass_AuthenticationResult.InvalidPlayer;
-    }
-
-    if (!Spyglass_IsAdmin(player))
-    {
-        return Spyglass_AuthenticationResult.NotAdmin;
-    }
-
-    string authPassword = strip(GetConVarString("spyglass_admin_auth_password"));
-    if (authPassword.len() == 0)
-    {
-        return Spyglass_AuthenticationResult.AuthenticationDisabled;
-    }
-
-    if (authPassword == password)
-    {
-        if (Spyglass_IsAuthenticated(player))
-        {
-            return Spyglass_AuthenticationResult.AlreadyAuthenticated;
-        }
-
-        Spyglass_AuthenticatedPlayers.append(player.GetUID());
-        return Spyglass_AuthenticationResult.Success;
-    }
-
-    return Spyglass_AuthenticationResult.WrongPassword;
-}
-
-/** Returns true if the given player is an authenticated admin. */
-bool function Spyglass_IsAuthenticated(entity player)
-{
-    if (!IsValid(player) || !player.IsPlayer())
-    {
-        return false;
-    }
-
-    return Spyglass_AuthenticatedPlayers.find(player.GetUID()) != -1;
 }

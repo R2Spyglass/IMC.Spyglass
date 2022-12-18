@@ -49,10 +49,6 @@
             "DefaultValue": "0"
         },
         {
-            "Name": "spyglass_command_prefix",
-            "DefaultValue": "!"
-        },
-        {
             "Name": "spyglass_cache_api_latest_version",
             "DefaultValue": ""
         },
@@ -129,14 +125,6 @@
             "ServerCallback":
             {
                 "After": "Spyglass_Init"
-            }
-        },
-        {
-            "Path": "spyglass/chat_utils.nut",
-            "RunOn":"SERVER && MP",
-            "ServerCallback":
-            {
-                "After": "Spyglass_ChatUtils_Init"
             }
         }
     ]

@@ -117,18 +117,51 @@ bool function OnReceiveAuthenticationRequest(entity player, array<string> args)
         return false;
     }
 
-    if (!GetConVarBool("spyglass_maintainers_are_admins"))
+    // If the player is an admin, and they're not authenticated, check if they gave a password.
+    if (Spyglass_IsAdmin(player))
     {
-        Spyglass_SayPrivate(player, "This server has disabled administration for maintainers.");
-        return true;
-    }
-    
-    if (Spyglass_IsMaintainer(player.GetUID()))
-    {
-        Spyglass_SayPrivate(player, format("You are already authenticated, %s.", Spyglass_FriendlyColor(player.GetPlayerName())));
+        if (Spyglass_IsAuthenticated(player.GetUID()) || Spyglass_IsMaintainer(player.GetUID()))
+        {
+            Spyglass_SayPrivate(player, format("You are already authenticated, %s.", Spyglass_FriendlyColor(player.GetPlayerName())));
+            return true;
+        }
+
+        string authPassword = strip(GetConVarString("spyglass_admin_auth_password"));
+        if (authPassword.len() == 0)
+        {
+            Spyglass_SayPrivate(player, "Cannot authenticate: server is missing an admin auth password, please configure one first.");
+            return true;
+        }
+
+        if (args.len() == 0)
+        {
+            Spyglass_SayPrivate(player, "Cannot authenticate: missing password.");
+            return true;
+        }
+
+        string password = strip(args[0]);
+
+        if (authPassword == password)
+        {
+            Spyglass_AddAuthenticatedPlayer(player.GetUID());
+            Spyglass_SayAll(format("Administrator %s has authenticated.", Spyglass_FriendlyColor(player.GetPlayerName())));
+        }
+        else
+        {
+            Spyglass_SayPrivate(player, "Authentication failed: wrong password.");
+        }
+
         return true;
     }
 
-    ServerToClientStringCommand(player, "spyglass_beginauthflow");
+    if (GetConVarBool("spyglass_maintainers_are_admins"))
+    {
+        ServerToClientStringCommand(player, "spyglass_beginauthflow true");
+    }
+    else
+    {
+        ServerToClientStringCommand(player, "spyglass_beginauthflow false");
+    }
+
     return true;
 }

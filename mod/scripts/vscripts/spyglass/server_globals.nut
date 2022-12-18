@@ -14,6 +14,9 @@ array<string> Spyglass_ConnectedPlayers = [];
 /** List of currently muted players. */
 array<string> Spyglass_MutedPlayers = [];
 
+/** List of admins that authenticated using the admin auth password. */
+array<string> Spyglass_AuthenticatedPlayers = [];
+
 /** Returns an array containing all authenticated maintainers. */
 array<string> function Spyglass_GetMaintainers()
 {
@@ -110,4 +113,29 @@ void function Spyglass_RemoveMutedPlayer(string uid)
 void function Spyglass_EmptyMutedPlayers()
 {
     Spyglass_MutedPlayers = [];
+}
+
+/** Returns true if the given player uid is an authenticated admin. */
+bool function Spyglass_IsAuthenticated(string uid)
+{
+    return Spyglass_AuthenticatedPlayers.find(uid) != -1;
+}
+
+/** Adds the given uid to the list of authenticated players if they aren't in already. */
+void function Spyglass_AddAuthenticatedPlayer(string uid)
+{
+    if (!Spyglass_IsAuthenticated(uid))
+    {
+        Spyglass_AuthenticatedPlayers.append(uid);
+    }
+}
+
+/** Removes the given uid from the list of authenticated players if they in it. */
+void function Spyglass_RemoveAuthenticatedPlayer(string uid)
+{
+    int index = Spyglass_AuthenticatedPlayers.find(uid);
+    if (index != -1)
+    {
+        Spyglass_AuthenticatedPlayers.remove(index);
+    }
 }

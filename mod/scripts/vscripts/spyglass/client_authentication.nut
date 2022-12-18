@@ -33,6 +33,20 @@ void function BeginAuthenticationFlow(array<string> args)
         return;
     }
 
+    if (args.len() == 0)
+    {
+        printt("[Spyglass] spyglass_beginauthflow received from the server with no args. Ignoring.");
+        return;
+    }
+
+    string enabled = args[0];
+
+    if (enabled != "true")
+    {
+        Spyglass_ClientSay("The server has disabled authentication for maintainers.");
+        return;
+    }
+
     printt("[Spyglass] Server requested we begin authentication flow.");
     Spyglass_ClientSay("Requesting authentication ticket from API...");
 
