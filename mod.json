@@ -126,6 +126,14 @@
             {
                 "After": "Spyglass_Init"
             }
+        },
+        {
+            "Path": "spyglass/admin_commands.nut",
+            "RunOn": "SERVER && MP",
+            "ServerCallback":
+            {
+                "Before": "Spyglass_AdminCommandsInit"
+            }
         }
     ]
 }

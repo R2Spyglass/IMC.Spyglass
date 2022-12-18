@@ -35,6 +35,8 @@ array<int functionref(entity, Spyglass_PlayerInfraction)> Spyglass_PlayerSanctio
 /** List of callbacks to run when a player sanction is applied. */
 array<void functionref(entity, Spyglass_PlayerInfraction)> Spyglass_OnPlayerSanctionAppliedCallbacks;
 
+bool Spyglass_IsRefreshingSanctions = false;
+
 /** List of currently banned players. */
 table<string, string> Spyglass_BannedPlayers;
 
@@ -171,7 +173,7 @@ void function OnClientDisconnected(entity player)
     {
         return;
     }
-    
+
     if (IsValid(player))
     {
         if (Spyglass_IsMuted(player.GetUID()))
@@ -489,6 +491,8 @@ Spyglass_AppliedSanctionResult function Spyglass_ApplySanctionsToPlayer(entity p
 
 void function Spyglass_OnPlayerSanctionsRefreshed(Spyglass_SanctionSearchResult result, bool invalidateCache)
 {
+    Spyglass_IsRefreshingSanctions = false;
+    
     if (!result.ApiResult.Success)
     {
         Spyglass_SayAllError(format("Failed to refresh player sanctions: %s", result.ApiResult.Error));
@@ -692,6 +696,12 @@ bool function Spyglass_VerifyPlayerSanctions(entity player)
  */
 bool function Spyglass_RefreshAllPlayerSanctions(bool invalidateCache = false)
 {
+    if (Spyglass_IsRefreshingSanctions)
+    {
+        CodeWarning("[Spyglass] Attempted to refresh all player sanctions, but we're already refreshing them.");
+        return false;
+    }
+
     array<string> uids = [];
 
     foreach (entity player in GetPlayerArray())
@@ -729,7 +739,13 @@ bool function Spyglass_RefreshAllPlayerSanctions(bool invalidateCache = false)
     }
 
     bool excludeMaintainers = GetConVarBool("spyglass_maintainers_are_admins") && GetConVarBool("spyglass_admin_immunity");
-    return SpyglassApi_QueryPlayerSanctions(uids, onSanctionsRefreshed, excludeMaintainers, false, false);
+    if (SpyglassApi_QueryPlayerSanctions(uids, onSanctionsRefreshed, excludeMaintainers, false, false))
+    {
+        Spyglass_IsRefreshingSanctions = true;
+        return true;
+    }
+
+    return false;
 }
 
 /** Checks whether or not the given player uid is banned, and has attempted to join the server this map. */

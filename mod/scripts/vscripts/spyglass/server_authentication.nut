@@ -20,6 +20,7 @@ void function OnClientDisconnected(entity player)
     if (IsValid(player) && player.IsPlayer())
     {
         Spyglass_RemoveMaintainer(player.GetUID());
+        Spyglass_RemoveAuthenticatedPlayer(player.GetUID());
     }
 }
 
