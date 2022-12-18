@@ -112,7 +112,8 @@ void function OnClientConnecting(entity player)
 
             if (notificationList.len() != 0)
             {
-                Spyglass_ChatSendPlayerInfractions(playerName, notificationList, GetPlayerArray());
+                array<entity> targets = Spyglass_GetSanctionMessageTargets();
+                Spyglass_ChatSendPlayerInfractions(playerName, notificationList, Spyglass_GetSanctionMessageTargets());
             }
         }
         else
@@ -176,7 +177,7 @@ void function OnClientConnected(entity player)
     delete Spyglass_OnConnectNotification[player.GetUID()];
     if (notificationList.len() != 0)
     {
-        Spyglass_ChatSendPlayerInfractions(player.GetPlayerName(), notificationList, GetPlayerArray());
+        Spyglass_ChatSendPlayerInfractions(player.GetPlayerName(), notificationList, Spyglass_GetSanctionMessageTargets());
     }
 }
 
@@ -548,7 +549,7 @@ void function Spyglass_OnPlayerSanctionsRefreshed(Spyglass_SanctionSearchResult 
 
         if (notificationList.len() != 0)
         {
-            Spyglass_ChatSendPlayerInfractions(playerName, notificationList, GetPlayerArray());
+            Spyglass_ChatSendPlayerInfractions(playerName, notificationList, Spyglass_GetSanctionMessageTargets());
         }
 
         // TODO: Re-enable if this is fixed: https://github.com/R2Northstar/NorthstarMods/issues/524
@@ -623,7 +624,7 @@ void function Spyglass_OnVerifyPlayerSanctionsComplete(Spyglass_SanctionSearchRe
 
         if (notificationList.len() != 0)
         {
-            Spyglass_ChatSendPlayerInfractions(playerName, notificationList, GetPlayerArray());
+            Spyglass_ChatSendPlayerInfractions(playerName, notificationList, Spyglass_GetSanctionMessageTargets());
         }
     }
     // Else if the player isn't connected, way for them to finish connecting first.

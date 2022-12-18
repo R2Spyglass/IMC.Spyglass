@@ -1,3 +1,21 @@
+// Who to send Spyglass messages to. 
+global enum Spyglass_MessageMode
+{
+    /** Messages will be sent to everyone. */
+    Everyone = 0,
+    /** Messages will be sent to admins only. */
+    Admins = 1
+}
+
+// Who to send sanctions to.
+global enum Spyglass_SanctionMessageMode
+{
+    /** Sanction messages will be sent to everyone. */
+    Everyone = 0,
+    /** Sanction messages will be sent to the sanctionee and admins only. */
+    Sanctionee = 1,
+}
+
 // Result of a version check.
 global enum Spyglass_VersionCheckResult
 {

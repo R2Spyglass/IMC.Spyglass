@@ -347,6 +347,36 @@ array<entity> function Spyglass_GetAllPlayers()
     return list;
 }
 
+/** Returns the targets of a general message. */
+array<entity> function Spyglass_GetMessageTargets()
+{
+    int messageMode = GetConVarInt("spyglass_message_mode");
+    if (messageMode == Spyglass_MessageMode.Everyone)
+    {
+        return GetPlayerArray();
+    }
+
+    return Spyglass_GetOnlineAdmins();
+}
+
+/** Returns the targets of a sanction message. */
+array<entity> function Spyglass_GetSanctionMessageTargets(entity forPlayer = null)
+{
+    int sanctionMessageMode = GetConVarInt("spyglass_sanction_message_mode");
+    if (sanctionMessageMode == Spyglass_SanctionMessageMode.Everyone)
+    {
+        return GetPlayerArray();
+    }
+
+    array<entity> targets = Spyglass_GetOnlineAdmins();
+    if (IsValid(forPlayer) && forPlayer.IsPlayer() && !Spyglass_IsAdmin(forPlayer))
+    {
+        targets.append(forPlayer);
+    }
+
+    return targets;
+}
+
 /**
  * Sends a message to everyone in the chat as Spyglass.
  * @param message The message that Spyglass should send in chat.
@@ -354,7 +384,21 @@ array<entity> function Spyglass_GetAllPlayers()
 void function Spyglass_SayAll(string message)
 {
     string finalMessage = format("\x1b[113mSpyglass:\x1b[0m %s", message);
-    Chat_ServerBroadcast(finalMessage, false);
+
+    if (GetConVarInt("spyglass_message_mode") == Spyglass_MessageMode.Everyone)
+    {
+        Chat_ServerBroadcast(finalMessage, false);
+    }
+    else
+    {
+        foreach (entity player in Spyglass_GetMessageTargets())
+        {
+            if (IsValid(player))
+            {
+                Chat_ServerPrivateMessage(player, finalMessage, false, false);
+            }
+        }
+    }
 }
 
 /**
@@ -381,7 +425,21 @@ void function Spyglass_SayAdmins(string message)
 void function Spyglass_SayAllError(string message)
 {
     string finalMessage = format("\x1b[113mSpyglass:\x1b[0m \x1b[38;2;254;0;0m%s\x1b[0m", message);
-    Chat_ServerBroadcast(finalMessage, false);
+
+    if (GetConVarInt("spyglass_message_mode") == Spyglass_MessageMode.Everyone)
+    {
+        Chat_ServerBroadcast(finalMessage, false);
+    }
+    else
+    {
+        foreach (entity player in Spyglass_GetMessageTargets())
+        {
+            if (IsValid(player))
+            {
+                Chat_ServerPrivateMessage(player, finalMessage, false, false);
+            }
+        }
+    }
 }
 
 /**
@@ -400,9 +458,13 @@ void function Spyglass_SayPrivate(entity player, string message, bool isWhisper 
 /** Checks whether or not the given player is in the admin uids convar. */
 bool function Spyglass_IsAdmin(entity player)
 {
+    if (Spyglass_IsMaintainer(player.GetUID()))
+    {
+        return true;
+    }
+
     array<string> adminUIDs = Spyglass_GetConVarStringArray("spyglass_admin_uids");
-    return IsValid(player) && player.IsPlayer() 
-        && (adminUIDs.find(player.GetUID()) != -1 || Spyglass_IsMaintainer(player.GetUID()));
+    return IsValid(player) && player.IsPlayer() && adminUIDs.find(player.GetUID()) != -1;
 }
 
 /** Returns an array of admins that are currently online on this server. */

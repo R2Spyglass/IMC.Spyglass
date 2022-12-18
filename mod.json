@@ -41,8 +41,12 @@
             "DefaultValue": "This server is monitored by Spyglass. Global sanctions are in effect."
         },
         {
-            "Name": "spyglass_sanction_notification_mode",
-            "DefaultValue": "4"
+            "Name": "spyglass_message_mode",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "spyglass_sanction_message_mode",
+            "DefaultValue": "0"
         },
         {
             "Name": "spyglass_use_banlist_for_bans",

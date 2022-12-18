@@ -1,4 +1,5 @@
 global function Spyglass_Init;
+global function Spyglass_TrackPlayers;
 
 void function Spyglass_Init()
 {
@@ -7,9 +8,10 @@ void function Spyglass_Init()
     SetConVarBool("spyglass_cache_disabled_from_error", false);
 
     AddCallback_OnReceivedSayTextMessage(OnClientMessage);
+    AddCallback_OnClientConnected(OnClientConnected);
 
     AddCallback_GameStateEnter(eGameState.Prematch, OnPrematchStarted);
-    AddCallback_GameStateEnter(eGameState.Playing, OnPlayingStarted)
+    AddCallback_GameStateEnter(eGameState.Playing, OnPlayingStarted);
 
     if (GetGameState() >= eGameState.Prematch)
     {
@@ -45,7 +47,16 @@ void function OnStatsRequestComplete(Spyglass_ApiStats response)
 
         Spyglass_SayAll(format("I am currently tracking %i %s and %i %s.", response.Players, Spyglass_Pluralize("pilot", "pilots", response.Players), response.Sanctions,
             Spyglass_Pluralize("sanction", "sanctions", response.Sanctions)));
-        Spyglass_RefreshAllPlayerSanctions();
+        
+        if (!Spyglass_RefreshAllPlayerSanctions())
+        {
+            Spyglass_SayAllError("Failed to refresh player sanctions, check the server's console for more information.");
+        }
+        
+        if (Spyglass_TrackPlayers(GetPlayerArray(), Spyglass_OnTrackPlayersComplete))
+        {
+            Spyglass_SayAdmins("API token detected, sending connected player identities to the API for tracking...");
+        }
     }
     else
     {
@@ -86,6 +97,25 @@ void function OnPlayingStarted()
     }
 }
 
+void function OnClientConnected(entity player)
+{
+    if (Spyglass_IsDisabled())
+    {
+        return;
+    }
+
+    if (!IsValid(player) || !player.IsPlayer())
+    {
+        return;
+    }
+
+    // Track the player if we're already in pre-match.
+    if (GetGameState() >= eGameState.Prematch)
+    {
+        Spyglass_TrackPlayers([player]);
+    }
+}
+
 ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
 {
     // Ignore if the message is already blocked, if the player is invalid or the player is immune.
@@ -100,4 +130,45 @@ ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
     }
 
     return message;
+}
+
+void function Spyglass_OnTrackPlayersComplete(Spyglass_ApiResult result)
+{
+    if (result.Success)
+    {
+        Spyglass_SayAdmins("Tracking data uploaded completed successfully.");
+    }
+    else
+    {
+        Spyglass_SayAdmins(format("Failed to upload tracking data with error: %s", result.Error));
+    }
+}
+
+bool function Spyglass_TrackPlayers(array<entity> players, void functionref(Spyglass_ApiResult) callback = null)
+{
+    // If there's no token, abort immediately.
+    if (Spyglass_GetApiToken().len() == 0)
+    {
+        return false;
+    }
+
+
+    Spyglass_PlayerTrackingData data;
+    data.Hostname = strip(GetConVarString("ns_server_name"));
+
+    foreach (entity player in players)
+    {
+        if (!IsValid(player) || !player.IsPlayer())
+        {
+            continue;
+        }
+
+        Spyglass_PlayerIdentity identity;
+        identity.Username = player.GetPlayerName();
+        identity.UniqueID = player.GetUID();
+
+        data.Players.append(identity);
+    }
+
+    return SpyglassApi_TrackPlayers(data, callback);
 }
