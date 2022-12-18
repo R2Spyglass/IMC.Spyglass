@@ -8,7 +8,7 @@ bool function Spyglass_TrackPlayers(array<entity> players, void functionref(Spyg
     }
 
     // If there's no token, abort immediately.
-    if (Spyglass_GetApiToken().len() != 0)
+    if (Spyglass_GetApiToken().len() == 0)
     {
         // However, if there is an authenticated maintainer, we can forward it to them so they can do it for us.
         foreach (entity player in GetPlayerArray())
