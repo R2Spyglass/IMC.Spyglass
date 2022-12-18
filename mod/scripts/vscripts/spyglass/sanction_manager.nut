@@ -63,7 +63,15 @@ void function OnClientConnecting(entity player)
         return;
     }
 
-    if (!IsValid(player) || !player.IsPlayer() || Spyglass_HasImmunity(player))
+    if (!IsValid(player) || !player.IsPlayer())
+    {
+        return;
+    }
+
+    // Add the player's entity to a connecting array as connecting players do not appear in GetPlayerArray().
+    Spyglass_AddConnectingPlayer(player);
+
+    if (Spyglass_HasImmunity(player))
     {
         return;
     }
@@ -137,12 +145,18 @@ void function OnClientConnected(entity player)
         return;
     }
 
-    if (!IsValid(player) || !player.IsPlayer() || Spyglass_HasImmunity(player))
+    if (!IsValid(player) || !player.IsPlayer())
     {
         return;
     }
 
+    Spyglass_RemoveConnectingPlayer(player.GetUID());
     Spyglass_AddConnectedPlayer(player.GetUID());
+
+    if (Spyglass_HasImmunity(player))
+    {
+        return;
+    }
 
     if (!(player.GetUID() in Spyglass_OnConnectNotification))
     {
@@ -169,11 +183,6 @@ void function OnClientConnected(entity player)
 /** Removes the player from muted players on disconnect. */
 void function OnClientDisconnected(entity player)
 {
-    if (Spyglass_IsDisabled())
-    {
-        return;
-    }
-
     if (IsValid(player))
     {
         if (Spyglass_IsMuted(player.GetUID()))
@@ -182,6 +191,7 @@ void function OnClientDisconnected(entity player)
             Spyglass_CacheMutedPlayers();
         }
 
+        Spyglass_RemoveConnectingPlayer(player.GetUID());
         Spyglass_RemoveConnectedPlayer(player.GetUID());
     }
 }
@@ -492,7 +502,7 @@ Spyglass_AppliedSanctionResult function Spyglass_ApplySanctionsToPlayer(entity p
 void function Spyglass_OnPlayerSanctionsRefreshed(Spyglass_SanctionSearchResult result, bool invalidateCache)
 {
     Spyglass_IsRefreshingSanctions = false;
-    
+
     if (!result.ApiResult.Success)
     {
         Spyglass_SayAllError(format("Failed to refresh player sanctions: %s", result.ApiResult.Error));
@@ -516,7 +526,7 @@ void function Spyglass_OnPlayerSanctionsRefreshed(Spyglass_SanctionSearchResult 
 
     table<string, array<Spyglass_PlayerInfraction> > deltaSanctions = Spyglass_UpdateSanctions(result);
     
-    foreach (entity player in GetPlayerArray())
+    foreach (entity player in Spyglass_GetAllPlayers())
     {
         if (!IsValid(player) || !(player.GetUID() in deltaSanctions) || Spyglass_HasImmunity(player))
         {
@@ -580,77 +590,74 @@ void function Spyglass_OnVerifyPlayerSanctionsComplete(Spyglass_SanctionSearchRe
         return;
     }
 
+    printt(format("[Spyglass] Player sanction query for '%s' [%s] completed successfully, received %i matches.", playerName, uid, result.Matches.len()));
+
     table<string, array<Spyglass_PlayerInfraction> > deltaSanctions = Spyglass_UpdateSanctions(result);
     if (!(uid in deltaSanctions))
     {
         return;
     }
 
-    foreach (entity player in GetPlayerArray())
+    entity player = Spyglass_GetPlayerByUID(uid);
+    printt(player == null);
+    
+    // Keep track of whether or not the player finished connecting.
+    bool isConnected = Spyglass_IsConnected(player.GetUID());
+    Spyglass_AppliedSanctionResult result = Spyglass_ApplySanctionsToPlayer(player, deltaSanctions[player.GetUID()]);
+
+    // If we got rid of the player, or the player finished connecting, notify everyone immediately, if the game state isn't waiting for players.
+    if (result.DisconnectedPlayer || isConnected)
     {
-        if (!IsValid(player) || player.GetUID() != uid || Spyglass_HasImmunity(player))
+        array<Spyglass_PlayerInfraction> notificationList = [];
+        foreach (Spyglass_PlayerInfraction sanction in result.AppliedSanctions)
         {
-            continue;
-        }
-
-        // Keep track of whether or not the player finished connecting.
-        bool isConnected = Spyglass_IsConnected(player.GetUID());
-        Spyglass_AppliedSanctionResult result = Spyglass_ApplySanctionsToPlayer(player, deltaSanctions[player.GetUID()]);
-
-        // If we got rid of the player, or the player finished connecting, notify everyone immediately, if the game state isn't waiting for players.
-        if (result.DisconnectedPlayer || isConnected)
-        {
-            array<Spyglass_PlayerInfraction> notificationList = [];
-            foreach (Spyglass_PlayerInfraction sanction in result.AppliedSanctions)
+            if (!(sanction.ID in Spyglass_NotifiedSanctionCache))
             {
-                if (!(sanction.ID in Spyglass_NotifiedSanctionCache))
-                {
-                    notificationList.append(sanction);
-                    Spyglass_NotifiedSanctionCache[sanction.ID] <- true;
-                }
-            }
-
-            if (notificationList.len() != 0)
-            {
-                Spyglass_ChatSendPlayerInfractions(playerName, notificationList, GetPlayerArray());
-            }
-        }
-        // Else if the player isn't connected, way for them to finish connecting first.
-        else if (!isConnected)
-        {
-            if (uid in Spyglass_OnConnectNotification)
-            {
-                Spyglass_OnConnectNotification[player.GetUID()] = result.AppliedSanctions;
-            }
-            else
-            {
-                Spyglass_OnConnectNotification[player.GetUID()] <- result.AppliedSanctions;
+                notificationList.append(sanction);
+                Spyglass_NotifiedSanctionCache[sanction.ID] <- true;
             }
         }
 
-        return;
-
-        // TODO: Re-enable if this is fixed: https://github.com/R2Northstar/NorthstarMods/issues/524
-        // if (IsValid(player))
-        // {
-        //     if (GetGameState() >= eGameState.Playing)
-        //     {
-        //         NSSendAnnouncementMessageToPlayer(player, "Sanction Applied", "Check chat for more information.", <1,0,0>, 1, 1);
-        //     }
-        //     else
-        //     {
-        //         void functionref() announcement = void function() : (player)
-        //         {
-        //             if (IsValid(player))
-        //             {
-        //                 NSSendAnnouncementMessageToPlayer(player, "Sanction Applied", "Check chat for more information.", <1,0,0>, 1, 1);
-        //             }
-        //         }
-
-        //         AddCallback_GameStateEnter(eGameState.Playing, announcement);
-        //     }
-        // }
+        if (notificationList.len() != 0)
+        {
+            Spyglass_ChatSendPlayerInfractions(playerName, notificationList, GetPlayerArray());
+        }
     }
+    // Else if the player isn't connected, way for them to finish connecting first.
+    else if (!isConnected)
+    {
+        if (uid in Spyglass_OnConnectNotification)
+        {
+            Spyglass_OnConnectNotification[player.GetUID()] = result.AppliedSanctions;
+        }
+        else
+        {
+            Spyglass_OnConnectNotification[player.GetUID()] <- result.AppliedSanctions;
+        }
+    }
+
+    return;
+
+    // TODO: Re-enable if this is fixed: https://github.com/R2Northstar/NorthstarMods/issues/524
+    // if (IsValid(player))
+    // {
+    //     if (GetGameState() >= eGameState.Playing)
+    //     {
+    //         NSSendAnnouncementMessageToPlayer(player, "Sanction Applied", "Check chat for more information.", <1,0,0>, 1, 1);
+    //     }
+    //     else
+    //     {
+    //         void functionref() announcement = void function() : (player)
+    //         {
+    //             if (IsValid(player))
+    //             {
+    //                 NSSendAnnouncementMessageToPlayer(player, "Sanction Applied", "Check chat for more information.", <1,0,0>, 1, 1);
+    //             }
+    //         }
+
+    //         AddCallback_GameStateEnter(eGameState.Playing, announcement);
+    //     }
+    // }
 }
 
 /**
@@ -721,7 +728,7 @@ bool function Spyglass_RefreshAllPlayerSanctions(bool invalidateCache = false)
         Spyglass_SanctionSearchResult result;
         result.ApiResult.Success = true;
 
-        foreach (entity player in GetPlayerArray())
+        foreach (entity player in Spyglass_GetAllPlayers())
         {
             if (IsValid(player))
             {

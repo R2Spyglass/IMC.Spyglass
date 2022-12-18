@@ -306,6 +306,48 @@ void function Spyglass_ClientSayError(string message)
 #endif
 
 #if SERVER
+
+/** Attempts to find a player by their unique id. */
+entity function Spyglass_GetPlayerByUID(string uid)
+{
+    foreach (entity player in GetPlayerArray())
+    {
+        if (IsValid(player) && player.GetUID() == uid)
+        {
+            return player;
+        }
+    }
+
+    if (Spyglass_IsConnecting(uid))
+    {
+        return Spyglass_GetConnectingPlayer(uid);
+    }
+
+    return null;
+}
+
+/** Returns all players on this server including connecting players. */
+array<entity> function Spyglass_GetAllPlayers()
+{
+    table<string, entity> connectingPlayers = Spyglass_GetConnectingPlayers();
+    array<entity> list = [];
+
+    foreach (string uid, entity player in connectingPlayers)
+    {
+        list.append(player);
+    }
+
+    foreach (entity connectedPlayer in GetPlayerArray())
+    {
+        if (!(connectedPlayer.GetUID() in connectingPlayers))
+        {
+            list.append(connectedPlayer);
+        }
+    }
+
+    return list;
+}
+
 /**
  * Sends a message to everyone in the chat as Spyglass.
  * @param message The message that Spyglass should send in chat.

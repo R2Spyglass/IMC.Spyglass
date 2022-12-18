@@ -10,7 +10,7 @@
         },
         {
             "Name": "spyglass_api_token",
-            "DefaultValue": "EEE0E372042654FE3C7175A90EBD75B8CB282C1727BA13E6F8ABDCB652963138"
+            "DefaultValue": "755A5496A8DBED94FB403989E4F729AF113D5F010F54200EC8615C42859FF1D4"
         },
         {
             "Name": "spyglass_appeal_link",
@@ -92,6 +92,10 @@
         },
         {
             "Path": "spyglass/api/api_authentication.nut",
+            "RunOn": "(CLIENT || SERVER) && MP"
+        },
+        {
+            "Path": "spyglass/api/api_players.nut",
             "RunOn": "(CLIENT || SERVER) && MP"
         },
         {

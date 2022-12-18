@@ -268,9 +268,9 @@ bool function Spyglass_TryParsePlayerInfo(table response, Spyglass_PlayerInfo ou
     bool success = Spyglass_TryParseString(response, "uniqueId");
     success = success && Spyglass_TryParseString(response, "username");
     success = success && Spyglass_TryParseBool(response, "isMaintainer");
-    success = success && Spyglass_TryParseInt(response, "createdAt");
+    success = success && Spyglass_TryParseInt(response, "createdAtTimestamp");
     success = success && Spyglass_TryParseString(response, "createdAtReadable");
-    success = success && Spyglass_TryParseInt(response, "lastSeenAt");
+    success = success && Spyglass_TryParseInt(response, "lastSeenAtTimestamp");
     success = success && Spyglass_TryParseString(response, "lastSeenAtReadable");
 
     if (success)
@@ -278,9 +278,9 @@ bool function Spyglass_TryParsePlayerInfo(table response, Spyglass_PlayerInfo ou
         outPlayerInfo.UniqueId = expect string(response["uniqueId"]);
         outPlayerInfo.Username = expect string(response["username"]);
         outPlayerInfo.IsMaintainer = expect bool(response["isMaintainer"]);
-        outPlayerInfo.CreatedAtTimestamp = expect int(response["createdAt"]);
+        outPlayerInfo.CreatedAtTimestamp = expect int(response["createdAtTimestamp"]);
         outPlayerInfo.CreatedAtReadable = expect string(response["createdAtReadable"]);
-        outPlayerInfo.LastSeenAtTimestamp = expect int(response["lastSeenAt"]);
+        outPlayerInfo.LastSeenAtTimestamp = expect int(response["lastSeenAtTimestamp"]);
         outPlayerInfo.LastSeenAtReadable = expect string(response["lastSeenAtReadable"]);
 
         if (Spyglass_TryParseString(response, "lastSeenOnServer"))
@@ -325,7 +325,7 @@ bool function Spyglass_TryParsePlayerInfraction(table response, Spyglass_PlayerI
     bool success = Spyglass_TryParseInt(response, "id");
     success = success && Spyglass_TryParseString(response, "uniqueId");
     success = success && Spyglass_TryParseString(response, "issuerId");
-    success = success && Spyglass_TryParseInt(response, "issuedAt");
+    success = success && Spyglass_TryParseInt(response, "issuedAtTimestamp");
     success = success && Spyglass_TryParseString(response, "issuedAtReadable");
     success = success && Spyglass_TryParseString(response, "expiresAtReadable");
     success = success && Spyglass_TryParseString(response, "reason");
@@ -363,12 +363,12 @@ bool function Spyglass_TryParsePlayerInfraction(table response, Spyglass_PlayerI
             }
         }
 
-        outInfraction.IssuedAtTimestamp = expect int(response["issuedAt"]);
+        outInfraction.IssuedAtTimestamp = expect int(response["issuedAtTimestamp"]);
         outInfraction.IssuedAtReadable = expect string(response["issuedAtReadable"]);
 
-        if (Spyglass_TryParseInt(response, "expiresAt"))
+        if (Spyglass_TryParseInt(response, "expiresAtTimestamp"))
         {
-            outInfraction.ExpiresAtTimestamp = expect int(response["expiresAt"]);
+            outInfraction.ExpiresAtTimestamp = expect int(response["expiresAtTimestamp"]);
         }
         else
         {
@@ -576,4 +576,29 @@ bool function Spyglass_TryParseMaintainerAuthenticationResult(table response, Sp
     }
 
     return true;
+}
+
+/**
+ * Serializes a Spyglass_PlayerTrackingData struct into a table, ready for JSON encoding.
+ * @param data The player tracking data to serialize.
+ * @returns A table representation of the tracking data.
+ */
+table function Spyglass_SerializePlayerTrackingData(Spyglass_PlayerTrackingData data)
+{
+    table serialized = {};
+    serialized["hostname"] <- data.Hostname;
+
+    array players = [];
+
+    foreach (Spyglass_PlayerIdentity identity in data.Players)
+    {
+        table identityData = {};
+        identityData["username"] <- identity.Username;
+        identityData["uniqueID"] <- identity.UniqueID;
+
+        players.append(identityData);
+    }
+
+    serialized["players"] <- players;
+    return serialized;
 }

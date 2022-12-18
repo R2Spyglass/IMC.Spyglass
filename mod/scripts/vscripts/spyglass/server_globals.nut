@@ -17,6 +17,9 @@ array<string> Spyglass_MutedPlayers = [];
 /** List of admins that authenticated using the admin auth password. */
 array<string> Spyglass_AuthenticatedPlayers = [];
 
+/** Table of connecting players and their entities. */
+table<string, entity> Spyglass_ConnectingPlayers = {};
+
 /** Returns an array containing all authenticated maintainers. */
 array<string> function Spyglass_GetMaintainers()
 {
@@ -137,5 +140,58 @@ void function Spyglass_RemoveAuthenticatedPlayer(string uid)
     if (index != -1)
     {
         Spyglass_AuthenticatedPlayers.remove(index);
+    }
+}
+
+/** Add a currently connecting player to the connecting player table. */
+void function Spyglass_AddConnectingPlayer(entity player)
+{
+    if (!IsValid(player) || !player.IsPlayer())
+    {
+        CodeWarning("[Spyglass] Attempted to add invalid or non-player entity to connecting players table.");
+        return;
+    }
+
+    string uid = player.GetUID();
+    
+    if (uid in Spyglass_ConnectingPlayers)
+    {
+        Spyglass_ConnectingPlayers[uid] = player;
+    }
+    else
+    {
+        Spyglass_ConnectingPlayers[uid] <- player;
+    }
+}
+
+/** Whether or not a player with the given uid is currently connecting. */
+bool function Spyglass_IsConnecting(string uid)
+{
+    return uid in Spyglass_ConnectingPlayers;
+}
+
+/** Returns the entity of the connecting player with the given uid if it exists. */
+entity function Spyglass_GetConnectingPlayer(string uid)
+{
+    if (uid in Spyglass_ConnectingPlayers)
+    {
+        return Spyglass_ConnectingPlayers[uid];
+    }
+
+    return null;
+}
+
+/** Returns all of the connecting players. */
+table<string, entity> function Spyglass_GetConnectingPlayers()
+{
+    return Spyglass_ConnectingPlayers;
+}
+
+/** Removes the player with the given uid from the connecting players table if it exists. */
+void function Spyglass_RemoveConnectingPlayer(string uid)
+{
+    if (uid in Spyglass_ConnectingPlayers)
+    {
+        delete Spyglass_ConnectingPlayers[uid];
     }
 }

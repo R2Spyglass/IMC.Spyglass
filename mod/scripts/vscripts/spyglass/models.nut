@@ -86,6 +86,23 @@ global struct Spyglass_PlayerInfo
     array<string> KnownAliases
 }
 
+// Used by trusted servers to track player data to the API.
+global struct Spyglass_PlayerIdentity
+{
+    // The unique id (UID) of the player.
+    string UniqueID
+    // The username the player currently has.
+    string Username
+}
+
+global struct Spyglass_PlayerTrackingData
+{
+    // The hostname of the server making the tracking request. 
+    string Hostname
+    // The players the server is currently tracking.
+    array<Spyglass_PlayerIdentity> Players
+}
+
 // Details about a sanction that was issued to a player.
 global struct Spyglass_PlayerInfraction
 {
