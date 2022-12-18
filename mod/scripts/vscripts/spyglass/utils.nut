@@ -306,7 +306,6 @@ void function Spyglass_ClientSayError(string message)
 #endif
 
 #if SERVER
-
 /** Attempts to find a player by their unique id. */
 entity function Spyglass_GetPlayerByUID(string uid)
 {

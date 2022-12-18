@@ -48,9 +48,12 @@ void function Spyglass_RegisterAdminCommand(string name, bool functionref(entity
  */
 bool function Spyglass_AdminListUniqueIDs(entity caller, array<string> args)
 {
-    foreach (entity player in GetPlayerArray())
+    foreach (entity player in Spyglass_GetAllPlayers())
     {
-        Spyglass_SayPrivate(caller, format("%s: %s", Spyglass_FriendlyColor(player.GetPlayerName()), player.GetUID()));
+        if (IsValid(player))
+        {
+            Spyglass_SayPrivate(caller, format("%s: %s", Spyglass_FriendlyColor(player.GetPlayerName()), player.GetUID()));
+        }
     }
 
     return true;

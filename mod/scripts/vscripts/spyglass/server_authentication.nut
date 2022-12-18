@@ -31,16 +31,7 @@ void function OnAuthenticationTokenValidationComplete(string uniqueId, Spyglass_
         return;
     }
 
-    entity target = null;
-
-    foreach (entity player in GetPlayerArray())
-    {
-        if (IsValid(player) && player.GetUID() == uniqueId)
-        {
-            target = player;
-            break;
-        }
-    }
+    entity target = Spyglass_GetPlayerByUID(uniqueId);
 
     if (target == null)
     {

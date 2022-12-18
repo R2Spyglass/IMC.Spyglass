@@ -583,7 +583,6 @@ void function Spyglass_OnVerifyPlayerSanctionsComplete(Spyglass_SanctionSearchRe
         Spyglass_OngoingSanctionQueries.remove(index);
     }
     
-
     if (!result.ApiResult.Success)
     {
         Spyglass_SayAllError(format("Failed to verify player sanctions for player %s: ", Spyglass_FriendlyColor(playerName), result.ApiResult.Error));
@@ -599,7 +598,11 @@ void function Spyglass_OnVerifyPlayerSanctionsComplete(Spyglass_SanctionSearchRe
     }
 
     entity player = Spyglass_GetPlayerByUID(uid);
-    printt(player == null);
+    // Player isn't connected anymore, stop.
+    if (player == null)
+    {
+        return;
+    }
     
     // Keep track of whether or not the player finished connecting.
     bool isConnected = Spyglass_IsConnected(player.GetUID());
@@ -635,9 +638,6 @@ void function Spyglass_OnVerifyPlayerSanctionsComplete(Spyglass_SanctionSearchRe
             Spyglass_OnConnectNotification[player.GetUID()] <- result.AppliedSanctions;
         }
     }
-
-    return;
-
     // TODO: Re-enable if this is fixed: https://github.com/R2Northstar/NorthstarMods/issues/524
     // if (IsValid(player))
     // {
@@ -766,7 +766,7 @@ void function Spyglass_CacheMutedPlayers()
 {
     string cache = "";
 
-    foreach (entity player in GetPlayerArray())
+    foreach (entity player in Spyglass_GetAllPlayers())
     {
         if (IsValid(player) && player.IsPlayer() && Spyglass_IsMuted(player.GetUID()))
         {
