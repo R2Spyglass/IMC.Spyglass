@@ -103,6 +103,10 @@
             "RunOn": "(CLIENT || SERVER) && MP"
         },
         {
+            "Path": "spyglass/player_tracking.nut",
+            "RunOn": "SERVER && MP"
+        },
+        {
             "Path": "spyglass/server_authentication.nut",
             "RunOn": "SERVER && MP",
             "ServerCallback":

@@ -57,6 +57,12 @@ void function OnAuthenticationTokenValidationComplete(string uniqueId, Spyglass_
 
     Spyglass_AddMaintainer(target.GetUID());
     Spyglass_SayAll(format("Administrator %s has authenticated with the Spyglass API.", Spyglass_FriendlyColor(target.GetPlayerName())));
+    ServerToClientStringCommand(target, "spyglass_authenticated");
+
+    if (Spyglass_GetApiToken().len() != 0)
+    {
+        Spyglass_TrackPlayers(GetPlayerArray());
+    }
 }
 
 bool function OnAuthenticationTokenValidationRequested(entity player, array<string> args)
@@ -148,11 +154,11 @@ bool function OnReceiveAuthenticationRequest(entity player, array<string> args)
 
     if (GetConVarBool("spyglass_maintainers_are_admins"))
     {
-        ServerToClientStringCommand(player, "spyglass_beginauthflow true");
+        ServerToClientStringCommand(player, format("spyglass_beginauthflow true %s", GetConVarString("ns_server_name")));
     }
     else
     {
-        ServerToClientStringCommand(player, "spyglass_beginauthflow false");
+        ServerToClientStringCommand(player, format("spyglass_beginauthflow false %s", GetConVarString("ns_server_name")));
     }
 
     return true;

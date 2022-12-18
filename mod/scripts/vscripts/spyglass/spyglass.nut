@@ -1,5 +1,4 @@
 global function Spyglass_Init;
-global function Spyglass_TrackPlayers;
 
 void function Spyglass_Init()
 {
@@ -21,6 +20,18 @@ void function Spyglass_Init()
     if (GetGameState() >= eGameState.Playing)
     {
         OnPlayingStarted();
+    }
+}
+
+void function Spyglass_OnTrackPlayersComplete(Spyglass_ApiResult result)
+{
+    if (result.Success)
+    {
+        Spyglass_SayAdmins("Tracking data uploaded completed successfully.");
+    }
+    else
+    {
+        Spyglass_SayAdmins(format("Failed to upload tracking data with error: %s", result.Error));
     }
 }
 
@@ -130,45 +141,4 @@ ClServer_MessageStruct function OnClientMessage(ClServer_MessageStruct message)
     }
 
     return message;
-}
-
-void function Spyglass_OnTrackPlayersComplete(Spyglass_ApiResult result)
-{
-    if (result.Success)
-    {
-        Spyglass_SayAdmins("Tracking data uploaded completed successfully.");
-    }
-    else
-    {
-        Spyglass_SayAdmins(format("Failed to upload tracking data with error: %s", result.Error));
-    }
-}
-
-bool function Spyglass_TrackPlayers(array<entity> players, void functionref(Spyglass_ApiResult) callback = null)
-{
-    // If there's no token, abort immediately.
-    if (Spyglass_GetApiToken().len() == 0)
-    {
-        return false;
-    }
-
-
-    Spyglass_PlayerTrackingData data;
-    data.Hostname = strip(GetConVarString("ns_server_name"));
-
-    foreach (entity player in players)
-    {
-        if (!IsValid(player) || !player.IsPlayer())
-        {
-            continue;
-        }
-
-        Spyglass_PlayerIdentity identity;
-        identity.Username = player.GetPlayerName();
-        identity.UniqueID = player.GetUID();
-
-        data.Players.append(identity);
-    }
-
-    return SpyglassApi_TrackPlayers(data, callback);
 }

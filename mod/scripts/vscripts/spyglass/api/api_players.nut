@@ -26,7 +26,7 @@ void function SpyglassApi_OnPlayerTrackingAttemptSuccessful(HttpRequestResponse 
 
     if (data.Success)
     {
-        printt("[Spyglass] Successfully send tracking data to the API.");
+        printt("[Spyglass] Successfully sent tracking data to the API.");
     }
     else
     {
