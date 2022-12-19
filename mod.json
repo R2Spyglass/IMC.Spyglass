@@ -147,5 +147,28 @@
                 "Before": "Spyglass_AdminCommandsInit"
             }
         }
+    ],
+    "ConCommands": [
+        {
+            "Name": "spyglass_warn",
+            "Function": "SpyglassCommand_WarnPlayer",
+            "Context": "CLIENT",
+            "Flags": 0,
+            "HelpString": "spyglass_warn [uid] [duration in minutes] [type] [reason]"
+        },
+        {
+            "Name": "spyglass_mute",
+            "Function": "SpyglassCommand_MutePlayer",
+            "Context": "CLIENT",
+            "Flags": 0,
+            "HelpString": "spyglass_mute [uid] [duration in minutes] [type] [reason]"
+        },
+        {
+            "Name": "spyglass_ban",
+            "Function": "SpyglassCommand_BanPlayer",
+            "Context": "CLIENT",
+            "Flags": 0,
+            "HelpString": "spyglass_ban [uid] [duration in minutes] [type] [reason]"
+        }
     ]
 }

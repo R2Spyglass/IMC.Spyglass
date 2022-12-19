@@ -579,6 +579,53 @@ bool function Spyglass_TryParseMaintainerAuthenticationResult(table response, Sp
 }
 
 /**
+ * Tries to parse the given API response into a Spyglass_SanctionIssueResult struct.
+ * @param response The decoded JSON response from the API.
+ * @param outResult The parsed Spyglass_SanctionIssueResult struct on success.
+ * @returns True if we've parsed the response successfully.
+ */
+bool function Spyglass_TryParseSanctionIssueResult(table response, Spyglass_SanctionIssueResult outResult)
+{
+    outResult.ApiResult.Success = false;
+    outResult.ApiResult.Error = "Failed to parse API response into a Spyglass_SanctionIssueResult struct.";
+
+    if (response.len() == 0)
+    {
+        return false;
+    }
+
+    Spyglass_ApiResult parsedResult;
+    if (!Spyglass_TryParseApiResult(response, parsedResult))
+    {
+        return false;
+    }
+
+    outResult.ApiResult.Success = parsedResult.Success;
+    outResult.ApiResult.Error = parsedResult.Error;
+
+    if (!outResult.ApiResult.Success)
+    {
+        return true;
+    }
+
+    if (Spyglass_TryParseTable(response, "issuedSanction"))
+    {
+        table sanction = expect table(response["issuedSanction"]);
+        
+        Spyglass_PlayerInfraction issuedSanction;
+        if (Spyglass_TryParsePlayerInfraction(sanction, issuedSanction))
+        {
+            outResult.IssuedSanction = issuedSanction;
+            return true;
+        }
+    }
+
+    outResult.ApiResult.Success = false;
+    outResult.ApiResult.Error = "Failed to parse API response into a Spyglass_SanctionIssueResult struct (issuedSanction parameter).";
+    return false;
+}
+
+/**
  * Serializes a Spyglass_PlayerTrackingData struct into a table, ready for JSON encoding.
  * @param data The player tracking data to serialize.
  * @returns A table representation of the tracking data.
@@ -600,5 +647,29 @@ table function Spyglass_SerializePlayerTrackingData(Spyglass_PlayerTrackingData 
     }
 
     serialized["players"] <- players;
+    return serialized;
+}
+
+/**
+ * Serializes a Spyglass_SanctionIssueData struct into a table, ready for JSON encoding.
+ * @param data The sanction issue data to serialize.
+ * @returns A table representation of the sanction issue data.
+ */
+table function Spyglass_SerializeSanctionIssueData(Spyglass_SanctionIssueData data)
+{
+    table serialized = {};
+    serialized["uniqueId"] <- data.UniqueId;
+    serialized["issuerId"] <- data.IssuerId;
+
+    if (data.ExpiresIn != null)
+    {
+        int expiry = expect int (data.ExpiresIn);
+        serialized["expiresIn"] <- expiry;
+    }
+
+    serialized["reason"] <- data.Reason;
+    serialized["type"] <- data.Type;
+    serialized["punishmentType"] <- data.PunishmentType;
+
     return serialized;
 }

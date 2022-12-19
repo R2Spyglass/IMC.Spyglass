@@ -154,40 +154,21 @@ global struct Spyglass_PlayerInfraction
     string PunishmentReadable
 }
 
-// Type of notification type for muted players trying to chat.
-global enum Spyglass_MuteNotificationType
+// Data about a sanction to issue to a player.
+global struct Spyglass_SanctionIssueData
 {
-    // The message is blocked, with no notice from Spyglass.
-    Block = 0,
-    // The message is blocked, Spyglass notifies the user.
-    Notify = 1, 
-    // The message is blocked, but sent back to the player. Only they can see it.
-    Shadowban = 2, 
-}
-
-// Notification modes for sanctions when a sanctionned player joins the server, or gets sanctionned.
-global enum Spyglass_SanctionNotificationMode
-{
-    // No sanction notification whatsoever for anyone.
-    None = 0,
-    // Only the sanctioned player will see the notification.
-    PlayerOnly = 1,
-    // Only the sanctioned player and online admins will see the notification.
-    PlayerAndAdmins = 2,
-    // Only server admins will see the sanction notification.
-    AdminsOnly = 3,
-    // Everyone will see the notification.
-    Everyone = 4,
-}
-
-global enum Spyglass_AuthenticationResult 
-{
-    NotAdmin,
-    AuthenticationDisabled,
-    WrongPassword,
-    InvalidPlayer,
-    AlreadyAuthenticated,
-    Success,
+    // The unique id of the player the sanction belongs to.
+    string UniqueId
+    // The unique id of the player who issued the id.
+    string IssuerId
+    // The time at which this sanction expires, in minutes in the future. Null if it's permanent.
+    int ornull ExpiresIn
+    // The reason why this sanction was applied to the player.
+    string Reason
+    // The type of infraction that led to this sanction.
+    int Type
+    // The punishment that should be applied for this sanction.
+    int PunishmentType
 }
 
 // Base class for API response results.
@@ -264,4 +245,13 @@ global struct Spyglass_MaintainerTicketValidationResult
 
     // Whether or not the authentication token is valid.
     bool IsValid
+}
+
+// A result of an attempt to issue a sanction to a player.
+global struct Spyglass_SanctionIssueResult
+{
+    Spyglass_ApiResult ApiResult
+
+    // The sanction that was issued to the player, if any.
+    Spyglass_PlayerInfraction ornull IssuedSanction
 }

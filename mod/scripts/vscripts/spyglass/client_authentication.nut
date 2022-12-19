@@ -52,7 +52,7 @@ void function BeginAuthenticationFlow(array<string> args)
         return;
     }
 
-    string enabled = args[0];
+    string enabled = strip(args[0]);
     string hostname = "";
 
     for (int i = 1; i < args.len(); i++)
@@ -70,7 +70,6 @@ void function BeginAuthenticationFlow(array<string> args)
 
     printt("[Spyglass] Server requested we begin authentication flow.");
     Spyglass_ClientSay("Requesting authentication ticket from API...");
-    Spyglass_ClientSay(format("Hostname: %s", Hostname));
 
     if (!SpyglassApi_RequestAuthenticationTicket(OnAuthenticationTicketReceived))
     {
