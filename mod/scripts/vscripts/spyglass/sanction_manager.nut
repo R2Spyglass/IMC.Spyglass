@@ -49,6 +49,7 @@ void function Spyglass_InitSanctionManager()
 
     // Apply muted players from the cache so we keep them muted until we refresh their sanctions.
     Spyglass_ApplyMutedPlayersCache();
+    Spyglass_ApplyConnectedPlayersCache();
 }
 
 /**
@@ -129,6 +130,14 @@ void function OnClientConnecting(entity player)
     }
     else
     {
+        // Check that the player wasn't in the connected cache and we're not in prematch.
+        // If so, don't query sanctions. They'll be refreshed like everyone else.
+        if (Spyglass_IsConnected(player.GetUID()) && GetGameState() < eGameState.Prematch)
+        {
+            printt(format("[Spyglass] Player '%s' was already connected last map, waiting for bulk sanction check on prematch.", player.GetPlayerName()));
+            return;
+        }
+
         if (!Spyglass_VerifyPlayerSanctions(player))
         {
             Spyglass_SayAllError(format("Failed to start verifying sanctions for player '%s'.", Spyglass_FriendlyColor(player.GetPlayerName())));
@@ -789,6 +798,22 @@ void function Spyglass_ApplyMutedPlayersCache()
         if (uid.len() != 0 && !Spyglass_IsMuted(uid))
         {
             Spyglass_AddMutedPlayer(uid);
+        }
+    }
+}
+
+/** Reads the connected players cache and applies the mutes. */
+void function Spyglass_ApplyConnectedPlayersCache()
+{
+    array<string> connected = Spyglass_GetConVarStringArray("spyglass_cache_connected_players");
+
+    foreach (string uid in connected)
+    {
+        string sanitized = strip(uid);
+
+        if (uid.len() != 0 && !Spyglass_IsConnected(uid))
+        {
+            Spyglass_AddConnectedPlayer(uid);
         }
     }
 }

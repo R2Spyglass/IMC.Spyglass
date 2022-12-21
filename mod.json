@@ -65,6 +65,10 @@
             "DefaultValue": ""
         },
         {
+            "Name": "spyglass_cache_connected_players",
+            "DefaultValue": ""
+        },
+        {
             "Name": "spyglass_cache_disabled_from_error",
             "DefaultValue": "0"
         }
