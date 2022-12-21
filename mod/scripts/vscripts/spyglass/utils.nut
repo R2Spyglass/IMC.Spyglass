@@ -124,17 +124,17 @@ string function Spyglass_GetInfractionAsString(Spyglass_PlayerInfraction infract
 
     if (infraction.ExpiresAtTimestamp != null)
     {
-        str = format("\n^F6AD0100[Spyglass]^F6AD0100 ^64fbfb00[#%i]^64fbfb00\n^eb393900%s for %s\nReason: %s^eb393900\n^a3a3a300Issued At: %s\nExpires: %s", infraction.ID, punishmentString, typeString, infraction.Reason, infraction.IssuedAtReadable, infraction.ExpiresAtReadable);
+        str = format("\n^F6AD0100[Spyglass] ^64fbfb00[#%i @ %s]\n^eb393900%s for %s\n^a3a3a300Reason: %s\nExpires: %s", infraction.ID, infraction.IssuedAtReadable, punishmentString, typeString, infraction.Reason, infraction.ExpiresAtReadable);
     }
     else
     {
-        str = format("\n^F6AD0100[Spyglass]^F6AD0100 ^64fbfb00[#%i]^64fbfb00\n^eb393900Permanently %s for %s\nReason: %s^eb393900^a3a3a300\nIssued At: %s", infraction.ID, punishmentString, typeString, infraction.Reason, infraction.IssuedAtReadable);
+        str = format("\n^F6AD0100[Spyglass] ^64fbfb00[#%i @ %s]\n^eb393900Permanently %s for %s\n^a3a3a300Reason: %s", infraction.ID, infraction.IssuedAtReadable, punishmentString, typeString  , infraction.Reason);
     }
 
     string appeal = strip(GetConVarString("spyglass_appeal_link"));
     if (appeal.len() != 0)
     {
-        str = format("%s\nAppeal On: ^64fbfb00%s^64fbfb00", str, appeal);
+        str = format("%s\nAppeal On: ^64fbfb00%s", str, appeal);
     }
 
     return str;
