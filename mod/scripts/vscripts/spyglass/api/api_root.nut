@@ -66,17 +66,40 @@ bool function SpyglassApi_MakeHttpRequest(HttpRequest request, void functionref(
     return NSHttpRequest(request, responseCapture, onFailure);
 }
 
+/**
+ * Returns the values of the given header key.
+ */
+array<string> function SpyglassApi_GetHeaderValues(HttpRequestResponse response, string name)
+{
+    array<string> foundValues = [];
+
+    foreach (string key, array<string> values in response.headers)
+    {
+        if (key.tolower() == name.tolower())
+        {
+            foreach (string headerValue in values)
+            {
+                foundValues.append(headerValue);
+            }
+        }
+    }
+
+    return foundValues;
+}
+
 /** Internal only - retrieves and caches the version and minimum version from response headers. */
 void function SpyglassApi_ParseVersionHeaders(HttpRequestResponse response)
 {
-    if ("Spyglass-API-Version" in response.headers)
+    array<string> latest = SpyglassApi_GetHeaderValues(response, "Spyglass-API-Version");
+    if (latest.len() != 0)
     {
-        SetConVarString("spyglass_cache_api_latest_version", response.headers["Spyglass-API-Version"][0]);
+        SetConVarString("spyglass_cache_api_latest_version", latest[0]);
     }
 
-    if ("Spyglass-API-MinimumVersion" in response.headers)
+    array<string> minimum = SpyglassApi_GetHeaderValues(response, "Spyglass-API-MinimumVersion");
+    if (minimum.len() != 0)
     {
-        SetConVarString("spyglass_cache_api_minimum_version", response.headers["Spyglass-API-MinimumVersion"][0]);
+        SetConVarString("spyglass_cache_api_minimum_version", minimum[0]);
     }
 }
 
