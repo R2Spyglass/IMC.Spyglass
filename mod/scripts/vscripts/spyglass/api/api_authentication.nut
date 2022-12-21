@@ -147,6 +147,6 @@ bool function SpyglassApi_ValidateAuthenticationToken(string uniqueId, string to
         SpyglassApi_OnValidateAuthenticationTokenFailed(failure, callback);
     }
 
-    return SpyglassApi_MakeHttpRequest(request, onSuccess, onFailure, true);
+    return SpyglassApi_MakeHttpRequest(request, onSuccess, onFailure);
 }
 #endif
