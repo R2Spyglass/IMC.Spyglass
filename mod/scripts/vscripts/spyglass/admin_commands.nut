@@ -4,6 +4,7 @@ void function Spyglass_AdminCommandsInit()
 {
     Spyglass_RegisterAdminCommand("spyglass_listuids", Spyglass_AdminListUniqueIDs);
     Spyglass_RegisterAdminCommand("spyglass_refreshsanctions", Spyglass_AdminRefreshSanctions);
+    Spyglass_RegisterAdminCommand("spyglass_kickplayer", Spyglass_AdminKickPlayer);
 }
 
 /**
@@ -76,5 +77,69 @@ bool function Spyglass_AdminRefreshSanctions(entity caller, array<string> args)
         Spyglass_SayAll(format("Administrator %s is refreshing all sanctions...", Spyglass_FriendlyColor(caller.GetPlayerName())));
     }
 
+    return true;
+}
+
+bool function Spyglass_AdminKickPlayer(entity caller, array<string> args)
+{
+    if (args.len() == 0)
+    {
+        Spyglass_SayPrivate(caller, "Missing argument: name or uid.");
+        return true;
+    }
+
+    string reason = format("Kicked by %s", caller.GetPlayerName());
+    if (args.len() > 1)
+    {
+        reason = "";
+        for (int i = 1; i < args.len(); i++)
+        {
+            reason = format("%s%s ", reason, args[i]);
+        }
+    }
+    
+    string query = args[0];
+    array<entity> matches = [];
+
+    foreach (entity player in GetPlayerArray())
+    {
+        if (caller.GetUID() == query)
+        {
+            if (NSDisconnectPlayer(player, reason))
+            {
+                Spyglass_SayAll(format("Administrator %s has kicked player %s:", Spyglass_FriendlyColor(caller.GetPlayerName()), Spyglass_FriendlyColor(player.GetPlayerName())));
+                Spyglass_SayAll(format("Reason: %s", reason));
+                return true;
+            }
+            else
+            {
+                Spyglass_SayPrivate(caller, format("Couldn't kick player %s due to an internal error.", Spyglass_FriendlyColor(player.GetPlayerName())));
+                return true;
+            }
+        }
+
+        if (player.GetPlayerName().find(query) != null)
+        {
+            matches.append(player);
+        }
+    }
+
+    if (matches.len() == 1)
+    {
+        entity player = matches[0];
+        if (NSDisconnectPlayer(player, reason))
+        {
+            Spyglass_SayAll(format("Administrator %s has kicked player %s:", Spyglass_FriendlyColor(caller.GetPlayerName()), Spyglass_FriendlyColor(player.GetPlayerName())));
+            Spyglass_SayAll(format("Reason: %s", reason));
+            return true;
+        }
+        else
+        {
+            Spyglass_SayPrivate(caller, format("Couldn't kick player %s due to an internal error.", Spyglass_FriendlyColor(player.GetPlayerName())));
+            return true;
+        }
+    }
+
+    Spyglass_SayPrivate(caller, format("Could not find player with name or uid '%s'.", query));
     return true;
 }
