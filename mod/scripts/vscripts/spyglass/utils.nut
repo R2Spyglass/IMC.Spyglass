@@ -124,17 +124,17 @@ string function Spyglass_GetInfractionAsString(Spyglass_PlayerInfraction infract
 
     if (infraction.ExpiresAtTimestamp != null)
     {
-        str = format("Spyglass: [#%i] %s for %s on %s. Reason: %s. Expires: %s.", infraction.ID, punishmentString, typeString, infraction.IssuedAtReadable, infraction.Reason, infraction.ExpiresAtReadable);
+        str = format("\n[Spyglass] [#%i]\n%s for %s\nIssued At: %s\nReason: %s\nExpires: %s", infraction.ID, punishmentString, typeString, infraction.IssuedAtReadable, infraction.Reason, infraction.ExpiresAtReadable);
     }
     else
     {
-        str = format("Spyglass: [#%i] Permanently %s for %s on %s. Reason: %s.", infraction.ID, punishmentString, typeString, infraction.IssuedAtReadable, infraction.Reason);
+        str = format("\n[Spyglass] [#%i]\nPermanently %s for %s\n\nIssued At: %s\nReason: %s", infraction.ID, punishmentString, typeString, infraction.IssuedAtReadable, infraction.Reason);
     }
 
     string appeal = strip(GetConVarString("spyglass_appeal_link"));
     if (appeal.len() != 0)
     {
-        str = format("%s Appeal on: %s", str, appeal);
+        str = format("%s\nAppeal On: %s", str, appeal);
     }
 
     return str;

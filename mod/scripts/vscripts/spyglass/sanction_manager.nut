@@ -84,8 +84,7 @@ void function OnClientConnecting(entity player)
         }
         else
         {
-            ClientCommand(player, format("disconnect \"%s\"", Spyglass_BannedPlayers[player.GetUID()]));
-            ServerCommand(format("kick %s", player.GetPlayerName()));
+            NSDisconnectPlayer(player, Spyglass_BannedPlayers[player.GetUID()]);
         }
 
         return;
@@ -833,8 +832,7 @@ bool function Spyglass_BanPlayer(entity player, string reason)
     }
     else
     {
-        ClientCommand(player, format("disconnect \"%s\"", reason));
-        ServerCommand(format("kick %s", player.GetPlayerName()));
+        NSDisconnectPlayer(player, reason);
     }
 
     return true;
