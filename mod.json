@@ -14,7 +14,7 @@
         },
         {
             "Name": "spyglass_appeal_link",
-            "DefaultValue": "https://discord.gg/whKMsPN3nu"
+            "DefaultValue": "https://spyglass.tf"
         },
         {
             "Name": "spyglass_admin_uids",
