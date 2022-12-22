@@ -13,4 +13,7 @@ void function AddSpyglassAdminMenu()
 void function InitSpyglassAdminMenu()
 {
     file.menu = GetMenu( "SpyglassAdminMenu" )
+
+    // add footer buttons
+    AddMenuFooterOption( file.menu, BUTTON_B, "#B_BUTTON_BACK", "#BACK" )
 }
