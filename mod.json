@@ -156,7 +156,8 @@
             "RunOn": "UI",
             "UICallback":
             {
-                "Before": "AddSpyglassAdminMenu"
+                "Before": "AddSpyglassAdminMenu",
+                "After": "AddSpyglassFooterButton"
             }
         }
     ],
