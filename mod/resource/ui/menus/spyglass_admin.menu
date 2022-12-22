@@ -1,0 +1,70 @@
+resource/ui/menus/spyglass_admin.menu
+{
+	menu
+	{
+		ControlName Frame
+		xpos 0
+		ypos 0
+		zpos 3
+		wide f0
+		tall f0
+		autoResize 0
+		visible 1
+		enabled 1
+		pinCorner 0
+		PaintBackgroundType 0
+		infocus_bgcolor_override "0 0 0 0"
+		outoffocus_bgcolor_override "0 0 0 0"
+
+		Vignette
+		{
+			ControlName ImagePanel
+			InheritProperties MenuVignette
+		}
+
+		Title
+		{
+			ControlName Label
+			InheritProperties MenuTitle
+			labelText "#SPYGLASS_ADMIN_MENU_TITLE"
+		}
+
+		ImgTopBar
+		{
+			ControlName ImagePanel
+			InheritProperties MenuTopBar
+		}
+
+		ButtonRowAnchor
+		{
+			ControlName Label
+			labelText ""
+
+			xpos 120
+			ypos 160
+		}
+
+		MatchmakingStatus
+		{
+			ControlName CNestedPanel
+			xpos 0
+			ypos 0
+			wide f0
+			tall f0
+			visible 1
+			controlSettingsFile "resource/ui/menus/panels/matchmaking_status.res"
+		}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		FooterButtons
+		{
+			ControlName CNestedPanel
+			InheritProperties FooterButtons
+		}
+	}
+}
