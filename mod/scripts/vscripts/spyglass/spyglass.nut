@@ -124,6 +124,17 @@ void function OnClientConnected(entity player)
     if (GetGameState() >= eGameState.Prematch)
     {
         Spyglass_TrackPlayers([player]);
+
+        if (GetConVarBool("spyglass_welcome_message_enabled"))
+        {
+            foreach (entity player in GetPlayerArray())
+            {
+                if (IsValid(player))
+                {
+                    NSSendInfoMessageToPlayer(player, GetConVarString("spyglass_welcome_message"));
+                }
+            }
+        }
     }
 }
 
