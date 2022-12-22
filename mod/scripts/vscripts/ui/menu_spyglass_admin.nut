@@ -1,8 +1,9 @@
 global function AddSpyglassAdminMenu
 
-struct file {
+struct
+{
     var menu
-}
+} file
 
 void function AddSpyglassAdminMenu()
 {
