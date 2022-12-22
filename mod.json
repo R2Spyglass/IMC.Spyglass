@@ -150,6 +150,14 @@
             {
                 "Before": "Spyglass_AdminCommandsInit"
             }
+        },
+        {
+            "Path": "ui/menu_spyglass_admin.nut",
+            "RunOn": "UI",
+            "UICallback":
+            {
+                "Before": "AddSpyglassAdminMenu"
+            }
         }
     ],
     "ConCommands": [
