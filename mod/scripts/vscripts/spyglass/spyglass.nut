@@ -127,12 +127,9 @@ void function OnClientConnected(entity player)
 
         if (GetConVarBool("spyglass_welcome_message_enabled"))
         {
-            foreach (entity player in GetPlayerArray())
+            if (IsValid(player))
             {
-                if (IsValid(player))
-                {
-                    NSSendInfoMessageToPlayer(player, GetConVarString("spyglass_welcome_message"));
-                }
+                NSSendInfoMessageToPlayer(player, GetConVarString("spyglass_welcome_message"));
             }
         }
     }
