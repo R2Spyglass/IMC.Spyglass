@@ -385,10 +385,15 @@ table<string, array<Spyglass_PlayerInfraction> > function Spyglass_UpdateSanctio
             {
                 return -1;
             }
+            else if (first.ID < second.ID)
+            {
+                return 1;
+            }
 
-            return 1;
+            // Squirrel is dumb and will try to sort a sanction against itself. Not returning anything but zero causes stack overflow with silent halt of script.
+            return 0;
         });
-        
+
         if (!(uid in Spyglass_CachedPlayerSanctions))
         {
             Spyglass_CachedPlayerSanctions[uid] <- sanctions;
@@ -402,6 +407,12 @@ table<string, array<Spyglass_PlayerInfraction> > function Spyglass_UpdateSanctio
         // For equal punishment, apply the newest sanctions first.
         newSanctions.sort(int function (Spyglass_PlayerInfraction first, Spyglass_PlayerInfraction second)
         {
+            // Squirrel is dumb and will try to sort a sanction against itself. Not returning anything but zero causes stack overflow with silent halt of script.
+            if (first.ID == second.ID)
+            {
+                return 0;
+            }
+
             if (first.PunishmentType > second.PunishmentType)
             {
                 return -1;
@@ -420,7 +431,7 @@ table<string, array<Spyglass_PlayerInfraction> > function Spyglass_UpdateSanctio
 
             return 1;
         });
-
+        
         if (newSanctions.len() != 0)
         {
             deltaSanctions[uid] <- newSanctions;
@@ -534,14 +545,14 @@ void function Spyglass_OnPlayerSanctionsRefreshed(Spyglass_SanctionSearchResult 
     }
 
     table<string, array<Spyglass_PlayerInfraction> > deltaSanctions = Spyglass_UpdateSanctions(result);
-    
+
     foreach (entity player in Spyglass_GetAllPlayers())
     {
         if (!IsValid(player) || !(player.GetUID() in deltaSanctions) || Spyglass_HasImmunity(player))
         {
             continue;
         }
-
+    
         string playerName = player.GetPlayerName();
         Spyglass_AppliedSanctionResult result = Spyglass_ApplySanctionsToPlayer(player, deltaSanctions[player.GetUID()]);
 
