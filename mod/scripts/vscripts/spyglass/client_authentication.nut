@@ -1,8 +1,6 @@
 global function Spyglass_AuthenticationClientInit;
 
 array<string> TrackedIdentities = [];
-
-bool IsAuthenticated = false;
 string Hostname = "";
 
 void function Spyglass_AuthenticationClientInit()
@@ -86,9 +84,9 @@ void function OnAuthenticated(array<string> args)
         return;
     }
 
-    if (!IsAuthenticated)
+    if (!Spyglass_IsAuthenticated())
     {
-        IsAuthenticated = true;
+        Spyglass_SetAuthenticated(true);
         Spyglass_ClientSay("Successfully authenticated with the server.");
     }
 }
@@ -101,7 +99,7 @@ void function OnAddPlayerIdentity(array<string> args)
         return;
     }
 
-    if (!IsAuthenticated)
+    if (!Spyglass_IsAuthenticated())
     {
         printt("[Spyglass] Received spyglass_addplayeridentity while unauthenticated, aborting.");
         return;
@@ -140,7 +138,7 @@ void function OnRemovePlayerIdentity(array<string> args)
         return;
     }
 
-    if (!IsAuthenticated)
+    if (!Spyglass_IsAuthenticated())
     {
         printt("[Spyglass] Received spyglass_addplayeridentity while unauthenticated, aborting.");
         return;
@@ -190,7 +188,7 @@ void function OnTrackPlayerRequest(array<string> args)
         return;
     }
 
-    if (!IsAuthenticated)
+    if (!Spyglass_IsAuthenticated())
     {
         printt("[Spyglass] Received spyglass_trackplayers while unauthenticated, aborting.");
         return;
