@@ -11,12 +11,13 @@ void function Spyglass_TryOpenAdminMenu(var button)
 struct
 {
     var menu
+    bool isAuthed = false
 } file
 
 void function AddSpyglassAdminMenu()
 {
     AddMenu( "SpyglassAdminMenu", $"resource/ui/menus/spyglass_admin.menu", InitSpyglassAdminMenu, "#SPYGLASS_ADMIN_MENU_TITLE" )
-    
+    AddServerToClientStringCommandCallback("spyglass_authenticated", AddSpyglassFooterButton)
 }
 
 void function AddSpyglassFooterButton()
@@ -41,9 +42,9 @@ void function InitSpyglassAdminMenu()
 void function Spyglass_OnAdminMenuOpened()
 {
     // set the UI presentation type for nicer visuals
-    //UI_SetPresentationType( ePresentationType.KNOWLEDGEBASE_SUB )
+    UI_SetPresentationType( ePresentationType.KNOWLEDGEBASE_SUB )
     // dont move ui camera at all
-    UI_SetPresentationType( ePresentationType.INACTIVE )
+    //UI_SetPresentationType( ePresentationType.INACTIVE )
 
     Spyglass_InitScrollablePlayerList( Hud_GetChild( file.menu, "PlayerList" ) )
 }
