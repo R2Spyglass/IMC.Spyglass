@@ -159,6 +159,10 @@
                 "Before": "AddSpyglassAdminMenu",
                 "After": "AddSpyglassFooterButton"
             }
+        },
+        {
+            "Path": "ui/panel_spyglass_player_list.nut",
+            "RunOn": "UI"
         }
     ],
     "ConCommands": [
