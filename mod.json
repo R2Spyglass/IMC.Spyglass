@@ -84,7 +84,11 @@
         },
         {
             "Path": "spyglass/client_globals.nut",
-            "RunOn": "CLIENT && MP"
+            "RunOn": "CLIENT && MP",
+            "ClientCallback":
+            {
+                "After": "Spyglass_ClientGlobalsInit"
+            }
         },
         {
             "Path": "spyglass/server_globals.nut",

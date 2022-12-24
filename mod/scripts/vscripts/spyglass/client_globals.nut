@@ -3,6 +3,15 @@ globalize_all_functions
 /** List of player identities sent from the server when authenticated. */
 table<string, string> Spyglass_PlayerIdentities = {};
 
+/** Whether or not we're currently authenticated with the Spyglass API. */
+bool IsAuthenticated = false;
+
+void function Spyglass_ClientGlobalsInit()
+{
+    Spyglass_SetAuthenticated(false);
+    RunUIScript("SpyglassUI_ResetPlayerIdentities");
+}
+
 /** Add a player name and uid to the identity table. */
 void function Spyglass_AddPlayerIdentity(string uid, string username)
 {
@@ -50,4 +59,17 @@ string function Spyglass_GetPlayerName(string uid)
 
     CodeWarning("[Spyglass] Attempted to get player identity of unknown player. Use Spyglass_HasIdentity() first!");
     return "";
+}
+
+/** Returns whether or not we're currently authenticated with the Spyglass API. */
+bool function Spyglass_IsAuthenticated()
+{
+    return IsAuthenticated;
+}
+
+/** Sets whether or not we're currently authenticated. */
+bool function Spyglass_SetAuthenticated(bool isAuthenticated)
+{
+    IsAuthenticated = isAuthenticated;
+    RunUIScript("SpyglassUI_SetAuthenticated", isAuthenticated);
 }
