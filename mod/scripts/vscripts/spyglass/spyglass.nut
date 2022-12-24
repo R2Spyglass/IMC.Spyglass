@@ -8,6 +8,7 @@ void function Spyglass_Init()
 
     AddCallback_OnReceivedSayTextMessage(OnClientMessage);
     AddCallback_OnClientConnected(OnClientConnected);
+    AddCallback_OnClientDisconnected(OnClientDisconnected);
 
     AddCallback_GameStateEnter(eGameState.Prematch, OnPrematchStarted);
     AddCallback_GameStateEnter(eGameState.Playing, OnPlayingStarted);
@@ -120,6 +121,15 @@ void function OnClientConnected(entity player)
         return;
     }
 
+    // Send the player's identity to all authenticated maintainers.
+    foreach (entity maintainer in GetPlayerArray())
+    {
+        if (IsValid(maintainer) && maintainer.IsPlayer() && Spyglass_IsMaintainer(maintainer.GetUID()))
+        {
+            Spyglass_TransmitPlayerIdentities(maintainer, [ player ]);
+        }
+    }
+
     // Track the player if we're already in pre-match.
     if (GetGameState() >= eGameState.Prematch)
     {
@@ -131,6 +141,28 @@ void function OnClientConnected(entity player)
             {
                 NSSendInfoMessageToPlayer(player, GetConVarString("spyglass_welcome_message"));
             }
+        }
+    }
+}
+
+void function OnClientDisconnected(entity player)
+{
+    if (Spyglass_IsDisabled())
+    {
+        return;
+    }
+
+    if (!IsValid(player) || !player.IsPlayer())
+    {
+        return;
+    }
+
+    // Remove the player's identity from all authenticated maintainers.
+    foreach (entity maintainer in GetPlayerArray())
+    {
+        if (IsValid(maintainer) && maintainer.IsPlayer() && Spyglass_IsMaintainer(maintainer.GetUID()))
+        {
+            Spyglass_RemovePlayerIdentities(maintainer, [ player ]);
         }
     }
 }

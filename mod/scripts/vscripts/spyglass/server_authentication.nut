@@ -59,6 +59,8 @@ void function OnAuthenticationTokenValidationComplete(string uniqueId, Spyglass_
     Spyglass_SayAll(format("Administrator %s has authenticated with the Spyglass API.", Spyglass_FriendlyColor(target.GetPlayerName())));
     ServerToClientStringCommand(target, "spyglass_authenticated");
 
+    Spyglass_TransmitPlayerIdentities(target, GetPlayerArray());
+
     if (Spyglass_GetApiToken().len() == 0)
     {
         Spyglass_TrackPlayers(GetPlayerArray());
