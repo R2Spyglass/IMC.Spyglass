@@ -1,6 +1,7 @@
 global function Spyglass_AuthenticationClientInit;
 
-table<string, string> PlayerIdentities = {};
+array<string> TrackedIdentities = [];
+
 bool IsAuthenticated = false;
 string Hostname = "";
 
@@ -10,6 +11,7 @@ void function Spyglass_AuthenticationClientInit()
     AddServerToClientStringCommandCallback("spyglass_beginauthflow", BeginAuthenticationFlow);
     AddServerToClientStringCommandCallback("spyglass_authenticated", OnAuthenticated);
     AddServerToClientStringCommandCallback("spyglass_addplayeridentity", OnAddPlayerIdentity);
+    AddServerToClientStringCommandCallback("spyglass_removeplayeridentity", OnRemovePlayerIdentity);
     AddServerToClientStringCommandCallback("spyglass_trackplayers", OnTrackPlayerRequest);
 }
 
@@ -95,6 +97,7 @@ void function OnAddPlayerIdentity(array<string> args)
 {
     if (IsPlayingDemo())
     {
+        printt("wut")
         return;
     }
 
@@ -104,14 +107,21 @@ void function OnAddPlayerIdentity(array<string> args)
         return;
     }
 
-    if (args.len() != 2)
+    if (args.len() < 2)
     {
         printt(format("[Spyglass] Invalid spyglass_addplayeridentity request: expected 2 args, got %i", args.len()));
         return;
     }
 
-    string username = strip(args[0]);
-    string uid = strip(args[1]);
+    string uid = strip(args[0]);
+    string username = "";
+
+    for (int i = 1; i < args.len(); i++)
+    {
+        username = format("%s%s ", username, args[i]);
+    }
+
+    username = strip(username);
 
     if (username.len() == 0 || uid.len() == 0)
     {
@@ -119,16 +129,45 @@ void function OnAddPlayerIdentity(array<string> args)
         return;
     }
 
-    if (uid in PlayerIdentities)
+    Spyglass_AddPlayerIdentity(uid, username);
+    printt(format("[Spyglass] Received player identity '%s' [%s] from server.", username, uid));
+}
+
+void function OnRemovePlayerIdentity(array<string> args)
+{
+    if (IsPlayingDemo())
     {
-        PlayerIdentities[uid] = username;
-    }
-    else
-    {
-        PlayerIdentities[uid] <- username;
+        return;
     }
 
-    printt(format("[Spyglass] Received player identity '%s' [%s] from server.", username, uid));
+    if (!IsAuthenticated)
+    {
+        printt("[Spyglass] Received spyglass_addplayeridentity while unauthenticated, aborting.");
+        return;
+    }
+
+    if (args.len() != 1)
+    {
+        printt(format("[Spyglass] Invalid spyglass_removeplayeridentity request: expected 1 args, got %i", args.len()));
+        return;
+    }
+
+    string uid = strip(args[0]);
+
+    if (uid.len() == 0)
+    {
+        printt(format("[Spyglass] Invalid spyglass_removeplayeridentity request: invalid uid '%i'", uid));
+        return;
+    }
+
+    Spyglass_RemovePlayerIdentity(uid);
+    int foundIndex = TrackedIdentities.find(uid);
+    if (foundIndex != -1)
+    {
+        TrackedIdentities.remove(foundIndex);
+    }
+
+    printt(format("[Spyglass] Removed player identity '%s' as requested by server.", uid));
 }
 
 void function OnTrackPlayersComplete(Spyglass_ApiResult result)
@@ -160,13 +199,17 @@ void function OnTrackPlayerRequest(array<string> args)
     Spyglass_PlayerTrackingData data;
     data.Hostname = Hostname;
 
-    foreach (string uid, string username in PlayerIdentities)
+    foreach (string uid, string username in Spyglass_GetPlayerIdentities())
     {
-        Spyglass_PlayerIdentity ident;
-        ident.Username = username;
-        ident.UniqueID = uid;
+        if (TrackedIdentities.find(uid) != -1)
+        {
+            Spyglass_PlayerIdentity ident;
+            ident.Username = username;
+            ident.UniqueID = uid;
 
-        data.Players.append(ident);
+            data.Players.append(ident);
+            TrackedIdentities.append(uid);
+        }
     }
 
     if (data.Players.len() == 0)
@@ -177,12 +220,10 @@ void function OnTrackPlayerRequest(array<string> args)
 
     if (SpyglassApi_TrackPlayers(data, OnTrackPlayersComplete))
     {
-        Spyglass_ClientSay(format("Sending tracking data for %i players to the API, on the server's behalf...", data.Players.len()));
+        Spyglass_ClientSay(format("Sending tracking data for %i %s to the API, on the server's behalf...", data.Players.len(), Spyglass_Pluralize("player", "players", data.Players.len())));
     }
     else
     {
         printt("[Spyglass] Failed to send tracking data on the server's behalf.");
     }
-
-    PlayerIdentities = {};
 }

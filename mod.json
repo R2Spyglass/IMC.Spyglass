@@ -1,7 +1,7 @@
 {
     "Name": "IMC.Spyglass",
     "Description": "A server-side mod that handles sanctions based on player reports on the community Northstar Discord.",
-    "Version": "2.0.1",
+    "Version": "2.0.2",
     "LoadPriority": 2,
     "ConVars": [
         {
@@ -77,6 +77,14 @@
         {
             "Path": "spyglass/models.nut",
             "RunOn": "(CLIENT || SERVER) && MP"
+        },
+        {
+            "Path": "spyglass/ui_globals.nut",
+            "RunOn": "UI"
+        },
+        {
+            "Path": "spyglass/client_globals.nut",
+            "RunOn": "CLIENT && MP"
         },
         {
             "Path": "spyglass/server_globals.nut",
