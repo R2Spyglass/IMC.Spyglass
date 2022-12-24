@@ -6,6 +6,12 @@ table<string, string> Spyglass_PlayerIdentities = {};
 /** Whether or not we're currently authenticated with the Spyglass API. */
 bool IsAuthenticated = false;
 
+void function Spyglass_ClientGlobalsInit()
+{
+    Spyglass_SetAuthenticated(false);
+    RunUIScript("SpyglassUI_ResetPlayerIdentities");
+}
+
 /** Add a player name and uid to the identity table. */
 void function Spyglass_AddPlayerIdentity(string uid, string username)
 {
@@ -64,9 +70,6 @@ bool function Spyglass_IsAuthenticated()
 /** Sets whether or not we're currently authenticated. */
 bool function Spyglass_SetAuthenticated(bool isAuthenticated)
 {
-    if (IsAuthenticated != isAuthenticated)
-    {
-        IsAuthenticated = isAuthenticated;
-        RunUIScript("SpyglassUI_SetAuthenticated", isAuthenticated);
-    }
+    IsAuthenticated = isAuthenticated;
+    RunUIScript("SpyglassUI_SetAuthenticated", isAuthenticated);
 }

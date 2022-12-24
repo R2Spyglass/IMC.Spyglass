@@ -28,6 +28,12 @@ void function SpyglassUI_RemovePlayerIdentity(string uid)
     }
 }
 
+/** Resets player identities to an empty table. */
+void function SpyglassUI_ResetPlayerIdentities()
+{
+    Spyglass_PlayerIdentities = {};
+}
+
 /** Returns all player identities. */
 table<string, string> function SpyglassUI_GetPlayerIdentities()
 {
@@ -61,8 +67,5 @@ bool function SpyglassUI_IsAuthenticated()
 /** Sets whether or not we're currently authenticated. */
 bool function SpyglassUI_SetAuthenticated(bool isAuthenticated)
 {
-    if (IsAuthenticated != isAuthenticated)
-    {
-        IsAuthenticated = isAuthenticated;
-    }
+    IsAuthenticated = isAuthenticated;
 }
