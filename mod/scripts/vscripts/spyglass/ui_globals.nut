@@ -65,7 +65,7 @@ bool function SpyglassUI_IsAuthenticated()
 }
 
 /** Sets whether or not we're currently authenticated. */
-bool function SpyglassUI_SetAuthenticated(bool isAuthenticated)
+void function SpyglassUI_SetAuthenticated(bool isAuthenticated)
 {
     IsAuthenticated = isAuthenticated;
 }
