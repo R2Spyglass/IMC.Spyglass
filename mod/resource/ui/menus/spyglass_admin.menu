@@ -27,6 +27,7 @@ resource/ui/menus/spyglass_admin.menu
 			ControlName Label
 			InheritProperties MenuTitle
 			labelText "#SPYGLASS_ADMIN_MENU_TITLE"
+			//labelText "HELLO"
 		}
 
 		ImgTopBar
@@ -56,19 +57,180 @@ resource/ui/menus/spyglass_admin.menu
 		}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		"PlayerList"
+		PlayerListFrame
 		{
-			"ControlName"				"CNestedPanel"
-			"tall"						"45"
-			"wide"						"500"
-			"pin_to_sibling"			"ButtonRowAnchor"
-			"pin_corner_to_sibling"		"TOP_LEFT"
-			"pin_to_sibling_corner"		"TOP_LEFT"
-			"navUp"						"BtnMod15"
-			"navDown"					"BtnMod2"
-			"controlSettingsFile"		"resource/UI/menus/panels/spyglass_player_list.res"
+			ControlName				"CNestedPanel"
+			wide					535
+			tall 770
+			pin_to_sibling			ButtonRowAnchor
+			pin_corner_to_sibling	TOP_LEFT
+			pin_to_sibling_corner	TOP_LEFT
+			//bgcolor_override		"255 0 0 255"
+			
+			Anchor
+			{
+				ControlName Label
+				labelText ""
+				//bgcolor_override		"0 255 0 100"
+				visible 1
+
+				wide					535
+				tall 770
+			}
+
+			PlayerList
+			{
+				ControlName				CNestedPanel
+				controlSettingsFile 	"resource/ui/menus/panels/spyglass_playerlist.res"
+				xpos 0
+				ypos 0
+				zpos 0
+				wide					500
+				tall					4000 // arbitrarily tall
+				pin_to_sibling			Anchor
+				pin_corner_to_sibling	TOP_LEFT
+				pin_to_sibling_corner	TOP_LEFT
+				//bgcolor_override		"255 0 0 50"
+			}
+
+			ScrollCapture
+			{
+				ControlName 			CMouseMovementCapturePanel
+				wide 					35
+				tall 					700
+				ypos					-35
+				zpos					3
+				visible					0 // this gets shown when you hover over ScrollBar
+
+				pin_to_sibling 			Anchor
+				pin_corner_to_sibling 	TOP_RIGHT
+				pin_to_sibling_corner 	TOP_RIGHT
+			}
+
+			ScrollTop
+			{
+				ControlName 			RuiButton
+				wide					35
+				tall					35
+				visible					1
+				enabled					1
+				style					RuiButton
+				rui					"ui/loadout_button_medium.rpak"
+				zpos					2
+
+				pin_to_sibling 			ScrollCapture
+				pin_corner_to_sibling 	BOTTOM_LEFT
+				pin_to_sibling_corner 	TOP_LEFT
+			}
+
+			ScrollBar
+			{
+				ControlName RuiButton
+				wide					35
+				tall					430
+				visible					1
+				enabled					1
+				style					RuiButton
+				rui						"ui/loadout_button_medium.rpak"
+				zpos					2
+				
+				pin_to_sibling			ScrollTop
+				pin_corner_to_sibling	TOP_LEFT
+				pin_to_sibling_corner	BOTTOM_LEFT
+			}
+
+			ScrollBottom
+			{
+				ControlName RuiButton
+				wide					35
+				tall					35
+				visible					1
+				enabled					1
+				style					RuiButton
+				rui						"ui/loadout_button_medium.rpak"
+				zpos					2
+
+				pin_to_sibling 			ScrollCapture
+				pin_corner_to_sibling 	TOP_LEFT
+				pin_to_sibling_corner 	BOTTOM_LEFT
+			}
 		}
+		
+		// i cant use the normal tab stuff because its built to go across the entire screen
+		// so this is the workaround: scriptID is used as an index to show a panel that is stored in file.tabPanels in menu_spyglass_admin.nut
+		Tab0
+		{
+			ControlName				RuiButton
+			InheritProperties		TabButton
+			scriptID				0
+
+			xpos 30
+			ypos 0
+
+			classname "TabButton"
+
+			pin_to_sibling			PlayerListFrame
+			pin_corner_to_sibling	TOP_LEFT
+			pin_to_sibling_corner	TOP_RIGHT
+		}
+
+		Tab1
+		{
+			ControlName				RuiButton
+			InheritProperties		TabButton
+			scriptID				1
+
+			labelText "Add Sanction"
+
+			xpos 0
+			ypos 0
+
+			classname "TabButton"
+
+			pin_to_sibling			Tab0
+			pin_corner_to_sibling	TOP_LEFT
+			pin_to_sibling_corner	TOP_RIGHT
+		}
+
+		AddSanctionPanel
+		{
+			ControlName CNestedPanel
+
+			classname "SpyglassAdminMenuTabPanel"
+			wide 1115
+			tall 730
+
+			xpos 30
+			ypos -40
+
+			visible 1
+			controlSettingsFile "resource/ui/menus/panels/spyglass_add_sanction.res"
+
+			pin_to_sibling 			PlayerListFrame
+			pin_corner_to_sibling 	TOP_LEFT
+			pin_to_sibling_corner 	TOP_RIGHT
+		}
+
+		ViewSanctionsPanel
+		{
+			ControlName CNestedPanel
+
+			classname "SpyglassAdminMenuTabPanel"
+			wide 1115
+			tall 730
+
+			xpos 30
+			ypos -40
+
+			visible 1
+			controlSettingsFile "resource/ui/menus/panels/spyglass_view_sanctions.res"
+
+			pin_to_sibling 			PlayerListFrame
+			pin_corner_to_sibling 	TOP_LEFT
+			pin_to_sibling_corner 	TOP_RIGHT
+		}
+
+		
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
