@@ -12,10 +12,10 @@ const int BACKGROUND_DEFAULT_G = 35
 const int BACKGROUND_DEFAULT_B = 35
 const int BACKGROUND_DEFAULT_A = 75
 
-const int BACKGROUND_FOCUS_R = 30
-const int BACKGROUND_FOCUS_G = 35
-const int BACKGROUND_FOCUS_B = 35
-const int BACKGROUND_FOCUS_A = 140
+const int BACKGROUND_FOCUS_R = 210
+const int BACKGROUND_FOCUS_G = 210
+const int BACKGROUND_FOCUS_B = 210
+const int BACKGROUND_FOCUS_A = 200
 
 const int NAME_DEFAULT_R = 255
 const int NAME_DEFAULT_G = 255
@@ -169,21 +169,23 @@ void function UpdatePlayerListButtons( var button )
     Spyglass_SetSelectedPlayer("", "") // give an invalid selection until something is clicked
 
     // hide all of the things
-    array<var> elems = GetElementsByClassname( file.menu, "Name")
-    elems.extend(GetElementsByClassname( file.menu, "Button"))
-    elems.extend(GetElementsByClassname( file.menu, "Background"))
+    array<var> elems = GetElementsByClassname( file.menu, "Name" )
+    elems.extend(GetElementsByClassname( file.menu, "Button" ))
+    elems.extend(GetElementsByClassname( file.menu, "Background" ))
+    
+    // hide all of them
     foreach (var elem in elems)
     {
-        Hud_SetVisible(elem, false)
+        Hud_SetVisible( elem, false )
     }
 
-    // reset colours
-    foreach (var elem in GetElementsByClassname( file.menu, "Name"))
+    // reset colours and text
+    foreach (var elem in GetElementsByClassname( file.menu, "Name" ))
     {
         Hud_SetColor( elem, NAME_DEFAULT_R, NAME_DEFAULT_G, NAME_DEFAULT_B, NAME_DEFAULT_A )
         Hud_SetText( elem, "" )
     }
-    foreach (var elem in GetElementsByClassname( file.menu, "Background"))
+    foreach (var elem in GetElementsByClassname( file.menu, "Background" ))
     {
         Hud_SetColor( elem, BACKGROUND_DEFAULT_R, BACKGROUND_DEFAULT_G, BACKGROUND_DEFAULT_B, BACKGROUND_DEFAULT_A )
     }
@@ -194,7 +196,7 @@ void function UpdatePlayerListButtons( var button )
     {
         var label = Hud_GetChild(file.playerList, "PlayerName" + i)
         Hud_SetText( label, name )
-        foreach (var elem in GetElementsByClassname(file.menu, "Player" + i) )
+        foreach (var elem in GetElementsByClassname( file.menu, "Player" + i ) )
         {
             Hud_SetVisible(elem, true)
         }
@@ -205,11 +207,10 @@ void function UpdatePlayerListButtons( var button )
 
 void function Spyglass_PlayerListButton_OnClick( var button )
 {
-    //printt("CLICK: " + Hud_GetHudName( button ))
     int index = int( Hud_GetScriptID(button) )
 
     // reset colours
-    foreach (var elem in GetElementsByClassname( file.menu, "Name"))
+    foreach (var elem in GetElementsByClassname( file.menu, "Name" ))
     {
         Hud_SetColor( elem, NAME_DEFAULT_R, NAME_DEFAULT_G, NAME_DEFAULT_B, NAME_DEFAULT_A )
     }
