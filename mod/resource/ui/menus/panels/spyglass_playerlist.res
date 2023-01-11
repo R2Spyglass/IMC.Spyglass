@@ -1063,4 +1063,956 @@
         pin_to_sibling_corner BOTTOM_LEFT
         classname "Button Player16"
     }
-}
+
+    //////////////////////////////////////////////////////////
+
+    Background17
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background16
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player17"
+    }
+    PlayerName17
+    {
+        ControlName Label
+        
+        labelText "testname17"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName16
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player17"
+    }
+    Button17
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 17
+        
+        pin_to_sibling Button16
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player17"
+    }
+
+    //////////////////////////////////////////////////////////
+
+    Background18
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background17
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player18"
+    }
+    PlayerName18
+    {
+        ControlName Label
+        
+        labelText "testname18"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName17
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player18"
+    }
+    Button18
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 18
+        
+        pin_to_sibling Button17
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player18"
+    }
+
+    //////////////////////////////////////////////////////////
+
+    Background19
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background18
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player19"
+    }
+    PlayerName19
+    {
+        ControlName Label
+        
+        labelText "testname19"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName18
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player19"
+    }
+    Button19
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 19
+        
+        pin_to_sibling Button18
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player19"
+    }
+
+    //////////////////////////////////////////////////////////
+
+    Background20
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background19
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player20"
+    }
+    PlayerName20
+    {
+        ControlName Label
+        
+        labelText "testname20"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName19
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player20"
+    }
+    Button20
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 16
+        
+        pin_to_sibling Button19
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player20"
+    }
+
+    //////////////////////////////////////////////////////////
+
+    Background21
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background20
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player21"
+    }
+    PlayerName21
+    {
+        ControlName Label
+        
+        labelText "testname21"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName20
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player21"
+    }
+    Button21
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 16
+        
+        pin_to_sibling Button20
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player21"
+    }
+
+    //////////////////////////////////////////////////////////
+
+    Background22
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background21
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player22"
+    }
+    PlayerName22
+    {
+        ControlName Label
+        
+        labelText "testname22"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName21
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player22"
+    }
+    Button22
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 16
+        
+        pin_to_sibling Button21
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player22"
+    }
+
+    //////////////////////////////////////////////////////////
+
+    Background23
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background22
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player23"
+    }
+    PlayerName23
+    {
+        ControlName Label
+        
+        labelText "testname23"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName22
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player23"
+    }
+    Button23
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 16
+        
+        pin_to_sibling Button22
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player23"
+    }
+
+    //////////////////////////////////////////////////////////
+
+    Background24
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background23
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player24"
+    }
+    PlayerName24
+    {
+        ControlName Label
+        
+        labelText "testname24"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName23
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player24"
+    }
+    Button24
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 16
+        
+        pin_to_sibling Button23
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player24"
+    }
+
+    //////////////////////////////////////////////////////////
+
+    Background25
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background24
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player25"
+    }
+    PlayerName25
+    {
+        ControlName Label
+        
+        labelText "testname25"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName24
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player25"
+    }
+    Button25
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 16
+        
+        pin_to_sibling Button24
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player25"
+    }
+
+    //////////////////////////////////////////////////////////
+
+    Background26
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background25
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player26"
+    }
+    PlayerName26
+    {
+        ControlName Label
+        
+        labelText "testname26"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName25
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player26"
+    }
+    Button26
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 16
+        
+        pin_to_sibling Button25
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player26"
+    }
+
+    //////////////////////////////////////////////////////////
+
+    Background27
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background26
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player27"
+    }
+    PlayerName27
+    {
+        ControlName Label
+        
+        labelText "testname27"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName26
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player27"
+    }
+    Button27
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 27
+        
+        pin_to_sibling Button26
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player27"
+    }
+
+    //////////////////////////////////////////////////////////
+
+    Background28
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background27
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player28"
+    }
+    PlayerName28
+    {
+        ControlName Label
+        
+        labelText "testname28"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName27
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player28"
+    }
+    Button28
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 28
+        
+        pin_to_sibling Button27
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player28"
+    }
+
+    //////////////////////////////////////////////////////////
+
+    Background29
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background28
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player29"
+    }
+    PlayerName29
+    {
+        ControlName Label
+        
+        labelText "testname29"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName28
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player29"
+    }
+    Button29
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 29
+        
+        pin_to_sibling Button28
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player29"
+    }
+
+    //////////////////////////////////////////////////////////
+
+    Background30
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background29
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player30"
+    }
+    PlayerName30
+    {
+        ControlName Label
+        
+        labelText "testname30"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName29
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player30"
+    }
+    Button30
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 30
+        
+        pin_to_sibling Button29
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player30"
+    }
+
+    //////////////////////////////////////////////////////////
+
+    Background31
+    {
+        ControlName ImagePanel
+        xpos					0
+        ypos					0
+        wide					500
+        tall					50
+        image 					"vgui/hud/white"
+        visible					1
+        scaleImage				1
+        drawColor "30 35 35 75"
+
+        pin_to_sibling Background30
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+        classname "Background Player31"
+    }
+    PlayerName31
+    {
+        ControlName Label
+        
+        labelText "testname31"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName30
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+
+
+        classname "Name Player31"
+    }
+    Button31
+    {
+        ControlName RuiButton
+        labelText ""
+
+        xpos 0
+        zpos 2000
+
+        wide 500
+        tall					50
+
+        scriptID 31
+        
+        pin_to_sibling Button30
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+        classname "Button Player31"
+    }
+
+//////////////////////////////////////////////////
+
+    Warning
+    {
+        ControlName Label
+        
+        labelText "Whoops, no more UI"
+
+        use_proportional_insets 1
+		textinsetx 5
+
+        xpos 0
+
+        wide 500
+        tall					50
+        font                    Default_28
+        fgcolor_override        "255 255 255 255"
+
+        pin_to_sibling PlayerName31
+        pin_corner_to_sibling TOP_LEFT
+        pin_to_sibling_corner BOTTOM_LEFT
+    }

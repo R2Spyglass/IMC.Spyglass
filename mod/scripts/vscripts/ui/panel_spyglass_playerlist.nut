@@ -2,6 +2,10 @@ untyped //Hud_GetPos has forced my hand
 
 global function Spyglass_PlayerList_Init
 global function Spyglass_RefreshPlayerList
+global function Spyglass_RefreshSanctions
+
+const int SCROLLBAR_BUTTON_SCROLL_DISTANCE = 5
+const int SCROLLBAR_MEMBER_HEIGHT = 50
 
 const int BACKGROUND_DEFAULT_R = 30
 const int BACKGROUND_DEFAULT_G = 35
@@ -29,23 +33,33 @@ struct
 
     // table< uid, name >
     table< string, string > playerIdentities
+    // used to convert an index (int) into a uid (string) for indexing into playerIdentities
     array<string> uids = []
 
+    var listFrame
     var playerList
     var playerListScrollTop
     var playerListScrollBar
     var playerListScrollBottom
     var playerListScrollCapture
+
+    // y positions
     int scrollMin
     int scrollMax
+
+    int scrollbarScrollScale = 1
     int scrollbarMaxHeight
     int scrollbarMinHeight
+
+    int scrollbarTotalContentsHeight = 0
+
 } file
 
 
 void function Spyglass_PlayerList_Init( var playerListFrame )
 {
     file.menu = GetParentMenu( playerListFrame )
+    file.listFrame = playerListFrame
     file.playerList = Hud_GetChild( playerListFrame, "PlayerList" )
     file.playerListScrollTop = Hud_GetChild( playerListFrame, "ScrollTop" )
     file.playerListScrollBar = Hud_GetChild( playerListFrame, "ScrollBar" )
@@ -54,20 +68,25 @@ void function Spyglass_PlayerList_Init( var playerListFrame )
     file.scrollMin = Hud_GetAbsY( file.playerListScrollCapture )
     file.scrollMax = file.scrollMin + Hud_GetHeight( file.playerListScrollCapture )
     file.scrollbarMaxHeight = Hud_GetHeight( file.playerListScrollBar )
-    file.scrollbarMinHeight = Hud_GetHeight( file.playerListScrollBar ) / 6
+    file.scrollbarMinHeight = 86 // this seems reasonable
 
-    Hud_AddEventHandler( file.playerListScrollTop, UIE_CLICK, void function(var button) {
-        PlayerList_MouseMovementHandler(0, -5)
+    // simulate mouse movements, arbitrary values for now
+    Hud_AddEventHandler( file.playerListScrollTop, UIE_CLICK, void function(var button)
+    {
+        PlayerList_MouseMovementHandler(0, -SCROLLBAR_BUTTON_SCROLL_DISTANCE)
     } )
-    Hud_AddEventHandler( file.playerListScrollBottom, UIE_CLICK, void function(var button) {
-        PlayerList_MouseMovementHandler(0, 5)
+    Hud_AddEventHandler( file.playerListScrollBottom, UIE_CLICK, void function(var button)
+    {
+        PlayerList_MouseMovementHandler(0, SCROLLBAR_BUTTON_SCROLL_DISTANCE)
     } )
 
     // event handlers to deal with weird capture handler bullshit
-    Hud_AddEventHandler( file.playerListScrollBar, UIE_GET_FOCUS, void function(var button) {
+    Hud_AddEventHandler( file.playerListScrollBar, UIE_GET_FOCUS, void function(var button)
+    {
         Hud_SetVisible( file.playerListScrollCapture, true )
     } )
-    Hud_AddEventHandler( file.playerListScrollBar, UIE_LOSE_FOCUS, void function(var button) {
+    Hud_AddEventHandler( file.playerListScrollBar, UIE_LOSE_FOCUS, void function(var button)
+    {
         Hud_SetVisible( file.playerListScrollCapture, false )
     } )
     
@@ -83,16 +102,15 @@ void function PlayerList_MouseMovementHandler( int deltaX, int deltaY )
 {
     // fix deltaY to bounds of scroll bar
     int y = Hud_GetAbsY( file.playerListScrollBar ) + deltaY
-    printt( y + " -> " + (y + Hud_GetHeight(file.playerListScrollBar)) )
+    //printt( y + " -> " + (y + Hud_GetHeight(file.playerListScrollBar)) )
     if ( y < file.scrollMin ) y = file.scrollMin
     if ( y + Hud_GetHeight(file.playerListScrollBar) > file.scrollMax ) y = file.scrollMax - Hud_GetHeight(file.playerListScrollBar)
-    printt(y)
+    //printt(y)
     deltaY = y - Hud_GetAbsY( file.playerListScrollBar )
 
 
     Hud_SetPos( file.playerListScrollBar, 0, Hud_GetPos(file.playerListScrollBar)[1] + deltaY )
-    // TODO - scale the movement of this based on scrollbar size
-    Hud_SetPos( file.playerList, 0, Hud_GetPos(file.playerList)[1] + deltaY * 6)
+    Hud_SetPos( file.playerList, 0, Hud_GetPos(file.playerList)[1] + (deltaY * file.scrollbarScrollScale) )
 }
 
 void function Spyglass_RefreshPlayerList( var button )
@@ -109,12 +127,44 @@ void function Spyglass_RefreshPlayerList( var button )
 
     
     UpdatePlayerListButtons(null)
+
+    // refresh the sanctions to get the sanctions for any new players
+    Spyglass_RefreshSanctions(button)
+}
+
+void function Spyglass_RefreshSanctions(var button)
+{
+    // query API for the sanctions and cache them
+    SpyglassApi_QueryPlayerSanctions(file.uids, OnSuccessfulSanctionQuery, false, true, true)
+}
+
+void function OnSuccessfulSanctionQuery(Spyglass_SanctionSearchResult res)
+{   
+    Spyglass_UpdateSanctionCache(res.Matches)
 }
 
 void function UpdatePlayerListButtons( var button )
 {
-    // TODO calc this
-    Hud_SetHeight( file.playerListScrollBar, file.scrollbarMinHeight )
+    // calculate scrollbar things
+    file.scrollbarTotalContentsHeight = SCROLLBAR_MEMBER_HEIGHT * file.uids.len()
+    // how many pixels we need to scroll to reach the bottom of the list
+    int requiredScrollSpace = file.scrollbarTotalContentsHeight - Hud_GetHeight(file.listFrame)
+    if (requiredScrollSpace <= 0)
+    {
+        Hud_SetHeight( file.playerListScrollBar, file.scrollbarMaxHeight )
+        file.scrollbarScrollScale = 1
+    }
+    else if (requiredScrollSpace <= file.scrollbarMaxHeight - file.scrollbarMinHeight)
+    {
+        Hud_SetHeight( file.playerListScrollBar, file.scrollbarMaxHeight - requiredScrollSpace )
+        file.scrollbarScrollScale = 1   
+    }
+    else
+    {
+        Hud_SetHeight( file.playerListScrollBar, file.scrollbarMinHeight )
+        file.scrollbarScrollScale = requiredScrollSpace / (file.scrollbarMaxHeight - file.scrollbarMinHeight)
+    }
+    // end of scrollbar calculations
 
     Spyglass_SetSelectedPlayer("", "") // give an invalid selection until something is clicked
 

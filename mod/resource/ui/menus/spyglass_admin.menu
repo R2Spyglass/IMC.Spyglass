@@ -127,7 +127,7 @@ resource/ui/menus/spyglass_admin.menu
 			{
 				ControlName RuiButton
 				wide					35
-				tall					430
+				tall					700
 				visible					1
 				enabled					1
 				style					RuiButton

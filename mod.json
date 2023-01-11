@@ -108,7 +108,7 @@
         },
         {
             "Path": "spyglass/api/api_sanctions.nut",
-            "RunOn": "(CLIENT || SERVER) && MP"
+            "RunOn": "UI || (CLIENT || SERVER) && MP"
         },
         {
             "Path": "spyglass/api/api_authentication.nut",

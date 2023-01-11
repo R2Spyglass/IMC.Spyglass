@@ -2,6 +2,8 @@ global function AddSpyglassAdminMenu
 global function Spyglass_TryOpenAdminMenu
 global function AddSpyglassFooterButton
 global function Spyglass_SetSelectedPlayer
+global function Spyglass_UpdateSanctionCache
+global function Spyglass_GetInfractionsForUID
 
 global function Spyglass_AddCallback_OnSelectedPlayerChanged
 
@@ -13,22 +15,14 @@ struct
 
     // holds the selected uid from the playerlist
     string selectedUID = ""
+    string selectedName = ""
     array<void functionref(string uid, string name)> onSelectedPlayerChangedCallbacks = []
 
     array<var> tabPanels = []
 
-
+    table<string, array<Spyglass_PlayerInfraction> > cachedInfractions = {}
 
     var playerListFrame
-    var playerList
-    var playerListScrollTop
-    var playerListScrollBar
-    var playerListScrollBottom
-    var playerListScrollCapture
-    int scrollMin
-    int scrollMax
-    int scrollbarMaxHeight
-    int scrollbarMinHeight
 } file
 
 // CALLBACKS FROM MOD.JSON AND INITIALISATION STUFF
@@ -59,8 +53,8 @@ void function InitSpyglassAdminMenu()
 
     // add footer buttons
     AddMenuFooterOption( file.menu, BUTTON_B, "#B_BUTTON_BACK", "#BACK" )
-    AddMenuFooterOption( file.menu, BUTTON_Y, "#SPYGLASS_Y_BUTTON_REFRESH_PLAYERS", "#SPYGLASS_REFRESH_PLAYERS", Spyglass_RefreshPlayerList)
-    AddMenuFooterOption( file.menu, BUTTON_X, "#SPYGLASS_X_BUTTON_REFRESH_SANCTIONS", "#SPYGLASS_REFRESH_SANCTIONS", void function(var button){ ClientCommand("spyglass_refreshsanctions true")})
+    AddMenuFooterOption( file.menu, BUTTON_Y, "#SPYGLASS_Y_BUTTON_REFRESH_PLAYERS", "#SPYGLASS_REFRESH_PLAYERS", Spyglass_RefreshPlayerList )
+    AddMenuFooterOption( file.menu, BUTTON_X, "#SPYGLASS_X_BUTTON_REFRESH_SANCTIONS", "#SPYGLASS_REFRESH_SANCTIONS", Spyglass_RefreshSanctions )
     
     //AddMenuFooterOption( file.menu, BUTTON_X, "KICK PLAYER", "KICK PLAYER", void function(var button){ ClientCommand("spyglass_kickplayer " + file.selectedUID)})
 
@@ -89,19 +83,19 @@ void function ShowTabPanelFromButton(var button)
     int index = int( Hud_GetScriptID(button) )
     
     // hide all of the panels
-    foreach ( var elem in GetElementsByClassname(file.menu, "SpyglassAdminMenuTabPanel") )
+    foreach ( var elem in GetElementsByClassname( file.menu, "SpyglassAdminMenuTabPanel" ) )
     {
         HidePanel(elem)
     }
 
     var newPanel = file.tabPanels[index]
-    printt("SHOWING NEW PANEL: " + Hud_GetHudName(newPanel))
+    printt( "SHOWING NEW PANEL: " + Hud_GetHudName(newPanel) )
     ShowPanel(newPanel)
 }
 
 void function SetSelectedTab(var button)
 {
-    foreach ( var elem in GetElementsByClassname(file.menu, "TabButton") )
+    foreach ( var elem in GetElementsByClassname( file.menu, "TabButton" ) )
     {
         Hud_SetSelected( elem, false )
     }
@@ -114,7 +108,7 @@ void function Spyglass_TryOpenAdminMenu(var button)
 {
     // clear dialogs to avoid weirdness
     CloseAllDialogs()
-    if ( !SpyglassUI_IsAuthenticated() ) // TODO - dialog for not authed
+    if ( !SpyglassUI_IsAuthenticated() )
     {
         ShowAuthenticationDialogue()
         return
@@ -185,7 +179,7 @@ void function Spyglass_OnAdminMenuOpened()
     //UI_SetPresentationType( ePresentationType.INACTIVE )
 
     // hide all of the panels
-    foreach(var elem in GetElementsByClassname(file.menu, "SpyglassAdminMenuTabPanel"))
+    foreach( var elem in GetElementsByClassname( file.menu, "SpyglassAdminMenuTabPanel" ) )
     {
         HidePanel(elem)
     }
@@ -194,26 +188,43 @@ void function Spyglass_OnAdminMenuOpened()
     ShowPanel(file.tabPanels[0])
 
     // select first tab
-    SetSelectedTab(GetElementsByClassname(file.menu, "TabButton")[0])
+    SetSelectedTab( GetElementsByClassname( file.menu, "TabButton" )[0] )
     
     Spyglass_RefreshPlayerList(null)
 }
 
-void function Spyglass_AddCallback_OnSelectedPlayerChanged(void functionref(string uid, string name) callback)
+void function Spyglass_AddCallback_OnSelectedPlayerChanged( void functionref( string uid, string name ) callback )
 {
     file.onSelectedPlayerChangedCallbacks.append(callback)
 }
 
 // ACTUAL HANDLING THE MENU ONCE OPENED BELOW HERE
 
-void function Spyglass_SetSelectedPlayer(string uid, string name)
+void function Spyglass_SetSelectedPlayer( string uid, string name )
 {
     file.selectedUID = uid
+    file.selectedName = name
     printt("SELECTED PLAYER WITH UID: " + uid)
 
     // run callbacks
-    foreach (callback in file.onSelectedPlayerChangedCallbacks)
+    foreach ( callback in file.onSelectedPlayerChangedCallbacks )
     {
-        callback(uid, name)
+        callback( uid, name )
     }
+}
+
+void function Spyglass_UpdateSanctionCache( table< string, array<Spyglass_PlayerInfraction> > newCache )
+{
+    printt("UPDATING SANCTION CACHE")
+    file.cachedInfractions = clone newCache
+    // simulate a change in selected player to make other UI update nicely
+    Spyglass_SetSelectedPlayer(file.selectedUID, file.selectedName)
+}
+
+array<Spyglass_PlayerInfraction> function Spyglass_GetInfractionsForUID(string uid)
+{
+    if ( !(uid in file.cachedInfractions) )
+        return []
+
+    return clone file.cachedInfractions[uid]
 }
