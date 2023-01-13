@@ -1,3 +1,5 @@
+untyped
+
 global function AddSpyglassAdminMenu
 global function Spyglass_TryOpenAdminMenu
 global function AddSpyglassFooterButton
@@ -23,6 +25,13 @@ struct
     table<string, array<Spyglass_PlayerInfraction> > cachedInfractions = {}
 
     var playerListFrame
+
+    var searchPlayerListFrame
+    var searchBar
+    var searchButton
+    var searchSpinner
+    var searchSpinnerLabel
+    table<string, string> cachedSearchResult = {}
 } file
 
 // CALLBACKS FROM MOD.JSON AND INITIALISATION STUFF
@@ -49,7 +58,16 @@ void function InitSpyglassAdminMenu()
     // initialise the various UI members
     
     file.playerListFrame = Hud_GetChild( file.menu, "PlayerListFrame" )
-    Spyglass_PlayerList_Init( file.playerListFrame )
+    file.searchPlayerListFrame = Hud_GetChild( file.menu, "SearchPlayerListFrame" )
+    Spyglass_PlayerList_Init( "currentPlayers", file.playerListFrame, SpyglassUI_GetPlayerIdentities )
+    Spyglass_PlayerList_Init( "searchedPlayers", file.searchPlayerListFrame, Spyglass_GetSearchedPlayersCache )
+
+    file.searchBar = Hud_GetChild( file.menu, "SearchBar" )
+    file.searchButton = Hud_GetChild( file.menu, "SearchButton" )
+    file.searchSpinner = Hud_GetChild( file.menu, "SearchAnimation" )
+    file.searchSpinnerLabel = Hud_GetChild( file.menu, "SearchLabel" )
+
+    RegisterButtonPressedCallback( KEY_ENTER, OnEnterPressed )
 
     // add footer buttons
     AddMenuFooterOption( file.menu, BUTTON_B, "#B_BUTTON_BACK", "#BACK" )
@@ -59,6 +77,8 @@ void function InitSpyglassAdminMenu()
     //AddMenuFooterOption( file.menu, BUTTON_X, "KICK PLAYER", "KICK PLAYER", void function(var button){ ClientCommand("spyglass_kickplayer " + file.selectedUID)})
 
     AddMenuEventHandler( file.menu, eUIEvent.MENU_OPEN, Spyglass_OnAdminMenuOpened )
+
+    Hud_AddEventHandler( file.searchButton, UIE_CLICK, Spyglass_SearchButton_OnClick )
     
     // handles tab button presses
     AddEventHandlerToButtonClass( file.menu, "TabButton", UIE_CLICK, ShowTabPanelFromButton )
@@ -228,3 +248,145 @@ array<Spyglass_PlayerInfraction> function Spyglass_GetInfractionsForUID(string u
 
     return clone file.cachedInfractions[uid]
 }
+
+table<string, string> function Spyglass_GetSearchedPlayersCache()
+{
+    return file.cachedSearchResult
+}
+
+void function Spyglass_SearchButton_OnClick(var button)
+{
+    // the flow for this is as follows:
+    // make API call
+    // show spinner thing
+    // wait for API call return
+    // parse API result
+    // set file.cachedSearchResult
+    // use Spyglass_RefreshPlayerList to update player lists and sanctions and such
+
+    // dont send with an empty name
+    if (strip(Hud_GetUTF8Text(file.searchBar)).len() == 0)
+        return
+    
+    Hud_SetVisible(file.searchSpinner, true)
+    Hud_SetVisible(file.searchSpinnerLabel, true)
+
+    // clear previously searched players
+    file.cachedSearchResult = {}
+    Spyglass_RefreshPlayerList(null)
+
+    HttpRequest request
+    request.method = HttpRequestMethod.GET
+    request.url = Spyglass_SanitizeUrl(format("%s/players/lookup_name", Spyglass_GetApiHostname()))
+    // queryParameters have to be strings, so i cant send integer values
+    // which fucking sucks, and means i have to form my json myself with strings
+    request.queryParameters["username"] <- [Hud_GetUTF8Text(file.searchBar)]
+    
+    SpyglassApi_MakeHttpRequest(request, OnSuccess, OnFailure, true)
+}
+
+void function OnSuccess(HttpRequestResponse response)
+{
+    Hud_SetVisible(file.searchSpinner, false)
+    Hud_SetVisible(file.searchSpinnerLabel, false)
+    printt("HTTP REQUEST SUCCESS")
+    printt("STATUS CODE: " + response.statusCode)
+    printt("BODY: " + response.body)
+
+    if (response.statusCode != 200)
+    {
+        ShowSearchFailureDialog("Status code was " + response.statusCode + "\nCheck the console for more details.")
+        return
+    }
+
+    //printt("RAW HEADERS: " + response.rawHeaders)
+    table temp = DecodeJSON(response.body)
+
+    table<string, string> tempIdentities = {}
+
+    if ( !("success" in temp && expect bool(temp["success"])) )
+    {
+        printt("'success' was not present or was false")
+        if ("error" in temp && typeof temp["error"] == "string")
+        {
+            ShowSearchFailureDialog(expect string(temp["error"]))
+        }
+        else
+        {
+            ShowSearchFailureDialog("Failed to parse response: 'success' was not present or was false")
+        }
+        return
+    }
+
+    if ( !("matches" in temp) )
+    {
+        printt("'matches' was not present")
+        ShowSearchFailureDialog("Failed to parse response: 'matches' was not present")
+        return
+    }
+
+    foreach ( var matches in temp["matches"] )
+    {
+        if ( !("uniqueID" in matches && typeof matches["uniqueID"] == "string") )
+        {
+            printt("'uniqueID' was not present or wasn't a string")
+            ShowSearchFailureDialog("Failed to parse match: 'uniqueID' was not present or wasn't a string")
+            return
+        }
+
+        if ( !("username" in matches && typeof matches["username"] == "string") )
+        {
+            printt("'username' was not present or wasn't a string")
+            ShowSearchFailureDialog("Failed to parse match: 'username' was not present or wasn't a string")
+            return
+        }
+        tempIdentities[expect string(matches["uniqueID"])] <- expect string(matches["username"])
+    }
+
+    foreach ( string uid, string name in tempIdentities )
+    {
+        printt(uid + ": " + name)
+    }
+
+    file.cachedSearchResult = tempIdentities
+
+    Spyglass_RefreshPlayerList(null)
+}
+
+void function OnFailure(HttpRequestFailure res)
+{
+    Hud_SetVisible(file.searchSpinner, false)
+    Hud_SetVisible(file.searchSpinnerLabel, false)
+    printt("REQUEST FAILURE")
+    // show failure dialog
+
+    ShowSearchFailureDialog(res.errorMessage)
+}
+
+void function ShowSearchFailureDialog(string error)
+{
+    // clear dialogs to avoid weirdness
+    CloseAllDialogs()
+    EmitUISound( "blackmarket_purchase_fail" )
+    DialogData dialogData
+    dialogData.header = Localize( "#SPYGLASS_SEARCH_FAILURE" )
+	dialogData.message = Localize( "#SPYGLASS_SEARCH_FAILURE_BODY", error )
+    dialogData.image = $"ui/menu/common/dialog_error"
+    dialogData.noChoiceWithNavigateBack = true
+
+    AddDialogButton( dialogData, "#OK" )
+
+    OpenDialog( dialogData )
+}
+
+// pressing enter is nice for text entry boxes
+void function OnEnterPressed(var arg)
+{
+    if (GetFocus() == file.searchBar)
+    {
+        EmitUISound("Menu.Accept")
+        Spyglass_SearchButton_OnClick(null)
+    }
+}
+
+

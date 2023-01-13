@@ -16,7 +16,7 @@
         ControlName ImagePanel
         xpos					0
         ypos					0
-        wide					750
+        wide					1000
         tall					550
         image 					"vgui/hud/white"
         visible					1
@@ -42,7 +42,7 @@
         textAlignment center
 
         tall 35
-        wide 730
+        wide 980
 
         pin_to_sibling ButtonRowAnchor
         pin_corner_to_sibling TOP_LEFT
@@ -61,7 +61,7 @@
         textAlignment center
 
         tall 550
-        wide 750
+        wide 1000
 
         visible 1
 
@@ -248,11 +248,11 @@
         InheritProperties SwitchButton
 
         wide 228
-        xpos -261
+        xpos -114
 
         pin_to_sibling BackgroundBox
         pin_corner_to_sibling TOP_LEFT
-        pin_to_sibling_corner BOTTOM_LEFT
+        pin_to_sibling_corner BOTTOM
     }
 
     SanctionChangeLabel
