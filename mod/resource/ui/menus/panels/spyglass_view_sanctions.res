@@ -60,14 +60,13 @@
         font Default_28
         textAlignment center
 
-        tall 550
-        wide 1000
+        auto_wide_tocontents 1
 
         visible 1
 
-        pin_to_sibling ButtonRowAnchor
-        pin_corner_to_sibling TOP_LEFT
-        pin_to_sibling_corner TOP_LEFT
+        pin_to_sibling BackgroundBox
+        pin_corner_to_sibling CENTER
+        pin_to_sibling_corner CENTER
     }
 
     PlayerUIDLabel

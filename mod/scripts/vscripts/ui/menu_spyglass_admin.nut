@@ -146,6 +146,7 @@ void function ShowAuthenticationDialogue()
     dialogData.noChoiceWithNavigateBack = true
 
     AddDialogButton( dialogData, "#SPYGLASS_TRY_AUTH", Spyglass_TryAuthAndOpenAdminMenu )
+    AddDialogButton( dialogData, "#SPYGLASS_SKIP_AUTH", void function(){ AdvanceMenu( file.menu ) } )
     AddDialogButton( dialogData, "#CANCEL" )
 
     OpenDialog( dialogData )
