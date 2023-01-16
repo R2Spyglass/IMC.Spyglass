@@ -4,7 +4,7 @@ global function AddSpyglassAdminMenu
 global function Spyglass_TryOpenAdminMenu
 global function AddSpyglassFooterButton
 global function Spyglass_SetSelectedPlayer
-global function Spyglass_UpdateSanctionCache
+global function Spyglass_UpdateInfractionCache
 global function Spyglass_GetInfractionsForUID
 
 global function Spyglass_AddCallback_OnSelectedPlayerChanged
@@ -18,11 +18,11 @@ struct
     // holds the selected uid from the playerlist
     string selectedUID = ""
     string selectedName = ""
-    array<void functionref(string uid, string name)> onSelectedPlayerChangedCallbacks = []
+    array< void functionref( string uid, string name ) > onSelectedPlayerChangedCallbacks = []
 
     array<var> tabPanels = []
 
-    table<string, array<Spyglass_PlayerInfraction> > cachedInfractions = {}
+    table< string, array<Spyglass_PlayerInfraction> > cachedInfractions = {}
 
     var playerListFrame
 
@@ -31,19 +31,18 @@ struct
     var searchButton
     var searchSpinner
     var searchSpinnerLabel
-    table<string, string> cachedSearchResult = {}
+    table< string, string > cachedSearchResult = {}
 } file
 
-// CALLBACKS FROM MOD.JSON AND INITIALISATION STUFF
+// Adds the menu to the UI
 void function AddSpyglassAdminMenu()
 {
-    
     AddMenu( "SpyglassAdminMenu", $"resource/ui/menus/spyglass_admin.menu", InitSpyglassAdminMenu, "#SPYGLASS_ADMIN_MENU_TITLE" )
-    
     file.menu = GetMenu( "SpyglassAdminMenu" )
 }
 
-// this is in an "After" callback to hopefully add it to the end of the list instead of being the first one added
+// adds the menu footer button to various menus, used to access the menu
+// this is in an "After" callback to add it to the end of the footer list instead of being the first one added
 void function AddSpyglassFooterButton()
 {
     // add footer button to in game pause menu
@@ -53,10 +52,10 @@ void function AddSpyglassFooterButton()
     AddMenuFooterOption( GetMenu( "PrivateLobbyMenu" ), BUTTON_BACK, "#SPYGLASS_START_BUTTON_ADMIN_MENU", "#SPYGLASS_ADMIN_MENU", Spyglass_TryOpenAdminMenu )
 }
 
+// various initialisation things for the main admin menu
 void function InitSpyglassAdminMenu()
 {
     // initialise the various UI members
-    
     file.playerListFrame = Hud_GetChild( file.menu, "PlayerListFrame" )
     file.searchPlayerListFrame = Hud_GetChild( file.menu, "SearchPlayerListFrame" )
     Spyglass_PlayerList_Init( "currentPlayers", file.playerListFrame, SpyglassUI_GetPlayerIdentities )
@@ -69,12 +68,10 @@ void function InitSpyglassAdminMenu()
 
     RegisterButtonPressedCallback( KEY_ENTER, OnEnterPressed )
 
-    // add footer buttons
+    // add footer buttons to the admin menu
     AddMenuFooterOption( file.menu, BUTTON_B, "#B_BUTTON_BACK", "#BACK" )
     AddMenuFooterOption( file.menu, BUTTON_Y, "#SPYGLASS_Y_BUTTON_REFRESH_PLAYERS", "#SPYGLASS_REFRESH_PLAYERS", Spyglass_RefreshPlayerList )
     AddMenuFooterOption( file.menu, BUTTON_X, "#SPYGLASS_X_BUTTON_REFRESH_SANCTIONS", "#SPYGLASS_REFRESH_SANCTIONS", Spyglass_RefreshSanctions )
-    
-    //AddMenuFooterOption( file.menu, BUTTON_X, "KICK PLAYER", "KICK PLAYER", void function(var button){ ClientCommand("spyglass_kickplayer " + file.selectedUID)})
 
     AddMenuEventHandler( file.menu, eUIEvent.MENU_OPEN, Spyglass_OnAdminMenuOpened )
 
@@ -113,17 +110,22 @@ void function ShowTabPanelFromButton(var button)
     ShowPanel(newPanel)
 }
 
+// sets the selected tab button, to indicate which menu is currently being selected
 void function SetSelectedTab(var button)
 {
+    // deselect all tab buttons, clear selection
     foreach ( var elem in GetElementsByClassname( file.menu, "TabButton" ) )
     {
         Hud_SetSelected( elem, false )
     }
+
+    // select the chosen tab buttons
     Hud_SetSelected( button, true )
 }
 
 // AUTHENTICATION AND OPENING MENU CHECKS HERE
 
+// checks if the user is currently authenticated, and prompts them to authenticate if needed
 void function Spyglass_TryOpenAdminMenu(var button)
 {
     // clear dialogs to avoid weirdness
@@ -136,6 +138,7 @@ void function Spyglass_TryOpenAdminMenu(var button)
     AdvanceMenu( file.menu )
 }
 
+// shows a dialog prompting the user to authenticate
 void function ShowAuthenticationDialogue()
 {
     DialogData dialogData
@@ -152,6 +155,7 @@ void function ShowAuthenticationDialogue()
     OpenDialog( dialogData )
 }
 
+// tries to authenticate with spyglass using spyglass_authenticate, before opening the admin menu
 void function Spyglass_TryAuthAndOpenAdminMenu()
 {
     DialogData dialogData
@@ -167,6 +171,8 @@ void function Spyglass_TryAuthAndOpenAdminMenu()
     OpenDialog( dialogData )
 }
 
+// waits for either a cancellation of the authentication attempt, or a response from the server
+// before showing the admin menu or another dialog
 void function Spyglass_TryAuthAndOpenAdminMenu_Threaded()
 {
     while ( !file.hasCancelledAuth && !SpyglassUI_IsAuthenticated() )
@@ -192,6 +198,7 @@ void function Spyglass_TryAuthAndOpenAdminMenu_Threaded()
     }
 }
 
+// actually handles opening the admin menu, after authentication
 void function Spyglass_OnAdminMenuOpened()
 {
     // set the UI presentation type for nicer visuals
@@ -211,16 +218,17 @@ void function Spyglass_OnAdminMenuOpened()
     // select first tab
     SetSelectedTab( GetElementsByClassname( file.menu, "TabButton" )[0] )
     
+    // refresh the playerlist to get an up to date list
     Spyglass_RefreshPlayerList(null)
 }
 
+// callbacks for the different panels
 void function Spyglass_AddCallback_OnSelectedPlayerChanged( void functionref( string uid, string name ) callback )
 {
     file.onSelectedPlayerChangedCallbacks.append(callback)
 }
 
-// ACTUAL HANDLING THE MENU ONCE OPENED BELOW HERE
-
+// sets the selected player, and runs callbacks
 void function Spyglass_SetSelectedPlayer( string uid, string name )
 {
     file.selectedUID = uid
@@ -234,14 +242,17 @@ void function Spyglass_SetSelectedPlayer( string uid, string name )
     }
 }
 
-void function Spyglass_UpdateSanctionCache( table< string, array<Spyglass_PlayerInfraction> > newCache )
+// updates the infraction cache on UI
+void function Spyglass_UpdateInfractionCache( table< string, array<Spyglass_PlayerInfraction> > newCache )
 {
-    printt("UPDATING SANCTION CACHE")
+    printt("UPDATING INFRACTION CACHE")
     file.cachedInfractions = clone newCache
     // simulate a change in selected player to make other UI update nicely
-    Spyglass_SetSelectedPlayer(file.selectedUID, file.selectedName)
+    Spyglass_SetSelectedPlayer( file.selectedUID, file.selectedName )
 }
 
+// gets cached infractions for a player using their UID
+// returns an empty array if the player has no infractions
 array<Spyglass_PlayerInfraction> function Spyglass_GetInfractionsForUID(string uid)
 {
     if ( !(uid in file.cachedInfractions) )
@@ -250,11 +261,13 @@ array<Spyglass_PlayerInfraction> function Spyglass_GetInfractionsForUID(string u
     return clone file.cachedInfractions[uid]
 }
 
+// gets the cached searched players
 table<string, string> function Spyglass_GetSearchedPlayersCache()
 {
-    return file.cachedSearchResult
+    return clone file.cachedSearchResult
 }
 
+// makes an API call if the search is valid, searching spyglass for players by username
 void function Spyglass_SearchButton_OnClick(var button)
 {
     // the flow for this is as follows:
@@ -266,11 +279,12 @@ void function Spyglass_SearchButton_OnClick(var button)
     // use Spyglass_RefreshPlayerList to update player lists and sanctions and such
 
     // dont send with an empty name
-    if (strip(Hud_GetUTF8Text(file.searchBar)).len() == 0)
+    if ( strip(Hud_GetUTF8Text(file.searchBar)).len() == 0 )
         return
     
-    Hud_SetVisible(file.searchSpinner, true)
-    Hud_SetVisible(file.searchSpinnerLabel, true)
+    // show the spinner while searching
+    Hud_SetVisible( file.searchSpinner, true )
+    Hud_SetVisible( file.searchSpinnerLabel, true )
 
     // clear previously searched players
     file.cachedSearchResult = {}
@@ -278,23 +292,24 @@ void function Spyglass_SearchButton_OnClick(var button)
 
     HttpRequest request
     request.method = HttpRequestMethod.GET
-    request.url = Spyglass_SanitizeUrl(format("%s/players/lookup_name", Spyglass_GetApiHostname()))
-    // queryParameters have to be strings, so i cant send integer values
-    // which fucking sucks, and means i have to form my json myself with strings
+    request.url = Spyglass_SanitizeUrl( format( "%s/players/lookup_name", Spyglass_GetApiHostname() ) )
     request.queryParameters["username"] <- [Hud_GetUTF8Text(file.searchBar)]
     
-    SpyglassApi_MakeHttpRequest(request, OnSuccess, OnFailure, true)
+    SpyglassApi_MakeHttpRequest( request, OnSuccess, OnFailure, true )
 }
 
+// callback for successfull API call for player search
 void function OnSuccess(HttpRequestResponse response)
 {
-    Hud_SetVisible(file.searchSpinner, false)
-    Hud_SetVisible(file.searchSpinnerLabel, false)
+    // hide the spinner, search is complete
+    Hud_SetVisible( file.searchSpinner, false )
+    Hud_SetVisible( file.searchSpinnerLabel, false )
+
     printt("HTTP REQUEST SUCCESS")
     printt("STATUS CODE: " + response.statusCode)
     printt("BODY: " + response.body)
 
-    if (response.statusCode != 200)
+    if ( response.statusCode != 200 )
     {
         ShowSearchFailureDialog("Status code was " + response.statusCode + "\nCheck the console for more details.")
         return
@@ -354,6 +369,7 @@ void function OnSuccess(HttpRequestResponse response)
     Spyglass_RefreshPlayerList(null)
 }
 
+// callback for failed API call for player search
 void function OnFailure(HttpRequestFailure res)
 {
     Hud_SetVisible(file.searchSpinner, false)
@@ -364,6 +380,7 @@ void function OnFailure(HttpRequestFailure res)
     ShowSearchFailureDialog(res.errorMessage)
 }
 
+// shows a dialog, indicating a failed player search
 void function ShowSearchFailureDialog(string error)
 {
     // clear dialogs to avoid weirdness
@@ -380,10 +397,12 @@ void function ShowSearchFailureDialog(string error)
     OpenDialog( dialogData )
 }
 
+// callback for when the enter key is pressed
+// simulates a search button press if the text box has focus
 // pressing enter is nice for text entry boxes
 void function OnEnterPressed(var arg)
 {
-    if (GetFocus() == file.searchBar)
+    if ( GetFocus() == file.searchBar )
     {
         EmitUISound("Menu.Accept")
         Spyglass_SearchButton_OnClick(null)

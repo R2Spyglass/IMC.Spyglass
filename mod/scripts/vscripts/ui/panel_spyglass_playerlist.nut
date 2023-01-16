@@ -193,7 +193,7 @@ void function Spyglass_RefreshSanctions(var button)
 void function OnSuccessfulSanctionQuery(Spyglass_SanctionSearchResult res)
 {   
     // TODO hide the dialog spinner thing
-    Spyglass_UpdateSanctionCache(res.Matches)
+    Spyglass_UpdateInfractionCache(res.Matches)
 }
 
 void function UpdatePlayerListButtons( string id, var button )
