@@ -93,11 +93,10 @@ void function OnShowAddSanctionPanel()
 }
 
 // sets the selected player, and attempts to unlock the apply sanction button
-void function OnSelectedPlayerChanged(string uid, string name)
+void function OnSelectedPlayerChanged( string uid, string name )
 {
     file.uid = uid
     file.username = name
-    print("SELECTED UID: " + uid)
     TryUnlockApplySanctionButton()
 }
 
@@ -147,7 +146,7 @@ void function ShowApplySanctionDialogue(var button)
     file.uid,
     [ "Spamming", "Harassment", "Hate Speech", "Griefing", "Exploiting", "Cheating" ][file.infractionType],
     [ "Warning", "Mute", "Ban" ][file.sanctionType],
-    (file.duration == 0) ? Localize("#SPYGLASS_DURATION_PERMANENT") : Localize( "#SPYGLASS_DURATION_MINUTES", file.duration ),
+    GetLocalisedDuration(file.duration),
     file.reason )
 
     dialogData.image = $"ui/menu/common/dialog_error"
@@ -159,12 +158,58 @@ void function ShowApplySanctionDialogue(var button)
     OpenDialog( dialogData )
 }
 
+string function GetLocalisedDuration(int minutes)
+{
+    if (minutes == 0)
+        return Localize("#SANCTION_DURATION_STRING_PERMANENT")
+
+    int weeks = int(floor(minutes / 10080))
+	minutes = minutes % 10080
+
+    int days = int(floor(minutes / 1440))
+	minutes = minutes % 1440
+
+	int hours = int(floor(minutes / 60))
+	minutes = minutes % 60
+
+    // these get populated as validation happens
+    string[4] strings = ["", "", "", ""]
+
+    int numValid = 0
+    if (weeks != 0)
+        strings[numValid++] = Localize( "#SANCTION_DURATION_STRING_" + (weeks == 1 ? "W" : "Ws" ), weeks )
+    if (days != 0)
+        strings[numValid++] = Localize( "#SANCTION_DURATION_STRING_" + (days == 1 ? "D" : "Ds" ), days )
+    if (hours != 0)
+        strings[numValid++] = Localize( "#SANCTION_DURATION_STRING_" + (hours == 1 ? "H" : "Hs" ), hours )
+    if (minutes != 0)
+        strings[numValid++] = Localize( "#SANCTION_DURATION_STRING_" + (minutes == 1 ? "M" : "Ms" ), minutes )
+    
+    string key = "#SANCTION_DURATION_STRING_" + numValid
+
+    switch (numValid)
+    {
+        case 1:
+        return Localize(key, strings[0])
+        case 2:
+        return Localize(key, strings[0], strings[1])
+        case 3:
+        return Localize(key, strings[0], strings[1], strings[2])
+        case 4:
+        return Localize(key, strings[0], strings[1], strings[2], strings[3])
+        default:
+        return Localize("#SANCTION_DURATION_STRING_PERMANENT")
+    }
+
+    unreachable
+}
+
 void function SendSanctionRequest()
 {
     ShowSendingSanctionDialogue()
     HttpRequest request
     request.method = HttpRequestMethod.POST
-    request.url = Spyglass_SanitizeUrl(format("%s/sanctions/add_sanction", Spyglass_GetApiHostname()))
+    request.url = Spyglass_SanitizeUrl( format( "%s/sanctions/add_sanction", Spyglass_GetApiHostname() ) )
     
     table json =
     {
@@ -178,7 +223,7 @@ void function SendSanctionRequest()
 
     request.body = EncodeJSON(json)
     
-    SpyglassApi_MakeHttpRequest(request, OnSuccess, OnFailure, true)
+    SpyglassApi_MakeHttpRequest( request, OnSuccess, OnFailure, true )
 }
 
 void function ShowSendingSanctionDialogue()
