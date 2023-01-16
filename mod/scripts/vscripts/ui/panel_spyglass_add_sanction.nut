@@ -24,21 +24,22 @@ struct {
     int duration = 0
 } file
 
+// initialises the panel
 void function Spyglass_InitAddSanctionPanel()
 {
     file.panel = GetPanel("AddSanctionPanel")
     AddPanelEventHandler( file.panel, eUIEvent.PANEL_SHOW, OnShowAddSanctionPanel )
     Spyglass_AddCallback_OnSelectedPlayerChanged(OnSelectedPlayerChanged)
 
-    // this matches the Spyglass_InfractionType enum
-    var infractionTypeButton = Hud_GetChild( file.panel, "SelectInfraction")
+    // this matches the Spyglass_InfractionType enum TODO - localise these?
+    var infractionTypeButton = Hud_GetChild( file.panel, "SelectInfraction" )
     Hud_DialogList_AddListItem( infractionTypeButton, "Spamming", "0" )
     Hud_DialogList_AddListItem( infractionTypeButton, "Harassment", "1" )
     Hud_DialogList_AddListItem( infractionTypeButton, "Hate Speech", "2" )
     Hud_DialogList_AddListItem( infractionTypeButton, "Griefing", "3" )
     Hud_DialogList_AddListItem( infractionTypeButton, "Exploiting", "4" )
     Hud_DialogList_AddListItem( infractionTypeButton, "Cheating", "5" )
-    SetButtonRuiText(infractionTypeButton, "Infraction Type")
+    SetButtonRuiText( infractionTypeButton, "Infraction Type" )
     Hud_AddEventHandler( infractionTypeButton, UIE_CLICK, void function(var button)
     {
         file.infractionType = Hud_GetDialogListSelectionValue( button ).tointeger()
@@ -46,7 +47,7 @@ void function Spyglass_InitAddSanctionPanel()
     } )
     file.infractionTypeButton = infractionTypeButton
 
-    // this matches the Spyglass_SanctionType enum
+    // this matches the Spyglass_SanctionType enum TODO - localise these?
     var sanctionTypeButton = Hud_GetChild( file.panel, "SelectSanction")
     Hud_DialogList_AddListItem( sanctionTypeButton, "Warning", "0" )
     Hud_DialogList_AddListItem( sanctionTypeButton, "Mute", "1" )
@@ -81,16 +82,17 @@ void function Spyglass_InitAddSanctionPanel()
     Hud_AddEventHandler( applySanctionButton, UIE_CLICK, ShowApplySanctionDialogue )
     file.applySanctionButton = applySanctionButton
 
-
-    TryUnlockApplySanctionButton() // this will basically just lock it at this stage but yeah
-}
-
-void function OnShowAddSanctionPanel()
-{
-    printt("LOCAL UID: " + NSGetLocalPlayerUID())
+    // this will basically just lock it at this stage but yeah
     TryUnlockApplySanctionButton()
 }
 
+// just attempts to unlock the apply sanction button
+void function OnShowAddSanctionPanel()
+{
+    TryUnlockApplySanctionButton()
+}
+
+// sets the selected player, and attempts to unlock the apply sanction button
 void function OnSelectedPlayerChanged(string uid, string name)
 {
     file.uid = uid
@@ -133,6 +135,7 @@ bool function ValidateSanctionFields()
 
 // DIALOGUE AND HTTP THINGS
 
+// shows the apply sanction dialogue, prompting the user to double check the sanction before actually sending it
 void function ShowApplySanctionDialogue(var button)
 {
     DialogData dialogData
@@ -142,10 +145,10 @@ void function ShowApplySanctionDialogue(var button)
 	dialogData.message = Localize( "#SPYGLASS_ARE_YOU_SURE_BODY", 
     file.username,
     file.uid,
-    ["Spamming", "Harassment", "Hate Speech", "Griefing", "Exploiting", "Cheating"][file.infractionType],
-    ["Warning", "Mute", "Ban"][file.sanctionType],
-    (file.duration == 0) ? Localize("#SPYGLASS_DURATION_PERMANENT") : Localize("#SPYGLASS_DURATION_MINUTES", file.duration),
-    file.reason)
+    [ "Spamming", "Harassment", "Hate Speech", "Griefing", "Exploiting", "Cheating" ][file.infractionType],
+    [ "Warning", "Mute", "Ban" ][file.sanctionType],
+    (file.duration == 0) ? Localize("#SPYGLASS_DURATION_PERMANENT") : Localize( "#SPYGLASS_DURATION_MINUTES", file.duration ),
+    file.reason )
 
     dialogData.image = $"ui/menu/common/dialog_error"
     dialogData.noChoiceWithNavigateBack = true
@@ -162,23 +165,18 @@ void function SendSanctionRequest()
     HttpRequest request
     request.method = HttpRequestMethod.POST
     request.url = Spyglass_SanitizeUrl(format("%s/sanctions/add_sanction", Spyglass_GetApiHostname()))
-    // queryParameters have to be strings, so i cant send integer values
-    // which fucking sucks, and means i have to form my json myself with strings
-    /*request.queryParameters["uniqueId"] <- [file.uid]
-    request.queryParameters["issuerId"] <- [NSGetLocalPlayerUID()]
-    request.queryParameters["expiresIn"] <- [file.duration.tostring()]
-    request.queryParameters["reason"] <- [file.reason]
-    request.queryParameters["type"] <- [file.infractionType.tostring()]
-    request.queryParameters["punishmentType"] <- [file.sanctionType.tostring()]*/
     
-    // todo, remove this when queryParameters works with non-string values
-    request.body = "{\"uniqueId\": \"" + file.uid
-    request.body += "\",\"issuerId\": \"" + NSGetLocalPlayerUID()
-    request.body += "\",\"expiresIn\": " + file.duration
-    request.body += ",\"reason\": \"" + file.reason
-    request.body += "\",\"type\": " + file.infractionType
-    request.body += ",\"punishmentType\": " + file.sanctionType
-    request.body += "}"
+    table json =
+    {
+        ["uniqueId"] = file.uid,
+        ["issuerId"] = NSGetLocalPlayerUID(),
+        ["expiresIn"] = file.duration,
+        ["reason"] = file.reason,
+        ["type"] = file.infractionType,
+        ["punishmentType"] = file.sanctionType
+    }
+
+    request.body = EncodeJSON(json)
     
     SpyglassApi_MakeHttpRequest(request, OnSuccess, OnFailure, true)
 }
