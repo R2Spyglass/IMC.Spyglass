@@ -1,5 +1,7 @@
 global function Spyglass_Init;
 
+bool Spyglass_HasInitialized = false;
+
 void function Spyglass_Init()
 {
     printt("[Spyglass] Spyglass_Init() called.");
@@ -10,10 +12,11 @@ void function Spyglass_Init()
     AddCallback_OnClientConnected(OnClientConnected);
     AddCallback_OnClientDisconnected(OnClientDisconnected);
 
+    AddCallback_GameStateEnter(eGameState.PickLoadout, OnPrematchStarted);
     AddCallback_GameStateEnter(eGameState.Prematch, OnPrematchStarted);
     AddCallback_GameStateEnter(eGameState.Playing, OnPlayingStarted);
 
-    if (GetGameState() >= eGameState.Prematch)
+    if (GetGameState() >= eGameState.PickLoadout)
     {
         OnPrematchStarted();
     }
@@ -78,6 +81,13 @@ void function OnStatsRequestComplete(Spyglass_ApiStats response)
 
 void function OnPrematchStarted()
 {
+    if (Spyglass_HasInitialized)
+    {
+        return;
+    }
+
+    Spyglass_HasInitialized = true;
+
     printt("[Spyglass] Prematch started, connecting to API...");
     Spyglass_SayAll(format("Initializing core, version %s.", NSGetModVersionByModName("IMC.Spyglass")));
     Spyglass_SayAll("Establishing uplink to IMC sanction database...");
@@ -92,9 +102,14 @@ void function OnPrematchStarted()
 
 void function OnPlayingStarted()
 {
-    if (Spyglass_IsDisabled())
+    if (Spyglass_IsDisabled() || Spyglass_HasInitialized)
     {
         return;
+    }
+
+    if (!Spyglass_HasInitialized)
+    {
+        OnPrematchStarted();
     }
 
     if (GetConVarBool("spyglass_welcome_message_enabled"))
