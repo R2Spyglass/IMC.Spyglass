@@ -1,6 +1,6 @@
 # Spyglass
 
-<a href="https://discord.com/invite/whKMsPN3nu" target="_blank">
+<a href="https://spyglass.tf" target="_blank">
   <img src="https://discordapp.com/api/guilds/897214251414994994/widget.png?style=shield" alt="Spyglass Discord Server"/>
 </a>
 
@@ -22,14 +22,6 @@ You may also get the mod on [Thunderstore](https://northstar.thunderstore.io/pac
 
 You should delete any previous version you had installed before.
 
-### Experienced Server Owner
-
-The best way to use Spyglass is by cloning this git repository, and pulling it from time to time to keep an up to date database.
-The database is read on map change, so that would allow you to keep it in sync.
-
-You may use the `stable` branch if you wish to only get database updates or stable versions.
-Do not modify Spyglass in any way, shape or form to keep this working smoothly. All configuration is done with convars.
-
 ## Infractions
 
 An infraction is a singular report that has been validated by the maintainers, contributors and Northstar community Discord. 
@@ -43,32 +35,15 @@ Reports are validated when they meet the following guidelines:
 
 Currently, Spyglass supports the current types of infractions:
 
-- Spoof: this infraction is merely to notify the player they were  spoofed.
 - Spamming: spamming text or voice chat with malicious intent.
-- Toxicity: insults/targeted harassment of one or more players. Generally attempting to ruin the game through harmful communication.
-- Discrimination: harassment based on a player's gender, sexuality, race, religion etc.
-- Cheating: usage of external programs that provide unfair advantage to the player (aimbot, wallhack, speedhack etc.) or detriment to the player experience (making the server or players lag & crash, etc.)
+- Harassment: harassing a player through text and/or voice chat.
+- Hate Speech: Any discriminatory, threatening, abusive, hateful or otherwise offensive language.
+- Griefing: Attempts to disrupt the game experience of one or more players outside of the accepted gameplay parameters.
+  - A good example would be purposefully causing damage to a teammate, either directly or indirectly.
+- Exploiting: Use or attempted use of exploits that may deteriorate the performance of game clients and/or the server.
+- Cheating: The use of third-party hacking or cheating clients (aimbot, wallhack etc.) or any tool that provides an advantage, like macros.
 
 This list is not final, and new infraction types can be added if the need arises. 
-Using the default settings, a singular `Cheating` infraction will land you an automatic ban, and a singular `Discrimination` infraction will give you a permanent mute.
-
-Infractions are cumulative, and may lead to greater sanctions (multiple spamming offences will eventually lead to a permanent mute).
-
-## Commands
-
-By default, commands are admin only, and are prefixed by "!".
-
-*Example: !infractions ErliteDev*
-
-```ini
-[find]
-Example = "!find ErliteDev, !find 1005829030626"
-Description = "Attempts to find a user with the given name, or UID. Partial matches work."
-
-[infractions]
-Example = "!infractions ErliteDev, !infractions 1005829030626"
-Description = "Searches for a player's infractions and displays them in chat."
-```
 
 ## Configuration Variables 
 
@@ -76,10 +51,26 @@ Spyglass is only configured through convars, meaning you can add them to your se
 You shouldn't in any way, shape or form modify the mod itself if possible, to make it very easy for you to update the player infractions database as often as possible.
 
 ```ini
-[spyglass_admin_uids]
-Description = "The UIDs of your server's admins, separated by a comma."
+[spyglass_api_hostname]
+Description = "The Spyglass API server to use. You shouldn't change this."
+Type = "String"
+DefaultValue = "https://spyglass.tf/"
+
+[spyglass_api_token]
+Description = "If set, the API token to use for trusted servers. Only given by Spyglass maintainers, leave this empty otherwise."
 Type = "String"
 DefaultValue = ""
+
+[spyglass_appeal_link]
+Description = "The link to a place where people can appeal Spyglass sanctions. You shouldn't change this."
+Type = "String"
+DefaultValue = "https://spyglass.tf"
+
+[spyglass_admin_uids]
+Description = "Comma separated list of UIDs belonging to server admins. Add your admin's UIDs here."
+Type = "String"
+DefaultValue = ""
+Example = "5189484894874,4864848948949"
 
 [spyglass_admin_immunity]
 Description = "Whether or not server admins are immune to Spyglass sanctions."
@@ -106,68 +97,22 @@ DefaultValue = "1 (true)"
 [spyglass_welcome_message]
 Description = "The message to display to players when they join."
 Type = "String"
-DefaultValue = "Spyglass: I am currently monitoring this server, and global sanctions are in effect."
+DefaultValue = "This server is monitored by Spyglass. Global sanctions are in effect."
 
-[spyglass_sanction_notification_mode]
-Description = "Used to choose who receives a notification when a player with a sanction joins the server."
-Values = "0: None, 1: Player Only, 2: Player and Admins, 3: Admins Only, 4: Everyone"
+[spyglass_message_mode]
+Description = "Used to choose who receives normal Spyglass messages."
+Values = "0: Everyone, 1: Admins Only"
 Type = "Integer"
-DefaultValue = "4"
+DefaultValue = "0"
 
-[spyglass_spamming_weight]
-Description = "The amount of weight a 'Spamming' infraction has on a sanction calculation score."
-Type = "Float"
-DefaultValue = "0.2"
-
-[spyglass_toxicity_weight]
-Description = "The amount of weight a 'Toxicity' infraction has on a sanction calculation score."
-Type = "Float"
-DefaultValue = "0.3"
-
-[spyglass_discrimination_weight]
-Description = "The amount of weight a 'Discrimination' infraction has on a sanction calculation score."
-Type = "Float"
-DefaultValue = "0.6"
-
-[spyglass_cheating_weight]
-Description = "The amount of weight a 'Cheating' infraction has on a sanction calculation score."
-Type = "Float"
-DefaultValue = "2.0"
-
-[spyglass_ban_score_threshold]
-Description = "The amount of infraction points a player needs to reach before being automatically banned."
-Type = "Float"
-DefaultValue = "2.0"
-
-[spyglass_mute_score_threshold]
-Description = "The amount of infraction points a player needs to reach before being automatically muted."
-Type = "Float"
-DefaultValue = "0.5"
-
-[spyglass_warn_score_threshold]
-Description = "The amount of infraction points a player needs to reach before being automatically muted."
-Requires = "spyglass_sanctions_notifications 1"
-Type = "Float"
-DefaultValue = "0.1"
+[spyglass_sanction_message_mode]
+Description = "Used to choose who receives a notification when a player with a sanction joins the server."
+Values = "0: Everyone, 1: Player and Admins"
+Type = "Integer"
+DefaultValue = "0"
 
 [spyglass_use_banlist_for_bans]
-Description = "Whether or not we should add the player to the banlist.txt if they reach the Ban threshold. If not, they will just be kicked while joining."
+Description = "Whether or not we should add the player to the banlist.txt if they have a Ban sanction. If not, they will just be kicked while joining."
 Type = "Boolean"
 DefaultValue = "0 (false)"
-
-[spyglass_mute_sanction_type]
-Description = "How to handle a muted player that tries to send a message in chat."
-Values = "0: Prevent message from appearing, 1: Prevent and notify player, 2: Only allow the player to see their own message."
-Type = "Integer"
-DefaultValue = "1"
-
-[spyglass_command_prefix]
-Description = "The prefix to use for Spyglass' chat commands."
-Type = "String"
-DefaultValue = "!"
-
-[spyglass_commands_admin_only]
-Description = "Whether or not Spyglass' commands can only be used by admins."
-Type = "Boolean"
-DefaultValue = "1 (true)"
 ```
