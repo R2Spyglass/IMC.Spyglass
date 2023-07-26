@@ -128,7 +128,7 @@ string function Spyglass_GetInfractionAsString(Spyglass_PlayerInfraction infract
     }
     else
     {
-        str = format("\n^F6AD0100[Spyglass] ^64fbfb00[#%i @ %s]\n^eb393900Permanently %s for %s\n^a3a3a300Reason: %s", infraction.ID, infraction.IssuedAtReadable, punishmentString, typeString  , infraction.Reason);
+        str = format("\n^F6AD0100[Spyglass] ^64fbfb00[#%i @ %s]\n^eb393900Permanently %s for %s\n^a3a3a300Reason: %s", infraction.ID, infraction.IssuedAtReadable, punishmentString, typeString, infraction.Reason);
     }
 
     string appeal = strip(GetConVarString("spyglass_appeal_link"));

@@ -46,12 +46,14 @@ void function OnAuthenticationTokenValidationComplete(string uniqueId, Spyglass_
     if (!result.ApiResult.Success)
     {
         Spyglass_SayPrivate(target, format("Failed to validate authentication token with error: %s", result.ApiResult.Error));
+        ServerToClientStringCommand(target, "spyglass_authfailed");
         return;
     }
 
     if (!result.IsValid)
     {
         Spyglass_SayPrivate(target, "The backend rejected your authentication token, please try again later.");
+        ServerToClientStringCommand(target, "spyglass_authfailed");
         return;
     }
 

@@ -1,7 +1,7 @@
 {
     "name": "Spyglass",
-    "version_number": "1.1.0",
-    "website_url": "https://github.com/Erlite/IMC.Spyglass/",
-    "description": "A curated, global player reports database with configurable automated sanctions",
+    "version_number": "2.1.0",
+    "website_url": "https://github.com/R2Spyglass/IMC.Spyglass/",
+    "description": "A server-side mod that handles sanctions based on player reports on the community Northstar Discord.",
     "dependencies": []
 }

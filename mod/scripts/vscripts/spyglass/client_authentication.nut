@@ -8,6 +8,7 @@ void function Spyglass_AuthenticationClientInit()
     printt("[Spyglass] Spyglass_AuthenticationClientInit() called.");
     AddServerToClientStringCommandCallback("spyglass_beginauthflow", BeginAuthenticationFlow);
     AddServerToClientStringCommandCallback("spyglass_authenticated", OnAuthenticated);
+    AddServerToClientStringCommandCallback("spyglass_authfailed", OnAuthenticationFailed);
     AddServerToClientStringCommandCallback("spyglass_addplayeridentity", OnAddPlayerIdentity);
     AddServerToClientStringCommandCallback("spyglass_removeplayeridentity", OnRemovePlayerIdentity);
     AddServerToClientStringCommandCallback("spyglass_trackplayers", OnTrackPlayerRequest);
@@ -89,6 +90,16 @@ void function OnAuthenticated(array<string> args)
         Spyglass_SetAuthenticated(true);
         Spyglass_ClientSay("Successfully authenticated with the server.");
     }
+}
+
+void function OnAuthenticationFailed(array<string> args)
+{
+    if (IsPlayingDemo())
+    {
+        return;
+    }
+
+    
 }
 
 void function OnAddPlayerIdentity(array<string> args)
