@@ -76,7 +76,7 @@
     "Scripts": [
         {
             "Path": "spyglass/models.nut",
-            "RunOn": "(CLIENT || SERVER) && MP"
+            "RunOn": "UI || (CLIENT || SERVER) && MP"
         },
         {
             "Path": "spyglass/ui_globals.nut",
@@ -96,19 +96,19 @@
         },
         {
             "Path": "spyglass/utils.nut",
-            "RunOn": "(CLIENT || SERVER) && MP"
+            "RunOn": "UI || (CLIENT || SERVER) && MP"
         },
         {
             "Path": "spyglass/json_parsers.nut",
-            "RunOn": "(CLIENT || SERVER) && MP"
+            "RunOn": "UI || (CLIENT || SERVER) && MP"
         },
         {
             "Path": "spyglass/api/api_root.nut",
-            "RunOn": "(CLIENT || SERVER) && MP"
+            "RunOn": "UI || (CLIENT || SERVER) && MP"
         },
         {
             "Path": "spyglass/api/api_sanctions.nut",
-            "RunOn": "(CLIENT || SERVER) && MP"
+            "RunOn": "UI || (CLIENT || SERVER) && MP"
         },
         {
             "Path": "spyglass/api/api_authentication.nut",
@@ -162,6 +162,27 @@
             {
                 "Before": "Spyglass_AdminCommandsInit"
             }
+        },
+        {
+            "Path": "ui/panel_spyglass_playerlist.nut",
+            "RunOn": "UI"
+        },
+        {
+            "Path": "ui/panel_spyglass_add_sanction.nut",
+            "RunOn": "UI"
+        },
+        {
+            "Path": "ui/panel_spyglass_view_sanctions.nut",
+            "RunOn": "UI"
+        },
+        {
+            "Path": "ui/menu_spyglass_admin.nut",
+            "RunOn": "UI",
+            "UICallback":
+            {
+                "Before": "AddSpyglassAdminMenu",
+                "After": "AddSpyglassFooterButton"
+            }
         }
     ],
     "ConCommands": [
@@ -186,5 +207,8 @@
             "Flags": 0,
             "HelpString": "spyglass_ban [uid] [duration in minutes] [type] [reason]"
         }
+    ],
+    "Localisation": [
+      "resource/spyglass_localisation_%language%.txt"
     ]
 }
