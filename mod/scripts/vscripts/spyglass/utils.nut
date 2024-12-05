@@ -245,6 +245,22 @@ int function Spyglass_CompareVersions(Spyglass_Version localVersion, Spyglass_Ve
     return -1;
 }
 
+/**
+ * Gets the currently enabled local version of Spyglass.
+ * @returns the the string representation of the version.
+ */
+string function Spyglass_GetCurrentVersion()
+{
+    foreach (ModInfo versionInfo in NSGetModInformation("IMC.Spyglass"))
+    {
+        if (versionInfo.enabled)
+            return versionInfo.version
+    }
+
+    // technically not, but since this code exists in IMC.Spyglass then surely one version of it is enabled
+    unreachable
+}
+
 /** 
  * Checks the local version against the API's version if cached. 
  * Returns a Spyglass_VersionCheckResult in integer form.
@@ -255,7 +271,7 @@ int function Spyglass_VersionCheck()
     Spyglass_Version minimumVersion;
     Spyglass_Version latestVersion;
 
-    if (!Spyglass_ParseVersion(NSGetModVersionByModName("IMC.Spyglass"), localVersion)
+    if (!Spyglass_ParseVersion(Spyglass_GetCurrentVersion(), localVersion)
         || !Spyglass_ParseVersion(Spyglass_GetMinimumVersion(), minimumVersion)
         || !Spyglass_ParseVersion(Spyglass_GetLatestVersion(), latestVersion))
     {

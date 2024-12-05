@@ -89,7 +89,7 @@ void function OnPrematchStarted()
     Spyglass_HasInitialized = true;
 
     printt("[Spyglass] Prematch started, connecting to API...");
-    Spyglass_SayAll(format("Initializing core, version %s.", NSGetModVersionByModName("IMC.Spyglass")));
+    Spyglass_SayAll(format("Initializing core, version %s.", Spyglass_GetCurrentVersion()));
     Spyglass_SayAll("Establishing uplink to IMC sanction database...");
 
     if (!SpyglassApi_GetStats(OnStatsRequestComplete))
